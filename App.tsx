@@ -1,6 +1,5 @@
 import React, { useState, useRef } from "react";
 // import AppLoading from "expo-app-loading";
-import { useFonts } from "expo-font";
 import {
   View,
   ImageBackground,
@@ -134,11 +133,6 @@ export default function App(): JSX.Element {
   // This is the animation that fades the UI out for the loading.
   // The actual wobbly animation is just a gif that's loaded underneath
   const fadeAnim = useRef(new Animated.Value(1)).current;
-
-  // Loading in a custom font
-  let [fontsLoaded] = useFonts({
-    "Montserrat-Bold": require("./assets/fonts/Montserrat-Bold.ttf"),
-  });
 
   // Have to pass loading in by hand in order to get the state update to register within a callback
   const toggleLoading = (loading: boolean) => {
@@ -428,7 +422,7 @@ export default function App(): JSX.Element {
             </TouchableWithoutFeedback>
             <Text
               style={{
-                fontFamily: "Montserrat-Bold",
+                // fontFamily: "Montserrat-Bold",
                 fontSize: 50,
                 padding: 100,
               }}

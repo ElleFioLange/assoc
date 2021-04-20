@@ -51,7 +51,7 @@ export const styles = StyleSheet.create({
     borderRadius: width * 0.015,
   },
   answer: {
-    fontFamily: "Montserrat-Bold",
+    // fontFamily: "Montserrat-Bold",
     fontSize: 20,
     textAlign: "center",
   },
