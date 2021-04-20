@@ -1,6 +1,6 @@
 /* eslint-disable react/no-children-prop */
 import React from "react";
-import { FlatList, SafeAreaView, View, Text, Image } from "react-native";
+import { FlatList, View, Text, Image } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { styles } from "../utils/Styles";
@@ -41,13 +41,14 @@ const Tab = createBottomTabNavigator();
 
 export default function Mine(map: TMap): JSX.Element {
   return (
-    <SafeAreaView>
-      <NavigationContainer>
-        <Tab.Navigator>
-          <Tab.Screen name="NodeSort" children={() => <NodeSort map={map} />} />
-          <Tab.Screen name="Settings" component={Settings} />
-        </Tab.Navigator>
-      </NavigationContainer>
-    </SafeAreaView>
+    <NavigationContainer>
+      <Tab.Navigator>
+        <Tab.Screen
+          name="By Location"
+          children={() => <NodeSort map={map} />}
+        />
+        <Tab.Screen name="Settings" component={Settings} />
+      </Tab.Navigator>
+    </NavigationContainer>
   );
 }

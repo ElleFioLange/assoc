@@ -10,20 +10,37 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  padTop: {
+    paddingTop: height * 0.02,
+  },
+  padTopDouble: {
+    paddingTop: height * 0.04,
+  },
+  marginTop: {
+    marginTop: height * 0.02,
+  },
+  marginTopDouble: {
+    marginTop: height * 0.04,
+  },
   bg: {
     flex: 1,
     resizeMode: "cover",
   },
   shadow: {
     shadowColor: "black",
-    shadowOffset: { width: 0, height: width * 0.03 },
+    shadowOffset: { width: 0, height: height * 0.012 },
     shadowRadius: 10,
     shadowOpacity: 0.25,
+  },
+  modal: {
+    height: win.height,
+    width: win.width,
+    paddingBottom: height * 0.1,
   },
   input: {
     backgroundColor: "white",
     width,
-    height: width * 0.15,
+    height: height * 0.06,
     borderRadius: width * 0.015,
     padding: width * 0.05,
     textAlign: "center",
@@ -36,7 +53,7 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: width * 0.02,
-    marginBottom: width * 0.12,
+    marginBottom: height * 0.04,
   },
   carouselImage: {
     flex: 1,
@@ -47,7 +64,7 @@ export const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    height: width * 0.15,
+    height: height * 0.06,
     borderRadius: width * 0.015,
   },
   answer: {

@@ -165,6 +165,7 @@ export default function App(): JSX.Element {
     });
   };
 
+  // DO THIS NEXT
   const openMap = () => {
     setModalContent(
       <View style={[styles.container, { width: width, height: height }]}>
@@ -372,14 +373,12 @@ export default function App(): JSX.Element {
               setModalVis(!modalVis);
             }}
           >
-            <View style={[styles.container, { padding: width * 0.05 }]}>
-              {modalContent}
-            </View>
+            <View style={[styles.modal, styles.marginTopDouble, styles.padTop]}>{modalContent}</View>
             <View>
               <Button title="Close" onPress={() => setModalVis(false)} />
             </View>
           </Modal>
-          <ScrollView>
+          <ScrollView style={styles.padTopDouble}>
             <TouchableWithoutFeedback
               style={styles.container}
               onPress={Keyboard.dismiss}
@@ -392,13 +391,17 @@ export default function App(): JSX.Element {
                   <Logo
                     width={width}
                     height={width * 0.6}
-                    style={styles.shadow}
+                    style={[styles.shadow, styles.marginTopDouble]}
                   />
                   <TextInput
                     onChangeText={setAsc}
                     value={asc}
                     placeholder="ASC"
-                    style={[styles.input, styles.shadow]}
+                    style={[
+                      styles.input,
+                      styles.shadow,
+                      styles.marginTopDouble,
+                    ]}
                     onSubmitEditing={({ nativeEvent }) =>
                       handleAsc(nativeEvent.text)
                     }
@@ -407,7 +410,7 @@ export default function App(): JSX.Element {
                     onChangeText={setAns}
                     value={ans}
                     placeholder="ANSWER"
-                    style={[styles.input, styles.shadow]}
+                    style={[styles.input, styles.shadow, styles.marginTop]}
                     onSubmitEditing={({ nativeEvent }) => {
                       ansFn(
                         nativeEvent.text,
@@ -420,15 +423,6 @@ export default function App(): JSX.Element {
                 </View>
               </KeyboardAvoidingView>
             </TouchableWithoutFeedback>
-            <Text
-              style={{
-                // fontFamily: "Montserrat-Bold",
-                fontSize: 50,
-                padding: 100,
-              }}
-            >
-              Hello this is test
-            </Text>
             <View style={styles.container}>
               <Carousel
                 layout={"default"}
@@ -441,7 +435,13 @@ export default function App(): JSX.Element {
                 style={styles.shadow}
                 renderItem={({ item }: { item: Item }) => (
                   <TouchableWithoutFeedback onPress={() => openItem(item)}>
-                    <View style={[styles.shadow, styles.card]}>
+                    <View
+                      style={[
+                        styles.shadow,
+                        styles.card,
+                        styles.marginTopDouble,
+                      ]}
+                    >
                       <Image
                         source={{ uri: item.uri }}
                         style={styles.carouselImage}
@@ -463,7 +463,6 @@ export default function App(): JSX.Element {
                 itemWidth={width}
               />
               <View>
-                <Text>{map.curNode.name === "Home" ? "Hello" : "Goodbye"}</Text>
                 <Pressable
                   onPress={() => {
                     const newMap = { ...map };
@@ -478,7 +477,7 @@ export default function App(): JSX.Element {
                     styles.shadow,
                   ]}
                 >
-                  <Text>Map</Text>
+                  <Text>MAP</Text>
                 </Pressable>
                 <Pressable
                   onPress={openMine}
@@ -488,9 +487,10 @@ export default function App(): JSX.Element {
                     },
                     styles.pressable,
                     styles.shadow,
+                    styles.marginTop,
                   ]}
                 >
-                  <Text>Mine</Text>
+                  <Text>MINE</Text>
                 </Pressable>
               </View>
             </View>
