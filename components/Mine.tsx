@@ -3,8 +3,8 @@ import React from "react";
 import { FlatList, View, Text, Image } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { styles } from "../utils/Styles";
-import { MapNode } from "../utils/Map";
+import { styles } from "../utils/styles";
+import { MapNode } from "../utils/map";
 
 function NodeSort({ map }: { map: TMap }) {
   const nodes = Array.from(map.data.values());

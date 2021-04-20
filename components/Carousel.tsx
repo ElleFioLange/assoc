@@ -1,8 +1,8 @@
 import React from "react";
 import { TouchableWithoutFeedback, View, Image } from "react-native";
 import Carousel from "react-native-snap-carousel";
-import { styles, win, width } from "../utils/Styles";
-import { Item } from "../utils/Map";
+import { styles, win, width } from "../utils/styles";
+import { Item } from "../utils/map";
 
 export function CustomCarousel(
   map: TMap,

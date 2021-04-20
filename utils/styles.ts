@@ -32,11 +32,6 @@ export const styles = StyleSheet.create({
     shadowRadius: 10,
     shadowOpacity: 0.25,
   },
-  modal: {
-    height: win.height,
-    width: win.width,
-    paddingBottom: height * 0.1,
-  },
   input: {
     backgroundColor: "white",
     width,
@@ -68,9 +63,14 @@ export const styles = StyleSheet.create({
     borderRadius: width * 0.015,
   },
   answer: {
-    // fontFamily: "Montserrat-Bold",
     fontSize: 20,
     textAlign: "center",
+  },
+  itemName: {
+    fontSize: 15,
+  },
+  itemDescription: {
+    fontSize: 8,
   },
   shelf: {
     width: width,

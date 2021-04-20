@@ -1,5 +1,7 @@
+/* eslint-disable react/prop-types */
 import React, { useState, useRef } from "react";
-// import AppLoading from "expo-app-loading";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
 import {
   View,
   ImageBackground,
@@ -16,111 +18,20 @@ import {
   Button,
 } from "react-native";
 import Carousel from "react-native-snap-carousel";
+import Home from "./components/Home";
+import Map from "./components/Map";
 import Mine from "./components/Mine";
 import Logo from "./assets/logo.svg";
 import Svg, { Circle, Line } from "react-native-svg";
 
 import Animated, { Easing } from "react-native-reanimated";
 
-import { styles, win, width, height } from "./utils/Styles";
+import { styles, win, width, height } from "./utils/styles";
 
 import { ascFn, ansFn } from "./utils/ApiCalls";
-import { MapNode, Item, devMap } from "./utils/Map";
+import { MapNode, Item, devMap } from "./utils/map";
 
-// const fpItems = [
-//   {
-//     name: "red octobers",
-//     content: (
-//       <Image
-//         source={require("./assets/product_pics/red_octobers.jpeg")}
-//         style={styles.productPic}
-//       />
-//     ),
-//   },
-//   {
-//     name: "off---white bag",
-//     content: (
-//       <Image
-//         source={require("./assets/product_pics/offwhite_bag.jpeg")}
-//         style={styles.productPic}
-//       />
-//     ),
-//   },
-//   {
-//     name: "supreme crowbar",
-//     content: (
-//       <Image
-//         source={require("./assets/product_pics/supreme_crowbar.png")}
-//         style={styles.productPic}
-//       />
-//     ),
-//   },
-//   {
-//     name: "dior j1s",
-//     content: (
-//       <Image
-//         source={require("./assets/product_pics/dior_j1s.jpeg")}
-//         style={styles.productPic}
-//       />
-//     ),
-//   },
-//   {
-//     name: "vv sandals",
-//     content: (
-//       <Image
-//         source={require("./assets/product_pics/vv_sandals.jpeg")}
-//         style={styles.productPic}
-//       />
-//     ),
-//   },
-// ];
-
-// const drItems = [
-//   {
-//     name: "ipod",
-//     content: (
-//       <Image
-//         source={require("./assets/product_pics/dr/ipod.jpeg")}
-//         style={styles.productPic}
-//       />
-//     ),
-//   },
-//   {
-//     name: "light",
-//     content: (
-//       <Image
-//         source={require("./assets/product_pics/dr/light.jpg")}
-//         style={styles.productPic}
-//       />
-//     ),
-//   },
-//   {
-//     name: "radio",
-//     content: (
-//       <Image
-//         source={require("./assets/product_pics/dr/radio.jpg")}
-//         style={styles.productPic}
-//       />
-//     ),
-//   },
-//   {
-//     name: "record_player",
-//     content: (
-//       <Image
-//         source={require("./assets/product_pics/dr/record_player.jpg")}
-//         style={styles.productPic}
-//       />
-//     ),
-//   },
-//   // {
-//   //   name: "t3",
-//   //   image: require("./assets/product_pics/dr/t3.jpg"),
-//   // },
-// ];
-
-export default function App(): JSX.Element {
-  const [map, setMap] = useState(devMap);
-
+function Home({ map, setMap, navigation }: HomeProps): JSX.Element {
   // States for input placeholders
   const [asc, setAsc] = useState("");
   const [ans, setAns] = useState("");
@@ -150,6 +61,7 @@ export default function App(): JSX.Element {
     setLoading(!loading);
   };
 
+  // Only for dev so that the loading animation actually runs
   function sleep(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
@@ -353,10 +265,6 @@ export default function App(): JSX.Element {
     setModalVis(true);
   };
 
-  // Stall until fonts are loaded
-  // if (!fontsLoaded) {
-  //   return <AppLoading />;
-  // } else {
   return (
     <ImageBackground source={require("./assets/bg_anim.gif")} style={styles.bg}>
       <Animated.View
@@ -373,8 +281,8 @@ export default function App(): JSX.Element {
               setModalVis(!modalVis);
             }}
           >
-            <View style={[styles.modal, styles.marginTopDouble, styles.padTop]}>{modalContent}</View>
             <View>
+              {modalContent}
               <Button title="Close" onPress={() => setModalVis(false)} />
             </View>
           </Modal>
@@ -464,11 +372,7 @@ export default function App(): JSX.Element {
               />
               <View>
                 <Pressable
-                  onPress={() => {
-                    const newMap = { ...map };
-                    newMap.curNode = Array.from(newMap.data.values())[1];
-                    setMap(newMap);
-                  }}
+                  onPress={() => {}}
                   style={({ pressed }) => [
                     {
                       backgroundColor: pressed ? "#ededed" : "white",
@@ -499,5 +403,27 @@ export default function App(): JSX.Element {
         </ImageBackground>
       </Animated.View>
     </ImageBackground>
+  );
+}
+
+const Stack = createStackNavigator();
+
+export default function App(): JSX.Element {
+  const [map, setMap] = useState(devMap);
+
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Home">
+          {(props) => <Home {...props} map={map} setMap={setMap} />}
+        </Stack.Screen>
+        <Stack.Screen name="Map">
+          {(props) => <Map {...props} map={map} />}
+        </Stack.Screen>
+        <Stack.Screen name="Mine">
+          {(props) => <Mine {...props} map={map} />}
+        </Stack.Screen>
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
