@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useRef } from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from "@react-navigation/stack";
+import { createNativeStackNavigator } from "react-native-screens/native-stack";
+import { enableScreens } from "react-native-screens";
 import {
   View,
   ImageBackground,
@@ -14,13 +14,12 @@ import {
   Pressable,
   Text,
   ScrollView,
-  Button,
 } from "react-native";
 import Carousel from "react-native-snap-carousel";
 import Animated, { Easing } from "react-native-reanimated";
 import Logo from "../assets/logo.svg";
 
-import { styles, win, width, height } from "../utils/styles";
+import { styles, win, width } from "../utils/styles";
 import { Item } from "../utils/map";
 
 function Main({
@@ -42,7 +41,7 @@ function Main({
   const fadeAnim = useRef(new Animated.Value(1)).current;
 
   // Have to pass loading in by hand in order to get the state update to register within a callback
-  const toggleLoading = (loading: boolean) => {
+  const toggleAnimation = (loading: boolean) => {
     loading
       ? Animated.timing(fadeAnim, {
           toValue: 0.1,
@@ -54,7 +53,6 @@ function Main({
           duration: 550,
           easing: Easing.ease,
         }).start();
-    setLoading(!loading);
   };
 
   // Only for dev so that the loading animation actually runs
@@ -63,29 +61,34 @@ function Main({
   }
 
   const handleAsc = (question: string) => {
-    toggleLoading(true);
+    toggleAnimation(true);
+    setLoading(true);
     sleep(1500).then((value) => {
-      toggleLoading(false);
+      toggleAnimation(false);
+      setLoading(false);
       setAnswer("Placeholder");
       navigation.navigate("Answer");
     });
   };
 
   const handleAns = (answer: string) => {
-    toggleLoading(true);
+    toggleAnimation(true);
     sleep(1500).then((value) => {
-      toggleLoading(false);
+      toggleAnimation(false);
       navigation.navigate();
     });
   };
 
   return (
-    <ImageBackground source={require("./assets/bg_anim.gif")} style={styles.bg}>
+    <ImageBackground
+      source={require("../assets/bg_anim.gif")}
+      style={styles.bg}
+    >
       <Animated.View
         style={[styles.bg, { opacity: fadeAnim }]}
         pointerEvents={loading ? "none" : "auto"}
       >
-        <ImageBackground source={require("./assets/bg.png")} style={styles.bg}>
+        <ImageBackground source={require("../assets/bg.png")} style={styles.bg}>
           <ScrollView style={styles.padTopDouble}>
             <TouchableWithoutFeedback
               style={styles.container}
@@ -213,7 +216,6 @@ function Answer({ answer, navigation }: AnswerProps) {
   return (
     <View style={styles.container}>
       <Text style={styles.answer}>{answer}</Text>
-      <Button onPress={() => navigation.goBack()} title="Dismiss" />
     </View>
   );
 }
@@ -239,38 +241,42 @@ function ItemInfo({ item, navigation }: ItemProps) {
         elit. Nam at eleifend ante. In fringilla finibus neque at blandit.
         Nullam nec arcu sapien.
       </Text>
-      <Button onPress={() => navigation.goBack()} title="Dismiss" />
     </View>
   );
 }
 
-const Stack = createStackNavigator();
+enableScreens();
+const Stack = createNativeStackNavigator();
 
 export default function Home({ map, setMap }: HomeProps): JSX.Element {
   const [answer, setAnswer] = useState("");
   const [item, setItem] = useState<Item>();
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator mode="modal">
-        <Stack.Screen name="Home">
-          {(props) => (
-            <Main
-              {...props}
-              map={map}
-              setMap={setMap}
-              setAnswer={setAnswer}
-              setItem={setItem}
-            />
-          )}
-        </Stack.Screen>
-        <Stack.Screen name="Answer">
-          {(props) => <Answer {...props} answer={answer} />}
-        </Stack.Screen>
-        <Stack.Screen name="ItemInfo">
-          {(props) => <ItemInfo {...props} item={item} />}
-        </Stack.Screen>
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Stack.Navigator
+      initialRouteName="Home"
+      screenOptions={{
+        headerShown: false,
+        stackPresentation: "formSheet",
+      }}
+    >
+      <Stack.Screen name="Home">
+        {(props) => (
+          <Main
+            {...props}
+            map={map}
+            setMap={setMap}
+            setAnswer={setAnswer}
+            setItem={setItem}
+          />
+        )}
+      </Stack.Screen>
+      <Stack.Screen name="Answer">
+        {(props) => <Answer {...props} answer={answer} />}
+      </Stack.Screen>
+      <Stack.Screen name="ItemInfo">
+        {(props) => <ItemInfo {...props} item={item} />}
+      </Stack.Screen>
+    </Stack.Navigator>
   );
 }

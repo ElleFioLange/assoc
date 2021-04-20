@@ -1,7 +1,6 @@
 /* eslint-disable react/no-children-prop */
 import React from "react";
 import { FlatList, View, Text, Image } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { styles } from "../utils/styles";
 import { MapNode } from "../utils/map";
@@ -33,22 +32,22 @@ function NodeSort({ map }: { map: TMap }) {
   );
 }
 
+function Test() {
+  return <Image source={require("../dev_assets/radio.jpg")} />;
+}
+
 function Settings() {
   return <Text>Hi this is the Settings</Text>;
 }
 
 const Tab = createBottomTabNavigator();
 
-export default function Mine(map: TMap): JSX.Element {
+export default function Mine({ map }: { map: TMap }): JSX.Element {
   return (
-    <NavigationContainer>
-      <Tab.Navigator>
-        <Tab.Screen
-          name="By Location"
-          children={() => <NodeSort map={map} />}
-        />
-        <Tab.Screen name="Settings" component={Settings} />
-      </Tab.Navigator>
-    </NavigationContainer>
+    <Tab.Navigator>
+      <Tab.Screen name="By Location" children={() => <NodeSort map={map} />} />
+      <Tab.Screen name="Settings" component={Settings} />
+      <Tab.Screen name="Test" component={Test} />
+    </Tab.Navigator>
   );
 }
