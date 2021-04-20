@@ -1,11 +1,10 @@
 import React, { useState, useRef } from "react";
+// import AppLoading from "expo-app-loading";
+import { useFonts } from "expo-font";
 import {
   View,
-  StyleSheet,
   ImageBackground,
   Image,
-  SafeAreaView,
-  Dimensions,
   TextInput,
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
@@ -17,267 +16,158 @@ import {
   Modal,
   Button,
 } from "react-native";
-import Svg, { Circle, Line } from "react-native-svg";
 import Carousel from "react-native-snap-carousel";
+import Mine from "./components/Mine";
 import Logo from "./assets/logo.svg";
-import { OPENAI_API_KEY } from "./api-key";
+import Svg, { Circle, Line } from "react-native-svg";
+
 import Animated, { Easing } from "react-native-reanimated";
-import { FlatList } from "react-native-gesture-handler";
 
-const win = Dimensions.get("window");
-const width = win.width * 0.8;
-const height = win.height * 0.8;
+import { styles, win, width, height } from "./utils/Styles";
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type Item = { name: string; content: JSX.Element };
+import { ascFn, ansFn } from "./utils/ApiCalls";
+import { MapNode, Item, devMap } from "./utils/Map";
 
-const smallBordRad = width * 0.015;
-const largeBordRad = width * 0.03;
+// const fpItems = [
+//   {
+//     name: "red octobers",
+//     content: (
+//       <Image
+//         source={require("./assets/product_pics/red_octobers.jpeg")}
+//         style={styles.productPic}
+//       />
+//     ),
+//   },
+//   {
+//     name: "off---white bag",
+//     content: (
+//       <Image
+//         source={require("./assets/product_pics/offwhite_bag.jpeg")}
+//         style={styles.productPic}
+//       />
+//     ),
+//   },
+//   {
+//     name: "supreme crowbar",
+//     content: (
+//       <Image
+//         source={require("./assets/product_pics/supreme_crowbar.png")}
+//         style={styles.productPic}
+//       />
+//     ),
+//   },
+//   {
+//     name: "dior j1s",
+//     content: (
+//       <Image
+//         source={require("./assets/product_pics/dior_j1s.jpeg")}
+//         style={styles.productPic}
+//       />
+//     ),
+//   },
+//   {
+//     name: "vv sandals",
+//     content: (
+//       <Image
+//         source={require("./assets/product_pics/vv_sandals.jpeg")}
+//         style={styles.productPic}
+//       />
+//     ),
+//   },
+// ];
 
-const styles = StyleSheet.create({
-  title: {
-    fontSize: 50,
-    textAlignVertical: "center",
-    textAlign: "center",
-  },
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  bg: {
-    flex: 1,
-    resizeMode: "cover",
-  },
-  shadow: {
-    shadowColor: "black",
-    shadowOffset: { width: 0, height: width * 0.03 },
-    shadowRadius: 10,
-    shadowOpacity: 0.25,
-  },
-  input: {
-    backgroundColor: "white",
-    width,
-    height: width * 0.15,
-    borderRadius: smallBordRad,
-    padding: width * 0.05,
-    textAlign: "center",
-  },
-  card: {
-    backgroundColor: "white",
-    borderRadius: largeBordRad,
-    height: width * 0.6,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: width * 0.02,
-    marginBottom: width * 0.12,
-  },
-  productPic: {
-    flex: 1,
-    resizeMode: "contain",
-  },
-  pressable: {
-    width,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    height: width * 0.15,
-    borderRadius: smallBordRad,
-  },
-  shelf: {
-    width: width,
-    height: height / 4,
-    borderBottomColor: "#e0e0e0",
-    borderBottomWidth: 1,
-  },
-  shelfItem: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    width: width,
-  },
-});
-
-const fpItems = [
-  {
-    name: "red octobers",
-    content: (
-      <Image
-        source={require("./assets/product_pics/red_octobers.jpeg")}
-        style={styles.productPic}
-      />
-    ),
-  },
-  {
-    name: "off---white bag",
-    content: (
-      <Image
-        source={require("./assets/product_pics/offwhite_bag.jpeg")}
-        style={styles.productPic}
-      />
-    ),
-  },
-  {
-    name: "supreme crowbar",
-    content: (
-      <Image
-        source={require("./assets/product_pics/supreme_crowbar.png")}
-        style={styles.productPic}
-      />
-    ),
-  },
-  {
-    name: "dior j1s",
-    content: (
-      <Image
-        source={require("./assets/product_pics/dior_j1s.jpeg")}
-        style={styles.productPic}
-      />
-    ),
-  },
-  {
-    name: "vv sandals",
-    content: (
-      <Image
-        source={require("./assets/product_pics/vv_sandals.jpeg")}
-        style={styles.productPic}
-      />
-    ),
-  },
-];
-
-const drItems = [
-  {
-    name: "ipod",
-    content: (
-      <Image
-        source={require("./assets/product_pics/dr/ipod.jpeg")}
-        style={styles.productPic}
-      />
-    ),
-  },
-  {
-    name: "light",
-    content: (
-      <Image
-        source={require("./assets/product_pics/dr/light.jpg")}
-        style={styles.productPic}
-      />
-    ),
-  },
-  {
-    name: "radio",
-    content: (
-      <Image
-        source={require("./assets/product_pics/dr/radio.jpg")}
-        style={styles.productPic}
-      />
-    ),
-  },
-  {
-    name: "record_player",
-    content: (
-      <Image
-        source={require("./assets/product_pics/dr/record_player.jpg")}
-        style={styles.productPic}
-      />
-    ),
-  },
-  // {
-  //   name: "t3",
-  //   image: require("./assets/product_pics/dr/t3.jpg"),
-  // },
-];
-
-const Separator = (n: number) => (
-  <View style={{ marginTop: width * 0.02 * n }} />
-);
+// const drItems = [
+//   {
+//     name: "ipod",
+//     content: (
+//       <Image
+//         source={require("./assets/product_pics/dr/ipod.jpeg")}
+//         style={styles.productPic}
+//       />
+//     ),
+//   },
+//   {
+//     name: "light",
+//     content: (
+//       <Image
+//         source={require("./assets/product_pics/dr/light.jpg")}
+//         style={styles.productPic}
+//       />
+//     ),
+//   },
+//   {
+//     name: "radio",
+//     content: (
+//       <Image
+//         source={require("./assets/product_pics/dr/radio.jpg")}
+//         style={styles.productPic}
+//       />
+//     ),
+//   },
+//   {
+//     name: "record_player",
+//     content: (
+//       <Image
+//         source={require("./assets/product_pics/dr/record_player.jpg")}
+//         style={styles.productPic}
+//       />
+//     ),
+//   },
+//   // {
+//   //   name: "t3",
+//   //   image: require("./assets/product_pics/dr/t3.jpg"),
+//   // },
+// ];
 
 export default function App(): JSX.Element {
-  const [dr, setDr] = useState(false);
+  const [map, setMap] = useState(devMap);
+
+  // States for input placeholders
   const [asc, setAsc] = useState("");
   const [ans, setAns] = useState("");
 
+  // Modal and loading states
   const [modalVis, setModalVis] = useState(false);
   const [modalContent, setModalContent] = useState<JSX.Element | null>(null);
   const [loading, setLoading] = useState(false);
 
+  // This is the animation that fades the UI out for the loading.
+  // The actual wobbly animation is just a gif that's loaded underneath
   const fadeAnim = useRef(new Animated.Value(1)).current;
 
-  const toggleLoading = (l: boolean) => {
-    l
+  // Loading in a custom font
+  let [fontsLoaded] = useFonts({
+    "Montserrat-Bold": require("./assets/fonts/Montserrat-Bold.ttf"),
+  });
+
+  // Have to pass loading in by hand in order to get the state update to register within a callback
+  const toggleLoading = (loading: boolean) => {
+    loading
       ? Animated.timing(fadeAnim, {
-          toValue: 1,
+          toValue: 0.1,
           duration: 550,
           easing: Easing.ease,
         }).start()
       : Animated.timing(fadeAnim, {
-          toValue: 0.1,
+          toValue: 1,
           duration: 550,
           easing: Easing.ease,
         }).start();
-    setLoading(!l);
-  };
-
-  const ascFn = async (question: string) => {
-    toggleLoading(false);
-    fetch("https://api.openai.com/v1/engines/davinci/completions", {
-      method: "POST",
-      mode: "cors",
-      cache: "no-cache",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${OPENAI_API_KEY}`,
-      },
-      body: JSON.stringify({
-        prompt: `I am an AI that can answer questions about Dieter Rams.
-Q: Who?
-A: Dieter Rams
-Q: What?
-A: Industrial Design
-Q: Where?
-A: Germany
-Q: When?
-A: 1961
-Q: Why?
-A: Design inhabits every built object, environment, and service. To see design is to see thought manifested in the physical.
-Q: ${question}
-A:`,
-        max_tokens: 150,
-        temperature: 0.56,
-        stop: ["\n"],
-      }),
-    })
-      .then((response) => response.json())
-      .then((response) => {
-        setModalContent(
-          <Text
-            style={{
-              // fontFamily: "San Francisco",
-              fontSize: 50,
-              // fontWeight: "bold",
-            }}
-          >
-            {response.choices[0].text}
-          </Text>
-        );
-        toggleLoading(true);
-        setModalVis(true);
-        setAsc("");
-      });
+    setLoading(!loading);
   };
 
   function sleep(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
-  const answerFn = (answer: string) => {
-    toggleLoading(false);
-    sleep(1500).then(() => {
-      answer === "Dieter Rams" ? setDr(true) : setDr(false);
-      setAns("");
-      toggleLoading(true);
+  const handleAsc = (question: string) => {
+    toggleLoading(true);
+    sleep(1500).then((value) => {
+      setModalContent(
+        <Text style={styles.answer}>This is placeholder text</Text>
+      );
+      setModalVis(true);
+      toggleLoading(false);
     });
   };
 
@@ -428,34 +318,11 @@ A:`,
   };
 
   const openMine = () => {
-    setModalContent(
-      <>
-        <FlatList
-          data={fpItems}
-          renderItem={({ item }) => (
-            <View style={styles.shelfItem}>{item.content}</View>
-          )}
-          horizontal={true}
-          style={styles.shelf}
-          keyExtractor={(item) => item.name}
-        />
-        <Text>Home</Text>
-        <FlatList
-          data={drItems}
-          renderItem={({ item }) => (
-            <View style={styles.shelfItem}>{item.content}</View>
-          )}
-          horizontal={true}
-          style={styles.shelf}
-          keyExtractor={(item) => item.name}
-        />
-        <Text>Dieter Rams</Text>
-      </>
-    );
+    setModalContent(Mine(map));
     setModalVis(true);
   };
 
-  const openItem = (item) => {
+  const openItem = (item: Item) => {
     setModalContent(
       <View style={styles.container}>
         <View
@@ -467,7 +334,7 @@ A:`,
             alignItems: "center",
           }}
         >
-          {item.content}
+          <Image source={{ uri: item.uri }} />
         </View>
         <Text style={{ fontSize: 15 }}>{item.name}</Text>
         <Text>
@@ -491,6 +358,10 @@ A:`,
     setModalVis(true);
   };
 
+  // Stall until fonts are loaded
+  // if (!fontsLoaded) {
+  //   return <AppLoading />;
+  // } else {
   return (
     <ImageBackground source={require("./assets/bg_anim.gif")} style={styles.bg}>
       <Animated.View
@@ -507,33 +378,12 @@ A:`,
               setModalVis(!modalVis);
             }}
           >
-            <SafeAreaView
-              style={{
-                backgroundColor: "white",
-                flex: 1,
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <ScrollView
-                style={{
-                  flex: 1,
-                  padding: width * 0.1,
-                  // alignItems: "center",
-                  // justifyContent: "center",
-                }}
-              >
-                {modalContent}
-                {Separator(3)}
-                <Button
-                  title="Close"
-                  onPress={() => {
-                    setModalVis(!modalVis);
-                  }}
-                />
-                {Separator(9)}
-              </ScrollView>
-            </SafeAreaView>
+            <View style={[styles.container, { padding: width * 0.05 }]}>
+              {modalContent}
+            </View>
+            <View>
+              <Button title="Close" onPress={() => setModalVis(false)} />
+            </View>
           </Modal>
           <ScrollView>
             <TouchableWithoutFeedback
@@ -545,44 +395,50 @@ A:`,
                 style={styles.container}
               >
                 <View style={styles.container}>
-                  {Separator(9)}
                   <Logo
                     width={width}
                     height={width * 0.6}
                     style={styles.shadow}
                   />
-                  {/* <Image
-                          source={require("./assets/logo.svg")}
-                          style={styles.logo}
-                          /> */}
-                  {Separator(3)}
                   <TextInput
                     onChangeText={setAsc}
                     value={asc}
                     placeholder="ASC"
                     style={[styles.input, styles.shadow]}
-                    onSubmitEditing={({ nativeEvent }) => {
-                      ascFn(nativeEvent.text);
-                    }}
+                    onSubmitEditing={({ nativeEvent }) =>
+                      handleAsc(nativeEvent.text)
+                    }
                   />
-                  {Separator(3)}
                   <TextInput
                     onChangeText={setAns}
                     value={ans}
                     placeholder="ANSWER"
                     style={[styles.input, styles.shadow]}
-                    onSubmitEditing={({ nativeEvent }) =>
-                      answerFn(nativeEvent.text)
-                    }
+                    onSubmitEditing={({ nativeEvent }) => {
+                      ansFn(
+                        nativeEvent.text,
+                        toggleLoading,
+                        setModalContent,
+                        setModalVis
+                      );
+                    }}
                   />
                 </View>
               </KeyboardAvoidingView>
             </TouchableWithoutFeedback>
+            <Text
+              style={{
+                fontFamily: "Montserrat-Bold",
+                fontSize: 50,
+                padding: 100,
+              }}
+            >
+              Hello this is test
+            </Text>
             <View style={styles.container}>
-              {Separator(6)}
               <Carousel
                 layout={"default"}
-                data={dr ? drItems : fpItems}
+                data={Array.from(map.curNode.items.values())}
                 contentContainerCustomStyle={{
                   display: "flex",
                   justifyContent: "center",
@@ -591,8 +447,21 @@ A:`,
                 style={styles.shadow}
                 renderItem={({ item }: { item: Item }) => (
                   <TouchableWithoutFeedback onPress={() => openItem(item)}>
-                    <View style={[styles.card, styles.shadow]}>
-                      {item.content}
+                    <View style={[styles.shadow, styles.card]}>
+                      <Image
+                        source={{ uri: item.uri }}
+                        style={styles.carouselImage}
+                        width={
+                          item.dims.w / item.dims.h >= 0.6
+                            ? width * 0.96
+                            : (width * 0.56 * item.dims.w) / item.dims.h
+                        }
+                        height={
+                          item.dims.w / item.dims.h < 0.6
+                            ? width * 0.56
+                            : (width * 0.96 * item.dims.h) / item.dims.w
+                        }
+                      />
                     </View>
                   </TouchableWithoutFeedback>
                 )}
@@ -600,8 +469,13 @@ A:`,
                 itemWidth={width}
               />
               <View>
+                <Text>{map.curNode.name === "Home" ? "Hello" : "Goodbye"}</Text>
                 <Pressable
-                  onPress={openMap}
+                  onPress={() => {
+                    const newMap = { ...map };
+                    newMap.curNode = Array.from(newMap.data.values())[1];
+                    setMap(newMap);
+                  }}
                   style={({ pressed }) => [
                     {
                       backgroundColor: pressed ? "#ededed" : "white",
@@ -612,7 +486,6 @@ A:`,
                 >
                   <Text>Map</Text>
                 </Pressable>
-                {Separator(3)}
                 <Pressable
                   onPress={openMine}
                   style={({ pressed }) => [
@@ -625,7 +498,6 @@ A:`,
                 >
                   <Text>Mine</Text>
                 </Pressable>
-                {Separator(3)}
               </View>
             </View>
           </ScrollView>
