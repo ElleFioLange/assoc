@@ -1,53 +1,60 @@
 /* eslint-disable react/no-children-prop */
-import React from "react";
-import { FlatList, View, Text, Image } from "react-native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import React, { useState } from "react";
+import { createNativeStackNavigator } from "react-native-screens/native-stack";
+import { FlatList, View, Text, Image, Button } from "react-native";
 import { styles } from "../utils/styles";
-import { MapNode } from "../utils/map";
+import { Item } from "../utils/map";
 
-function NodeSort({ map }: { map: TMap }) {
+import ItemInfo from "./ItemInfo";
+
+function Browser({ map, navigation }: MineProps) {
   const nodes = Array.from(map.data.values());
   const curNodeId = map.curNode.id;
   nodes.sort((a, b) => a.minD(curNodeId) - b.minD(curNodeId));
 
   return (
-    <>
-      {nodes.map((node: MapNode) => (
-        <View key={node.name}>
-          <FlatList
-            data={Array.from(node.items.values())}
-            renderItem={({ item }) => (
-              <View style={styles.shelfItem}>
-                <Image source={{ uri: item.uri }} />
-              </View>
-            )}
-            horizontal={true}
-            style={styles.shelf}
-            keyExtractor={(item) => item.name}
-          />
-          <Text>{node.name}</Text>
-        </View>
-      ))}
-    </>
+    <View style={[styles.container, styles.whiteBg]}>
+      <Button onPress={() => navigation.navigate("MineItem")} title="Item" />
+    </View>
+    // <>
+    //   {nodes.map((node: MapNode) => (
+    //     <View key={node.name}>
+    //       <FlatList
+    //         data={Array.from(node.items.values())}
+    //         renderItem={({ item }) => (
+    //           <View style={styles.shelfItem}>
+    //             <Image source={{ uri: item.uri }} width={100} height={100} />
+    //           </View>
+    //         )}
+    //         horizontal={true}
+    //         style={styles.shelf}
+    //         keyExtractor={(item) => item.name}
+    //       />
+    //       <Text>{node.name}</Text>
+    //     </View>
+    //   ))}
+    // </>
   );
 }
 
-function Test() {
-  return <Image source={require("../dev_assets/radio.jpg")} />;
-}
+const Stack = createNativeStackNavigator();
 
-function Settings() {
-  return <Text>Hi this is the Settings</Text>;
-}
+export default function Mine({ map, navigation }: MineProps) {
+  const [item, setItem] = useState<Item>();
 
-const Tab = createBottomTabNavigator();
-
-export default function Mine({ map }: { map: TMap }): JSX.Element {
   return (
-    <Tab.Navigator>
-      <Tab.Screen name="By Location" children={() => <NodeSort map={map} />} />
-      <Tab.Screen name="Settings" component={Settings} />
-      <Tab.Screen name="Test" component={Test} />
-    </Tab.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false,
+        stackPresentation: "formSheet",
+      }}
+    >
+      <Stack.Screen name="Browser">
+        {(props) => <Browser {...props} map={map} />}
+      </Stack.Screen>
+      <Stack.Screen name="MineItem">
+        {(props) => <ItemInfo item={item} />}
+      </Stack.Screen>
+    </Stack.Navigator>
   );
 }

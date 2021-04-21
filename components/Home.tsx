@@ -1,7 +1,6 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useRef } from "react";
 import { createNativeStackNavigator } from "react-native-screens/native-stack";
-import { enableScreens } from "react-native-screens";
 import {
   View,
   ImageBackground,
@@ -18,6 +17,8 @@ import {
 import Carousel from "react-native-snap-carousel";
 import Animated, { Easing } from "react-native-reanimated";
 import Logo from "../assets/logo.svg";
+
+import ItemInfo from "./ItemInfo";
 
 import { styles, win, width } from "../utils/styles";
 import { Item } from "../utils/map";
@@ -40,11 +41,11 @@ function Main({
   // The actual wobbly animation is just a gif that's loaded underneath
   const fadeAnim = useRef(new Animated.Value(1)).current;
 
-  // Have to pass loading in by hand in order to get the state update to register within a callback
+  // Toggle the loading animation
   const toggleAnimation = (loading: boolean) => {
     loading
       ? Animated.timing(fadeAnim, {
-          toValue: 0.1,
+          toValue: 0.25,
           duration: 550,
           easing: Easing.ease,
         }).start()
@@ -67,15 +68,23 @@ function Main({
       toggleAnimation(false);
       setLoading(false);
       setAnswer("Placeholder");
+      setAsc("");
       navigation.navigate("Answer");
     });
   };
 
   const handleAns = (answer: string) => {
     toggleAnimation(true);
+    setLoading(true);
     sleep(1500).then((value) => {
+      const newMap = { ...map };
+      newMap.curNode = Array.from(newMap.data.values())[
+        answer === "Dieter Rams" ? 1 : 0
+      ];
+      setMap(newMap);
+      setAns("");
       toggleAnimation(false);
-      navigation.navigate();
+      setLoading(false);
     });
   };
 
@@ -153,6 +162,7 @@ function Main({
                         styles.marginTopDouble,
                       ]}
                     >
+                      {/* {item.Image()} */}
                       <Image
                         source={{ uri: item.uri }}
                         style={styles.carouselImage}
@@ -186,7 +196,7 @@ function Main({
                     styles.shadow,
                   ]}
                 >
-                  <Text>MAP</Text>
+                  <Text style={styles.pressableText}>MAP</Text>
                 </Pressable>
                 <Pressable
                   onPress={() => {
@@ -201,8 +211,24 @@ function Main({
                     styles.marginTop,
                   ]}
                 >
-                  <Text>MINE</Text>
+                  <Text style={styles.pressableText}>MINE</Text>
                 </Pressable>
+                <Pressable
+                  onPress={() => {
+                    navigation.navigate("Settings");
+                  }}
+                  style={({ pressed }) => [
+                    {
+                      backgroundColor: pressed ? "#ededed" : "white",
+                    },
+                    styles.pressable,
+                    styles.shadow,
+                    styles.marginTop,
+                  ]}
+                >
+                  <Text style={styles.pressableText}>SETTINGS</Text>
+                </Pressable>
+                <View style={{ marginBottom: width * 0.25 }} />
               </View>
             </View>
           </ScrollView>
@@ -212,7 +238,7 @@ function Main({
   );
 }
 
-function Answer({ answer, navigation }: AnswerProps) {
+function Answer({ answer }: AnswerProps) {
   return (
     <View style={styles.container}>
       <Text style={styles.answer}>{answer}</Text>
@@ -220,32 +246,6 @@ function Answer({ answer, navigation }: AnswerProps) {
   );
 }
 
-function ItemInfo({ item, navigation }: ItemProps) {
-  return (
-    <View style={styles.container}>
-      <Image source={{ uri: item.uri }} />
-      <Text style={styles.itemName}>{item.name}</Text>
-      <Text style={styles.itemDescription}>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed imperdiet
-        sodales enim eu interdum. Cras elit sapien, tristique et mattis eget,
-        interdum in ligula. Nullam condimentum nisl vitae tellus auctor, a
-        lobortis est interdum. Ut luctus nunc dui, a consectetur magna rutrum
-        sed. Pellentesque aliquam vitae dui et lobortis. Aliquam eu bibendum
-        magna. Quisque pellentesque felis nec laoreet mattis. Nam sed nibh
-        luctus, congue enim ut, ultricies erat. Nullam placerat, justo vitae
-        interdum vehicula, dui sem pulvinar ligula, a rutrum sapien sapien eget
-        felis. Sed viverra nibh in turpis blandit tempor. Curabitur enim tellus,
-        vestibulum quis nisl finibus, efficitur tincidunt nunc. Donec bibendum
-        urna ut felis fringilla convallis. Duis vitae augue non tellus pharetra
-        varius. Donec tortor nulla, euismod sit amet consequat vel, luctus id
-        elit. Nam at eleifend ante. In fringilla finibus neque at blandit.
-        Nullam nec arcu sapien.
-      </Text>
-    </View>
-  );
-}
-
-enableScreens();
 const Stack = createNativeStackNavigator();
 
 export default function Home({ map, setMap }: HomeProps): JSX.Element {
@@ -254,7 +254,6 @@ export default function Home({ map, setMap }: HomeProps): JSX.Element {
 
   return (
     <Stack.Navigator
-      initialRouteName="Home"
       screenOptions={{
         headerShown: false,
         stackPresentation: "formSheet",

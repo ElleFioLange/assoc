@@ -14,6 +14,11 @@ declare type TMap = {
   data: Map<string, import("./map").MapNode>;
 };
 
+// declare type ItemImageProps = {
+//   width: number;
+//   height: number;
+// };
+
 declare type HomeProps = {
   map: TMap;
   setMap: React.Dispatch<React.SetStateAction<TMap>>;
@@ -22,7 +27,9 @@ declare type HomeProps = {
 
 declare type MainProps = HomeProps & {
   setAnswer: React.Dispatch<React.SetStateAction<string>>;
-  setItem: React.Dispatch<React.SetStateAction<Item>>;
+  setItem: React.Dispatch<
+    React.SetStateAction<import("./map").Item | undefined>
+  >;
 };
 
 declare type AnswerProps = {
@@ -30,8 +37,8 @@ declare type AnswerProps = {
   navigation: any;
 };
 
-declare type ItemProps = {
-  item: Item;
+declare type MineProps = {
+  map: TMap;
   navigation: any;
 };
 

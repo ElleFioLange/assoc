@@ -2,7 +2,6 @@ import { StyleSheet, Dimensions } from "react-native";
 
 export const win = Dimensions.get("window");
 export const width = win.width * 0.8;
-export const height = win.height - win.width + width;
 
 export const styles = StyleSheet.create({
   container: {
@@ -11,16 +10,16 @@ export const styles = StyleSheet.create({
     alignItems: "center",
   },
   padTop: {
-    paddingTop: height * 0.02,
+    paddingTop: width * 0.05,
   },
   padTopDouble: {
-    paddingTop: height * 0.04,
+    paddingTop: width * 0.1,
   },
   marginTop: {
-    marginTop: height * 0.02,
+    marginTop: width * 0.05,
   },
   marginTopDouble: {
-    marginTop: height * 0.04,
+    marginTop: width * 0.1,
   },
   bg: {
     flex: 1,
@@ -28,27 +27,32 @@ export const styles = StyleSheet.create({
   },
   shadow: {
     shadowColor: "black",
-    shadowOffset: { width: 0, height: height * 0.012 },
+    shadowOffset: { width: 0, height: width * 0.02 },
     shadowRadius: 10,
     shadowOpacity: 0.25,
+    borderColor: "#0000ff40",
+    borderWidth: 1,
+  },
+  border: {
+    borderColor: "#0000ff33",
+    borderWidth: 1,
   },
   input: {
     backgroundColor: "white",
     width,
-    height: height * 0.06,
+    height: width * 0.2,
     borderRadius: width * 0.015,
-    padding: width * 0.05,
     textAlign: "center",
   },
   card: {
     backgroundColor: "white",
     borderRadius: width * 0.03,
-    height: width * 0.6,
+    height: width,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     padding: width * 0.02,
-    marginBottom: height * 0.04,
+    marginBottom: width * 0.1,
   },
   carouselImage: {
     flex: 1,
@@ -59,8 +63,15 @@ export const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    height: height * 0.06,
-    borderRadius: width * 0.015,
+    height: width * 0.2,
+    borderRadius: width * 0.02,
+  },
+  pressableText: {
+    fontSize: 20,
+    fontWeight: "500",
+  },
+  whiteBg: {
+    backgroundColor: "white",
   },
   answer: {
     fontSize: 20,
@@ -74,7 +85,7 @@ export const styles = StyleSheet.create({
   },
   shelf: {
     width: width,
-    height: height / 4,
+    height: width,
     borderBottomColor: "#e0e0e0",
     borderBottomWidth: 1,
   },

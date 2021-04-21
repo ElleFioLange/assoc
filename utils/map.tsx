@@ -1,5 +1,8 @@
+import React from "react";
+import { Image } from "react-native";
 import "react-native-get-random-values";
 import { v4 as uuid } from "uuid";
+import { width } from "./styles";
 
 class Base {
   name: string;
@@ -111,6 +114,8 @@ export class Item extends Base {
 
   position: number;
 
+  Image: () => JSX.Element;
+
   constructor(
     name: string,
     type: string,
@@ -123,6 +128,23 @@ export class Item extends Base {
     this.uri = uri;
     this.dims = dims;
     this.position = position;
+    this.Image =
+      // eslint-disable-next-line react/display-name
+      () => (
+        <Image
+          source={{ uri: this.uri }}
+          width={
+            this.dims.w / this.dims.h >= 1
+              ? width * 0.96
+              : (width * 0.96 * this.dims.w) / this.dims.h
+          }
+          height={
+            this.dims.w / this.dims.h < 1
+              ? width * 0.96
+              : (width * 0.96 * this.dims.h) / this.dims.w
+          }
+        />
+      );
   }
 }
 
@@ -139,7 +161,7 @@ const dj1 = new Item(
 const tripleS = new Item(
   "Balenciaga Triple S",
   "image",
-  "http://localhost:8888/assoc/dev_assets/triple_s.jpeg",
+  "http://localhost:8888/assoc/dev_assets/triple_s.png",
   { w: 375, h: 183 },
   2
 );

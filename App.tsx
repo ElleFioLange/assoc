@@ -6,6 +6,7 @@ import { enableScreens } from "react-native-screens";
 import Home from "./components/Home";
 // import Map from "./components/Map";
 import Mine from "./components/Mine";
+import Settings from "./components/Settings";
 
 import { devMap } from "./utils/map";
 
@@ -17,7 +18,10 @@ export default function App(): JSX.Element {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Navigator
+        initialRouteName={"Home"}
+        screenOptions={{ headerShown: false }}
+      >
         <Stack.Screen name="Home">
           {(props) => <Home {...props} map={map} setMap={setMap} />}
         </Stack.Screen>
@@ -27,6 +31,7 @@ export default function App(): JSX.Element {
         <Stack.Screen name="Mine">
           {(props) => <Mine {...props} map={map} />}
         </Stack.Screen>
+        <Stack.Screen name="Settings" component={Settings} />
       </Stack.Navigator>
     </NavigationContainer>
   );
