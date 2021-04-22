@@ -7,14 +7,20 @@ import { Item } from "../utils/map";
 
 import ItemInfo from "./ItemInfo";
 
-function Browser({ map, navigation }: MineProps) {
+function Browser({ map, setItem, navigation }: BrowserProps) {
   const nodes = Array.from(map.data.values());
   const curNodeId = map.curNode.id;
   nodes.sort((a, b) => a.minD(curNodeId) - b.minD(curNodeId));
 
   return (
     <View style={[styles.container, styles.whiteBg]}>
-      <Button onPress={() => navigation.navigate("MineItem")} title="Item" />
+      <Button
+        onPress={() => {
+          setItem(Array.from(map.curNode.items.values())[0]);
+          navigation.navigate("MineItem");
+        }}
+        title="Item"
+      />
     </View>
     // <>
     //   {nodes.map((node: MapNode) => (
@@ -39,7 +45,7 @@ function Browser({ map, navigation }: MineProps) {
 
 const Stack = createNativeStackNavigator();
 
-export default function Mine({ map, navigation }: MineProps) {
+export default function Mine({ map }: ScreenProps): JSX.Element {
   const [item, setItem] = useState<Item>();
 
   return (
@@ -50,10 +56,10 @@ export default function Mine({ map, navigation }: MineProps) {
       }}
     >
       <Stack.Screen name="Browser">
-        {(props) => <Browser {...props} map={map} />}
+        {(props) => <Browser {...props} map={map} setItem={setItem} />}
       </Stack.Screen>
       <Stack.Screen name="MineItem">
-        {(props) => <ItemInfo item={item} />}
+        {() => <ItemInfo item={item} />}
       </Stack.Screen>
     </Stack.Navigator>
   );

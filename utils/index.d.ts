@@ -14,15 +14,19 @@ declare type TMap = {
   data: Map<string, import("./map").MapNode>;
 };
 
-// declare type ItemImageProps = {
-//   width: number;
-//   height: number;
-// };
+declare type NetworkImageProps = {
+  uri: string;
+  w: number;
+  h: number;
+};
 
-declare type HomeProps = {
+declare type ScreenProps = {
   map: TMap;
-  setMap: React.Dispatch<React.SetStateAction<TMap>>;
   navigation: any;
+};
+
+declare type HomeProps = ScreenProps & {
+  setMap: React.Dispatch<React.SetStateAction<TMap>>;
 };
 
 declare type MainProps = HomeProps & {
@@ -37,9 +41,10 @@ declare type AnswerProps = {
   navigation: any;
 };
 
-declare type MineProps = {
-  map: TMap;
-  navigation: any;
+declare type BrowserProps = ScreenProps & {
+  setItem: React.Dispatch<
+    React.SetStateAction<import("./map").Item | undefined>
+  >;
 };
 
 declare type ShadowStyle = {

@@ -114,8 +114,6 @@ export class Item extends Base {
 
   position: number;
 
-  Image: () => JSX.Element;
-
   constructor(
     name: string,
     type: string,
@@ -128,23 +126,6 @@ export class Item extends Base {
     this.uri = uri;
     this.dims = dims;
     this.position = position;
-    this.Image =
-      // eslint-disable-next-line react/display-name
-      () => (
-        <Image
-          source={{ uri: this.uri }}
-          width={
-            this.dims.w / this.dims.h >= 1
-              ? width * 0.96
-              : (width * 0.96 * this.dims.w) / this.dims.h
-          }
-          height={
-            this.dims.w / this.dims.h < 1
-              ? width * 0.96
-              : (width * 0.96 * this.dims.h) / this.dims.w
-          }
-        />
-      );
   }
 }
 

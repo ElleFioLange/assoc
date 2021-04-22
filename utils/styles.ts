@@ -2,6 +2,7 @@ import { StyleSheet, Dimensions } from "react-native";
 
 export const win = Dimensions.get("window");
 export const width = win.width * 0.8;
+export const barHeight = width * 0.15;
 
 export const styles = StyleSheet.create({
   container: {
@@ -31,16 +32,16 @@ export const styles = StyleSheet.create({
     shadowRadius: 10,
     shadowOpacity: 0.25,
     borderColor: "#0000ff40",
-    borderWidth: 1,
+    borderWidth: StyleSheet.hairlineWidth,
   },
   border: {
     borderColor: "#0000ff33",
-    borderWidth: 1,
+    borderWidth: StyleSheet.hairlineWidth,
   },
   input: {
     backgroundColor: "white",
     width,
-    height: width * 0.2,
+    height: barHeight,
     borderRadius: width * 0.015,
     textAlign: "center",
   },
@@ -63,7 +64,7 @@ export const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    height: width * 0.2,
+    height: barHeight,
     borderRadius: width * 0.02,
   },
   pressableText: {
@@ -78,10 +79,12 @@ export const styles = StyleSheet.create({
     textAlign: "center",
   },
   itemName: {
-    fontSize: 15,
+    fontSize: 25,
+    paddingHorizontal: width * 0.1,
   },
   itemDescription: {
-    fontSize: 8,
+    fontSize: 15,
+    paddingHorizontal: width * 0.1,
   },
   shelf: {
     width: width,

@@ -17,6 +17,7 @@ import {
 import Carousel from "react-native-snap-carousel";
 import Animated, { Easing } from "react-native-reanimated";
 import Logo from "../assets/logo.svg";
+import { enableScreens } from "react-native-screens";
 
 import ItemInfo from "./ItemInfo";
 
@@ -162,7 +163,6 @@ function Main({
                         styles.marginTopDouble,
                       ]}
                     >
-                      {/* {item.Image()} */}
                       <Image
                         source={{ uri: item.uri }}
                         style={styles.carouselImage}
