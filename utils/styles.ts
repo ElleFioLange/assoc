@@ -3,6 +3,8 @@ import { StyleSheet, Dimensions } from "react-native";
 export const win = Dimensions.get("window");
 export const width = win.width * 0.8;
 
+// Accent blue = #1122f4
+
 export const styles = StyleSheet.create({
   container: {
     flex: 1,

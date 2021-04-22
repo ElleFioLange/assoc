@@ -17,6 +17,8 @@ import {
 import Carousel from "react-native-snap-carousel";
 import Animated, { Easing } from "react-native-reanimated";
 import Logo from "../assets/logo.svg";
+import MapIcon from "../assets/map.svg";
+import MineIcon from "../assets/mine.svg";
 
 import ItemInfo from "./ItemInfo";
 
@@ -46,12 +48,12 @@ function Main({
     loading
       ? Animated.timing(fadeAnim, {
           toValue: 0.25,
-          duration: 550,
+          duration: 650,
           easing: Easing.ease,
         }).start()
       : Animated.timing(fadeAnim, {
           toValue: 1,
-          duration: 550,
+          duration: 650,
           easing: Easing.ease,
         }).start();
   };
@@ -182,13 +184,13 @@ function Main({
                         style={styles.carouselImage}
                         width={
                           item.dims.w / item.dims.h >= 1
-                            ? width * 0.96
-                            : (width * 0.56 * item.dims.w) / item.dims.h
+                            ? width
+                            : (width * item.dims.w) / item.dims.h
                         }
                         height={
                           item.dims.w / item.dims.h < 1
-                            ? width * 0.56
-                            : (width * 0.96 * item.dims.h) / item.dims.w
+                            ? width
+                            : (width * item.dims.h) / item.dims.w
                         }
                       />
                     </View>
@@ -211,7 +213,7 @@ function Main({
                     styles.border,
                   ]}
                 >
-                  <Text style={styles.avenir}>MAP</Text>
+                  <MapIcon />
                 </Pressable>
                 <Pressable
                   onPress={() => {
@@ -226,7 +228,7 @@ function Main({
                     styles.border,
                   ]}
                 >
-                  <Text style={[styles.barText, styles.avenir]}>MINE</Text>
+                  <MineIcon />
                 </Pressable>
                 <Pressable
                   onPress={() => {
@@ -242,6 +244,21 @@ function Main({
                   ]}
                 >
                   <Text style={[styles.barText, styles.avenir]}>SETTINGS</Text>
+                </Pressable>
+                <Pressable
+                  onPress={() => {
+                    navigation.navigate("Account");
+                  }}
+                  style={({ pressed }) => [
+                    {
+                      backgroundColor: pressed ? "#ededed" : "white",
+                    },
+                    styles.pressable,
+                    styles.shadow,
+                    styles.border,
+                  ]}
+                >
+                  <Text style={[styles.barText, styles.avenir]}>ACCOUNT</Text>
                 </Pressable>
               </View>
               <View style={{ marginBottom: width * 0.25 }} />
