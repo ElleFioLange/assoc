@@ -17,7 +17,6 @@ import {
 import Carousel from "react-native-snap-carousel";
 import Animated, { Easing } from "react-native-reanimated";
 import Logo from "../assets/logo.svg";
-import { enableScreens } from "react-native-screens";
 
 import ItemInfo from "./ItemInfo";
 
@@ -116,12 +115,17 @@ function Main({
                   />
                   <TextInput
                     onChangeText={setAsc}
+                    allowFontScaling={false}
+                    autoCapitalize="none"
+                    disableFullscreenUI={true}
+                    enablesReturnKeyAutomatically={true}
                     value={asc}
-                    placeholder="ASC"
+                    placeholder="asc"
                     style={[
                       styles.input,
                       styles.shadow,
                       styles.marginTopDouble,
+                      styles.border,
                     ]}
                     onSubmitEditing={({ nativeEvent }) =>
                       handleAsc(nativeEvent.text)
@@ -129,9 +133,18 @@ function Main({
                   />
                   <TextInput
                     onChangeText={setAns}
+                    allowFontScaling={false}
+                    autoCapitalize="none"
+                    disableFullscreenUI={true}
+                    enablesReturnKeyAutomatically={true}
                     value={ans}
-                    placeholder="ANSWER"
-                    style={[styles.input, styles.shadow, styles.marginTop]}
+                    placeholder="answer"
+                    style={[
+                      styles.input,
+                      styles.shadow,
+                      styles.marginTop,
+                      styles.border,
+                    ]}
                     onSubmitEditing={({ nativeEvent }) => {
                       handleAns(nativeEvent.text);
                     }}
@@ -161,18 +174,19 @@ function Main({
                         styles.shadow,
                         styles.card,
                         styles.marginTopDouble,
+                        styles.border,
                       ]}
                     >
                       <Image
                         source={{ uri: item.uri }}
                         style={styles.carouselImage}
                         width={
-                          item.dims.w / item.dims.h >= 0.6
+                          item.dims.w / item.dims.h >= 1
                             ? width * 0.96
                             : (width * 0.56 * item.dims.w) / item.dims.h
                         }
                         height={
-                          item.dims.w / item.dims.h < 0.6
+                          item.dims.w / item.dims.h < 1
                             ? width * 0.56
                             : (width * 0.96 * item.dims.h) / item.dims.w
                         }
@@ -183,7 +197,7 @@ function Main({
                 sliderWidth={win.width}
                 itemWidth={width}
               />
-              <View>
+              <View style={styles.pressableContainer}>
                 <Pressable
                   onPress={() => {
                     navigation.navigate("Map");
@@ -194,9 +208,10 @@ function Main({
                     },
                     styles.pressable,
                     styles.shadow,
+                    styles.border,
                   ]}
                 >
-                  <Text style={styles.pressableText}>MAP</Text>
+                  <Text style={styles.avenir}>MAP</Text>
                 </Pressable>
                 <Pressable
                   onPress={() => {
@@ -208,10 +223,10 @@ function Main({
                     },
                     styles.pressable,
                     styles.shadow,
-                    styles.marginTop,
+                    styles.border,
                   ]}
                 >
-                  <Text style={styles.pressableText}>MINE</Text>
+                  <Text style={[styles.barText, styles.avenir]}>MINE</Text>
                 </Pressable>
                 <Pressable
                   onPress={() => {
@@ -223,13 +238,13 @@ function Main({
                     },
                     styles.pressable,
                     styles.shadow,
-                    styles.marginTop,
+                    styles.border,
                   ]}
                 >
-                  <Text style={styles.pressableText}>SETTINGS</Text>
+                  <Text style={[styles.barText, styles.avenir]}>SETTINGS</Text>
                 </Pressable>
-                <View style={{ marginBottom: width * 0.25 }} />
               </View>
+              <View style={{ marginBottom: width * 0.25 }} />
             </View>
           </ScrollView>
         </ImageBackground>

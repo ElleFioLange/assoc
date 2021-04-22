@@ -13,18 +13,20 @@ export default function ItemInfo({
       <Image
         source={{ uri: item.uri }}
         width={
-          item.dims.w / item.dims.h >= 0.6
+          item.dims.w / item.dims.h >= 1
             ? width * 0.96
             : (width * 0.56 * item.dims.w) / item.dims.h
         }
         height={
-          item.dims.w / item.dims.h < 0.6
+          item.dims.w / item.dims.h < 1
             ? width * 0.56
             : (width * 0.96 * item.dims.h) / item.dims.w
         }
       />
-      <Text style={[styles.itemName, styles.marginTopDouble]}>{item.name}</Text>
-      <Text style={[styles.itemDescription, styles.marginTop]}>
+      <Text style={[styles.itemName, styles.marginTopDouble, styles.avenir]}>
+        {item.name}
+      </Text>
+      <Text style={[styles.itemDescription, styles.marginTop, styles.avenir]}>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas et
         velit nec lacus mattis viverra laoreet nec magna. Mauris semper turpis
         non commodo bibendum. Vivamus consectetur nulla id nunc fermentum, eu

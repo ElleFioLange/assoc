@@ -2,9 +2,11 @@
 import React, { useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "react-native-screens/native-stack";
+import { useFonts, Montserrat_500Medium } from "@expo-google-fonts/montserrat";
+import AppLoading from "expo-app-loading";
 import { enableScreens } from "react-native-screens";
 import Home from "./components/Home";
-// import Map from "./components/Map";
+import Map from "./components/Map";
 import Mine from "./components/Mine";
 import Settings from "./components/Settings";
 
@@ -16,7 +18,11 @@ const Stack = createNativeStackNavigator();
 export default function App(): JSX.Element {
   const [map, setMap] = useState(devMap);
 
-  return (
+  const [fontsLoaded] = useFonts({
+    Montserrat_500Medium,
+  });
+
+  return fontsLoaded ? (
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName={"Home"}
@@ -25,6 +31,7 @@ export default function App(): JSX.Element {
         <Stack.Screen name="Home">
           {(props) => <Home {...props} map={map} setMap={setMap} />}
         </Stack.Screen>
+        <Stack.Screen name="Map" component={Map} />
         {/* <Stack.Screen name="Map">
           {(props) => <Map {...props} map={map} />}
         </Stack.Screen> */}
@@ -34,5 +41,7 @@ export default function App(): JSX.Element {
         <Stack.Screen name="Settings" component={Settings} />
       </Stack.Navigator>
     </NavigationContainer>
+  ) : (
+    <AppLoading />
   );
 }

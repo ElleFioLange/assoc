@@ -2,7 +2,6 @@ import { StyleSheet, Dimensions } from "react-native";
 
 export const win = Dimensions.get("window");
 export const width = win.width * 0.8;
-export const barHeight = width * 0.15;
 
 export const styles = StyleSheet.create({
   container: {
@@ -26,24 +25,31 @@ export const styles = StyleSheet.create({
     flex: 1,
     resizeMode: "cover",
   },
+  avenir: {
+    fontFamily: "Avenir Next",
+  },
+  whiteBg: {
+    backgroundColor: "white",
+  },
   shadow: {
     shadowColor: "black",
     shadowOffset: { width: 0, height: width * 0.02 },
     shadowRadius: 10,
     shadowOpacity: 0.25,
-    borderColor: "#0000ff40",
-    borderWidth: StyleSheet.hairlineWidth,
   },
   border: {
-    borderColor: "#0000ff33",
+    borderColor: "#0000ff40",
     borderWidth: StyleSheet.hairlineWidth,
   },
   input: {
     backgroundColor: "white",
     width,
-    height: barHeight,
+    height: width * 0.15,
     borderRadius: width * 0.015,
     textAlign: "center",
+    fontSize: 18,
+    fontFamily: "Avenir Next",
+    fontWeight: "400",
   },
   card: {
     backgroundColor: "white",
@@ -59,32 +65,41 @@ export const styles = StyleSheet.create({
     flex: 1,
     resizeMode: "contain",
   },
-  pressable: {
+  pressableContainer: {
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    alignContent: "space-between",
+    justifyContent: "space-between",
+    height: width,
     width,
+  },
+  pressable: {
+    width: width * 0.475,
+    height: width * 0.475,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    height: barHeight,
     borderRadius: width * 0.02,
-  },
-  pressableText: {
-    fontSize: 20,
-    fontWeight: "500",
-  },
-  whiteBg: {
-    backgroundColor: "white",
   },
   answer: {
     fontSize: 20,
     textAlign: "center",
   },
   itemName: {
+    width: width,
+    textAlign: "left",
     fontSize: 25,
-    paddingHorizontal: width * 0.1,
+    fontWeight: "600",
+    // paddingLeft: width * 0.05,
+    // paddingHorizontal: width * 0.1,
   },
   itemDescription: {
     fontSize: 15,
-    paddingHorizontal: width * 0.1,
+    fontWeight: "300",
+    width: width,
+    textAlign: "left",
+    // paddingHorizontal: width * 0.1,
   },
   shelf: {
     width: width,
