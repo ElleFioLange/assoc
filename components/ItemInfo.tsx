@@ -3,10 +3,7 @@ import { View, Image, Text, ScrollView, Button } from "react-native";
 import { styles, width } from "../utils/styles";
 import { Item } from "../utils/map";
 
-export default function ItemInfo({
-  item,
-  navigation,
-}: ItemInfoProps): JSX.Element {
+export default function ItemInfo({ item }: { item: Item }): JSX.Element {
   return item ? (
     <ScrollView style={styles.whiteBg}>
       <View style={styles.container}>

@@ -43,11 +43,6 @@ declare type AnswerProps = {
   navigation: any;
 };
 
-declare type ItemInfoProps = {
-  item: Item;
-  navigation: any;
-};
-
 declare type BrowserProps = ScreenProps & {
   setItem: React.Dispatch<
     React.SetStateAction<import("./map").Item | undefined>
