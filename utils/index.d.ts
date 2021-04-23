@@ -1,6 +1,3 @@
-import { Item } from "./map";
-
-/* eslint-disable @typescript-eslint/no-explicit-any */
 declare module "*.svg" {
   import React from "react";
   import { SvgProps } from "react-native-svg";
@@ -10,51 +7,53 @@ declare module "*.svg" {
 
 declare module "uuid";
 
-declare type TMap = {
+type TMap = {
   curNode: import("./map").MapNode;
   curPosition: number;
-  data: Map<string, import("./map").MapNode>;
+  data: Map<string, MapNode>;
 };
 
-declare type NetworkImageProps = {
-  uri: string;
-  w: number;
-  h: number;
+type RootStackParamList = {
+  Home: { map: TMap; setMap: React.Dispatch<React.SetStateAction<TMap>> };
+  Answer: { answer: string };
+  ItemInfo: { item: import("./map").Item };
+  Map: { map: TMap };
+  Mine: { map: TMap };
+  Settings: undefined;
+  Tokens: undefined;
 };
 
-declare type ScreenProps = {
-  map: TMap;
-  navigation: any;
-};
+type HomeProps = import("react-native-screens/native-stack").NativeStackScreenProps<
+  RootStackParamList,
+  "Home"
+>;
 
-declare type HomeProps = ScreenProps & {
-  setMap: React.Dispatch<React.SetStateAction<TMap>>;
-};
+type AnswerProps = import("react-native-screens/native-stack").NativeStackScreenProps<
+  RootStackParamList,
+  "Answer"
+>;
 
-declare type MainProps = HomeProps & {
-  setAnswer: React.Dispatch<React.SetStateAction<string>>;
-  setItem: React.Dispatch<
-    React.SetStateAction<import("./map").Item | undefined>
-  >;
-};
+type ItemInfoProps = import("react-native-screens/native-stack").NativeStackScreenProps<
+  RootStackParamList,
+  "ItemInfo"
+>;
 
-declare type AnswerProps = {
-  answer: string;
-  navigation: any;
-};
+type MapProps = import("react-native-screens/native-stack").NativeStackScreenProps<
+  RootStackParamList,
+  "Map"
+>;
 
-declare type BrowserProps = ScreenProps & {
-  setItem: React.Dispatch<
-    React.SetStateAction<import("./map").Item | undefined>
-  >;
-};
+type MineProps = import("react-native-screens/native-stack").NativeStackScreenProps<
+  RootStackParamList,
+  "Mine"
+>;
 
-declare type ShadowStyle = {
-  shadowColor: string;
-  shadowOffset: {
-    width: number;
-    height: number;
-  };
-  shadowRadius: number;
-  shadowOpacity: number;
-};
+type SettingsProps = import("react-native-screens/native-stack").NativeStackScreenProps<
+  RootStackParamList,
+  "Settings"
+>;
+
+type TokensProps = import("react-native-screens/native-stack").NativeStackScreenProps<
+  RootStackParamList,
+  "Tokens"
+>;

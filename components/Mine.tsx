@@ -1,6 +1,4 @@
-/* eslint-disable react/no-children-prop */
-import React, { useState } from "react";
-import { createNativeStackNavigator } from "react-native-screens/native-stack";
+import React from "react";
 import {
   FlatList,
   View,
@@ -9,12 +7,11 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
 } from "react-native";
-import { styles, width, win } from "../utils/styles";
-import { Item, MapNode } from "../utils/map";
+import { styles, width } from "../utils/styles";
+import { MapNode } from "../utils/map";
 
-import ItemInfo from "./ItemInfo";
-
-function Browser({ map, setItem, navigation }: BrowserProps) {
+export default function Mine({ navigation, route }: MineProps): JSX.Element {
+  const { map } = route.params;
   const nodes = Array.from(map.data.values());
   nodes.sort((a, b) => a.minD(map.curNode.id) - b.minD(map.curNode.id));
 
@@ -29,8 +26,7 @@ function Browser({ map, setItem, navigation }: BrowserProps) {
                 <View style={styles.shelfItem}>
                   <TouchableWithoutFeedback
                     onPress={() => {
-                      setItem(item);
-                      navigation.navigate("MineItem");
+                      navigation.navigate("ItemInfo", { item });
                     }}
                   >
                     <Image
@@ -67,27 +63,5 @@ function Browser({ map, setItem, navigation }: BrowserProps) {
         ))}
       </View>
     </ScrollView>
-  );
-}
-
-const Stack = createNativeStackNavigator();
-
-export default function Mine({ map }: ScreenProps): JSX.Element {
-  const [item, setItem] = useState<Item>();
-
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        headerShown: false,
-        stackPresentation: "formSheet",
-      }}
-    >
-      <Stack.Screen name="Browser">
-        {(props) => <Browser {...props} map={map} setItem={setItem} />}
-      </Stack.Screen>
-      <Stack.Screen name="MineItem">
-        {() => <ItemInfo item={item} />}
-      </Stack.Screen>
-    </Stack.Navigator>
   );
 }

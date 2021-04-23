@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useRef } from "react";
-import { createNativeStackNavigator } from "react-native-screens/native-stack";
 import {
   View,
   ImageBackground,
@@ -11,7 +10,6 @@ import {
   Platform,
   Keyboard,
   Pressable,
-  Text,
   ScrollView,
 } from "react-native";
 import Carousel from "react-native-snap-carousel";
@@ -21,19 +19,12 @@ import MapIcon from "../assets/map.svg";
 import MineIcon from "../assets/mine.svg";
 import SettingsIcon from "../assets/settings.svg";
 import TokensIcon from "../assets/tokens.svg";
-
-import ItemInfo from "./ItemInfo";
-
 import { styles, win, width } from "../utils/styles";
 import { Item } from "../utils/map";
 
-function Main({
-  map,
-  setMap,
-  setAnswer,
-  setItem,
-  navigation,
-}: MainProps): JSX.Element {
+export default function Home({ navigation, route }: HomeProps): JSX.Element {
+  const { map, setMap } = route.params;
+
   // States for input placeholders
   const [asc, setAsc] = useState("");
   const [ans, setAns] = useState("");
@@ -73,9 +64,8 @@ function Main({
     sleep(1500).then((value) => {
       toggleAnimation(false);
       setLoading(false);
-      setAnswer("Placeholder");
       setAsc("");
-      navigation.navigate("Answer");
+      navigation.navigate("Answer", { answer: "Placeholder" });
     });
   };
 
@@ -173,8 +163,7 @@ function Main({
                 renderItem={({ item }: { item: Item }) => (
                   <TouchableWithoutFeedback
                     onPress={() => {
-                      setItem(item);
-                      navigation.navigate("ItemInfo");
+                      navigation.navigate("ItemInfo", { item });
                     }}
                   >
                     <View
@@ -211,7 +200,7 @@ function Main({
               <View style={styles.pressableContainer}>
                 <Pressable
                   onPress={() => {
-                    navigation.navigate("Map");
+                    navigation.navigate("Map", { map });
                   }}
                   style={({ pressed }) => [
                     {
@@ -226,7 +215,7 @@ function Main({
                 </Pressable>
                 <Pressable
                   onPress={() => {
-                    navigation.navigate("Mine");
+                    navigation.navigate("Mine", { map });
                   }}
                   style={({ pressed }) => [
                     {
@@ -276,47 +265,5 @@ function Main({
         </ImageBackground>
       </Animated.View>
     </ImageBackground>
-  );
-}
-
-function Answer({ answer }: AnswerProps) {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.answer}>{answer}</Text>
-    </View>
-  );
-}
-
-const Stack = createNativeStackNavigator();
-
-export default function Home({ map, setMap }: HomeProps): JSX.Element {
-  const [answer, setAnswer] = useState("");
-  const [item, setItem] = useState<Item>();
-
-  return (
-    <Stack.Navigator
-      screenOptions={{
-        headerShown: false,
-        stackPresentation: "formSheet",
-      }}
-    >
-      <Stack.Screen name="Home">
-        {(props) => (
-          <Main
-            {...props}
-            map={map}
-            setMap={setMap}
-            setAnswer={setAnswer}
-            setItem={setItem}
-          />
-        )}
-      </Stack.Screen>
-      <Stack.Screen name="Answer">
-        {(props) => <Answer {...props} answer={answer} />}
-      </Stack.Screen>
-      <Stack.Screen name="ItemInfo">
-        {(props) => <ItemInfo {...props} item={item} />}
-      </Stack.Screen>
-    </Stack.Navigator>
   );
 }

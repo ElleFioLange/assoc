@@ -1,8 +1,5 @@
-import React from "react";
-import { Image } from "react-native";
 import "react-native-get-random-values";
 import { v4 as uuid } from "uuid";
-import { width } from "./styles";
 
 class Base {
   name: string;
@@ -31,7 +28,9 @@ export class MapNode extends Base {
   // All nodes that this node can reach
   outgoing = new Map<string, MapNode>();
 
-  // Minimum distance to another node (undef if not connected)
+  // Minimum distance to another node
+  // Private var returns undef if not connected
+  // Public func return Infinity if not connected
   #minD = new Map<string, number>();
 
   // All content at this node (get by ID)
@@ -68,6 +67,7 @@ export class MapNode extends Base {
     });
   }
 
+  // Using this to return Infinity if two nodes are not connected
   minD(id: string): number {
     const distance = this.#minD.get(id);
     if (typeof distance === "number") return distance;
