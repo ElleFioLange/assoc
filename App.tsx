@@ -9,7 +9,7 @@ import Home from "./components/Home";
 import Map from "./components/Map";
 import Mine from "./components/Mine";
 import Settings from "./components/Settings";
-import Account from "./components/Account";
+import Tokens from "./components/Tokens";
 
 import { devMap } from "./utils/map";
 
@@ -40,7 +40,7 @@ export default function App(): JSX.Element {
           {(props) => <Mine {...props} map={map} />}
         </Stack.Screen>
         <Stack.Screen name="Settings" component={Settings} />
-        <Stack.Screen name="Account" component={Account} />
+        <Stack.Screen name="Tokens" component={Tokens} />
       </Stack.Navigator>
     </NavigationContainer>
   ) : (

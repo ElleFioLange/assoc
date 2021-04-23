@@ -19,6 +19,8 @@ import Animated, { Easing } from "react-native-reanimated";
 import Logo from "../assets/logo.svg";
 import MapIcon from "../assets/map.svg";
 import MineIcon from "../assets/mine.svg";
+import SettingsIcon from "../assets/settings.svg";
+import TokensIcon from "../assets/tokens.svg";
 
 import ItemInfo from "./ItemInfo";
 
@@ -38,6 +40,8 @@ function Main({
 
   // Loading state
   const [loading, setLoading] = useState(false);
+  // Using this to hide items as carousel updates so there's no jumping
+  const [hideItems, setHideItems] = useState(false);
 
   // This is the animation that fades the UI out for the loading.
   // The actual wobbly animation is just a gif that's loaded underneath
@@ -83,7 +87,9 @@ function Main({
       newMap.curNode = Array.from(newMap.data.values())[
         answer === "Dieter Rams" ? 1 : 0
       ];
+      setHideItems(true);
       setMap(newMap);
+      setHideItems(false);
       setAns("");
       toggleAnimation(false);
       setLoading(false);
@@ -181,7 +187,10 @@ function Main({
                     >
                       <Image
                         source={{ uri: item.uri }}
-                        style={styles.carouselImage}
+                        style={[
+                          { opacity: hideItems ? 0 : 1 },
+                          styles.carouselImage,
+                        ]}
                         width={
                           item.dims.w / item.dims.h >= 1
                             ? width
@@ -243,11 +252,11 @@ function Main({
                     styles.border,
                   ]}
                 >
-                  <Text style={[styles.barText, styles.avenir]}>SETTINGS</Text>
+                  <SettingsIcon />
                 </Pressable>
                 <Pressable
                   onPress={() => {
-                    navigation.navigate("Account");
+                    navigation.navigate("Tokens");
                   }}
                   style={({ pressed }) => [
                     {
@@ -258,7 +267,7 @@ function Main({
                     styles.border,
                   ]}
                 >
-                  <Text style={[styles.barText, styles.avenir]}>ACCOUNT</Text>
+                  <TokensIcon />
                 </Pressable>
               </View>
               <View style={{ marginBottom: width * 0.25 }} />
