@@ -1,13 +1,12 @@
 import React from "react";
-import { View, Image, Text, ScrollView } from "react-native";
+import { View, Image, Text, ScrollView, Button } from "react-native";
 import { styles, width } from "../utils/styles";
 import { Item } from "../utils/map";
 
 export default function ItemInfo({
   item,
-}: {
-  item: Item | undefined;
-}): JSX.Element {
+  navigation,
+}: ItemInfoProps): JSX.Element {
   return item ? (
     <ScrollView style={styles.whiteBg}>
       <View style={styles.container}>
@@ -16,12 +15,12 @@ export default function ItemInfo({
           source={{ uri: item.uri }}
           style={[styles.carouselImage, styles.marginTopDouble]}
           width={
-            item.dims.w / item.dims.h >= 1
-              ? width * 0.96
-              : (width * 0.96 * item.dims.w) / item.dims.h
+            item.dims.w >= item.dims.h
+              ? width
+              : (width * item.dims.w) / item.dims.h
           }
           height={
-            item.dims.w / item.dims.h < 1
+            item.dims.w < item.dims.h
               ? width
               : (width * item.dims.h) / item.dims.w
           }
@@ -43,6 +42,7 @@ export default function ItemInfo({
           hendrerit nec lectus sit amet, commodo rhoncus ex. Praesent gravida
           maximus dignissim.
         </Text>
+        <Button title="test" onPress={() => navigation.navigate("Answer")} />
       </View>
     </ScrollView>
   ) : (

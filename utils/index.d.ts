@@ -1,3 +1,5 @@
+import { Item } from "./map";
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 declare module "*.svg" {
   import React from "react";
@@ -38,6 +40,11 @@ declare type MainProps = HomeProps & {
 
 declare type AnswerProps = {
   answer: string;
+  navigation: any;
+};
+
+declare type ItemInfoProps = {
+  item: Item;
   navigation: any;
 };
 

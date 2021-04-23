@@ -146,7 +146,7 @@ function Main({
                     disableFullscreenUI={true}
                     enablesReturnKeyAutomatically={true}
                     value={ans}
-                    placeholder="answer"
+                    placeholder="search"
                     style={[
                       styles.input,
                       styles.shadow,
@@ -192,12 +192,12 @@ function Main({
                           styles.carouselImage,
                         ]}
                         width={
-                          item.dims.w / item.dims.h >= 1
+                          item.dims.w >= item.dims.h
                             ? width
                             : (width * item.dims.w) / item.dims.h
                         }
                         height={
-                          item.dims.w / item.dims.h < 1
+                          item.dims.w < item.dims.h
                             ? width
                             : (width * item.dims.h) / item.dims.w
                         }
