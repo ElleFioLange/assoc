@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Image, Text, ScrollView, Button } from "react-native";
+import { View, Image, Text, ScrollView, Pressable } from "react-native";
 import { styles, width } from "../utils/styles";
 
 export default function ItemInfo({
@@ -7,10 +7,9 @@ export default function ItemInfo({
   route,
 }: ItemInfoProps): JSX.Element {
   const { item } = route.params;
-  return item ? (
-    <ScrollView style={styles.whiteBg}>
+  return (
+    <ScrollView style={[styles.whiteBg, styles.scrollPadding]}>
       <View style={styles.container}>
-        <View style={styles.marginTopDouble} />
         <Image
           source={{ uri: item.uri }}
           style={[styles.carouselImage, styles.marginTopDouble]}
@@ -42,10 +41,22 @@ export default function ItemInfo({
           hendrerit nec lectus sit amet, commodo rhoncus ex. Praesent gravida
           maximus dignissim.
         </Text>
-        {/* <Button title="test" onPress={() => navigation.navigate("Answer")} /> */}
+        {
+          item.price ? <Pressable 
+            style={({ pressed }) => [
+              {
+                backgroundColor: pressed ? "#395aff" : "#1122f4"
+              },
+              styles.purchase,
+              styles.marginTopDouble
+            ]}
+            onPress={() => navigation.navigate("Purchase", { item })}>
+              <Text style={[styles.avenir, styles.purchaseText]}>Purchase {item.price}</Text>
+            </Pressable>
+            : null
+        }
       </View>
+      <View style={{ marginBottom: width * 0.25 }} />
     </ScrollView>
-  ) : (
-    <View />
   );
 }

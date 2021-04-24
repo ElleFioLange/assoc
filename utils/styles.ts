@@ -80,7 +80,7 @@ export const styles = StyleSheet.create({
     height: width,
     width,
   },
-  pressable: {
+  pageNav: {
     width: width * 0.475,
     height: width * 0.475,
     display: "flex",
@@ -120,4 +120,16 @@ export const styles = StyleSheet.create({
     alignItems: "flex-end",
     width: width,
   },
+  purchase: {
+    width: width * 0.5,
+    height: width * 0.15,
+    borderRadius: width * 0.015,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  purchaseText: {
+    fontWeight: "500",
+    color: "white",
+  }
 });

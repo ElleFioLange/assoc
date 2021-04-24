@@ -7,6 +7,7 @@ import { enableScreens } from "react-native-screens";
 import Home from "./components/Home";
 import Answer from "./components/Answer";
 import ItemInfo from "./components/ItemInfo";
+import Purchase from "./components/Purchase";
 import Map from "./components/Map";
 import Mine from "./components/Mine";
 import Settings from "./components/Settings";
@@ -45,6 +46,7 @@ export default function App(): JSX.Element {
           component={ItemInfo}
           options={{ stackPresentation: "formSheet" }}
         />
+        <Stack.Screen name="Purchase" component={Purchase} options={{ stackPresentation: "formSheet" }} />
         <Stack.Screen name="Map" component={Map} initialParams={{ map }} />
         <Stack.Screen name="Mine" component={Mine} initialParams={{ map }} />
         <Stack.Screen name="Settings" component={Settings} />

@@ -114,18 +114,22 @@ export class Item extends Base {
 
   position: number;
 
+  price: number | undefined; 
+
   constructor(
     name: string,
     type: string,
     uri: string,
     dims: { w: number; h: number },
-    position: number
+    position: number,
+    price?: number,
   ) {
     super(name);
     this.type = type;
     this.uri = uri;
     this.dims = dims;
     this.position = position;
+    if (price) this.price = price;
   }
 }
 
@@ -144,14 +148,16 @@ const tripleS = new Item(
   "image",
   "http://localhost:8888/assoc/dev_assets/triple_s.png",
   { w: 375, h: 183 },
-  2
+  2,
+  799,
 );
 const radio = new Item(
   "Radio",
   "image",
   "http://localhost:8888/assoc/dev_assets/radio.jpg",
   { w: 424, h: 463 },
-  1
+  1,
+  49.99,
 );
 
 home.items.set(dj1.id, dj1);

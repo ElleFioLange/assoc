@@ -17,6 +17,7 @@ type RootStackParamList = {
   Home: { map: TMap; setMap: React.Dispatch<React.SetStateAction<TMap>> };
   Answer: { answer: string };
   ItemInfo: { item: import("./map").Item };
+  Purchase: { item: import("./map").Item};
   Map: { map: TMap };
   Mine: { map: TMap };
   Settings: undefined;
@@ -36,6 +37,11 @@ type AnswerProps = import("react-native-screens/native-stack").NativeStackScreen
 type ItemInfoProps = import("react-native-screens/native-stack").NativeStackScreenProps<
   RootStackParamList,
   "ItemInfo"
+>;
+
+type PurchaseProps = import("react-native-screens/native-stack").NativeStackScreenProps<
+  RootStackParamList,
+  "Purchase"
 >;
 
 type MapProps = import("react-native-screens/native-stack").NativeStackScreenProps<

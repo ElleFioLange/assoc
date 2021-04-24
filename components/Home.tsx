@@ -206,7 +206,7 @@ export default function Home({ navigation, route }: HomeProps): JSX.Element {
                     {
                       backgroundColor: pressed ? "#ededed" : "white",
                     },
-                    styles.pressable,
+                    styles.pageNav,
                     styles.shadow,
                     styles.border,
                   ]}
@@ -221,7 +221,7 @@ export default function Home({ navigation, route }: HomeProps): JSX.Element {
                     {
                       backgroundColor: pressed ? "#ededed" : "white",
                     },
-                    styles.pressable,
+                    styles.pageNav,
                     styles.shadow,
                     styles.border,
                   ]}
@@ -236,7 +236,7 @@ export default function Home({ navigation, route }: HomeProps): JSX.Element {
                     {
                       backgroundColor: pressed ? "#ededed" : "white",
                     },
-                    styles.pressable,
+                    styles.pageNav,
                     styles.shadow,
                     styles.border,
                   ]}
@@ -251,7 +251,7 @@ export default function Home({ navigation, route }: HomeProps): JSX.Element {
                     {
                       backgroundColor: pressed ? "#ededed" : "white",
                     },
-                    styles.pressable,
+                    styles.pageNav,
                     styles.shadow,
                     styles.border,
                   ]}
