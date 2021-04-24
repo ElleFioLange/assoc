@@ -10,7 +10,7 @@ declare module "uuid";
 type TMap = {
   curNode: import("./map").MapNode;
   curPosition: number;
-  data: Map<string, MapNode>;
+  data: Map<string, import("./map").MapNode>;
 };
 
 type RootStackParamList = {

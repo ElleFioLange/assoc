@@ -11,6 +11,10 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  scrollPadding: {
+    paddingVertical: width * 0.1,
+    borderBottomColor: "red",
+  },
   padTop: {
     paddingTop: width * 0.05,
   },
@@ -105,14 +109,15 @@ export const styles = StyleSheet.create({
   },
   shelf: {
     width: width,
-    height: width,
+    // height: width,
+    paddingBottom: width * 0.01,
     borderBottomColor: "#e0e0e0",
     borderBottomWidth: 1,
   },
   shelfItem: {
     display: "flex",
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "flex-end",
     width: width,
   },
 });

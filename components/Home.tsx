@@ -96,7 +96,7 @@ export default function Home({ navigation, route }: HomeProps): JSX.Element {
         pointerEvents={loading ? "none" : "auto"}
       >
         <ImageBackground source={require("../assets/bg.png")} style={styles.bg}>
-          <ScrollView style={styles.padTopDouble}>
+          <ScrollView style={styles.scrollPadding}>
             <TouchableWithoutFeedback
               style={styles.container}
               onPress={Keyboard.dismiss}
