@@ -70,6 +70,8 @@ export default function Home({ navigation, route }: HomeProps): JSX.Element {
   };
 
   const handleAns = (answer: string) => {
+    console.log(answer);
+    console.log(answer === "Dieter Rams");
     toggleAnimation(true);
     setLoading(true);
     sleep(1500).then((value) => {
@@ -77,6 +79,7 @@ export default function Home({ navigation, route }: HomeProps): JSX.Element {
       newMap.curNode = Array.from(newMap.data.values())[
         answer === "Dieter Rams" ? 1 : 0
       ];
+      console.log(newMap.curNode.name);
       setHideItems(true);
       setMap(newMap);
       setHideItems(false);

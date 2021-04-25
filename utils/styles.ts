@@ -129,7 +129,8 @@ export const styles = StyleSheet.create({
     alignItems: "center",
   },
   purchaseText: {
-    fontWeight: "500",
+    fontWeight: "600",
+    fontSize: 18,
     color: "white",
-  }
+  },
 });

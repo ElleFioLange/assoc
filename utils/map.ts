@@ -114,7 +114,7 @@ export class Item extends Base {
 
   position: number;
 
-  price: number | undefined; 
+  price: number | undefined;
 
   constructor(
     name: string,
@@ -122,7 +122,7 @@ export class Item extends Base {
     uri: string,
     dims: { w: number; h: number },
     position: number,
-    price?: number,
+    price?: number
   ) {
     super(name);
     this.type = type;
@@ -149,7 +149,7 @@ const tripleS = new Item(
   "http://localhost:8888/assoc/dev_assets/triple_s.png",
   { w: 375, h: 183 },
   2,
-  799,
+  799
 );
 const radio = new Item(
   "Radio",
@@ -157,7 +157,7 @@ const radio = new Item(
   "http://localhost:8888/assoc/dev_assets/radio.jpg",
   { w: 424, h: 463 },
   1,
-  49.99,
+  49.99
 );
 
 home.items.set(dj1.id, dj1);

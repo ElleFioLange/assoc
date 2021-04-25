@@ -41,20 +41,22 @@ export default function ItemInfo({
           hendrerit nec lectus sit amet, commodo rhoncus ex. Praesent gravida
           maximus dignissim.
         </Text>
-        {
-          item.price ? <Pressable 
+        {item.price ? (
+          <Pressable
             style={({ pressed }) => [
               {
-                backgroundColor: pressed ? "#395aff" : "#1122f4"
+                backgroundColor: pressed ? "#395aff" : "#1122f4",
               },
               styles.purchase,
-              styles.marginTopDouble
+              styles.marginTopDouble,
             ]}
-            onPress={() => navigation.navigate("Purchase", { item })}>
-              <Text style={[styles.avenir, styles.purchaseText]}>Purchase {item.price}</Text>
-            </Pressable>
-            : null
-        }
+            onPress={() => navigation.navigate("Purchase", { item })}
+          >
+            <Text style={[styles.avenir, styles.purchaseText]}>
+              Purchase ${item.price}
+            </Text>
+          </Pressable>
+        ) : null}
       </View>
       <View style={{ marginBottom: width * 0.25 }} />
     </ScrollView>
