@@ -1,7 +1,7 @@
 import Answer from "./Answer";
 import Home from "./Home";
 import ItemInfo from "./ItemInfo";
-import Map from "./Map";
+import MapScreen from "./MapScreen";
 import Mine from "./Mine";
 import NodeInfo from "./NodeInfo";
 import Purchase from "./Purchase";
@@ -12,7 +12,7 @@ export {
   Answer,
   Home,
   ItemInfo,
-  Map,
+  MapScreen,
   Mine,
   NodeInfo,
   Purchase,

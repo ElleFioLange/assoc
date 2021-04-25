@@ -5,8 +5,6 @@ declare module "*.svg" {
   export default content;
 }
 
-declare module "uuid";
-
 type TMap = {
   curNode: import("./map").MapNode;
   curPosition: number;

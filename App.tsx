@@ -1,14 +1,12 @@
 import React, { useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "react-native-screens/native-stack";
-import { useFonts, Montserrat_500Medium } from "@expo-google-fonts/montserrat";
-import AppLoading from "expo-app-loading";
 import { enableScreens } from "react-native-screens";
 import {
   Answer,
   Home,
   ItemInfo,
-  Map,
+  MapScreen,
   Mine,
   NodeInfo,
   Purchase,
@@ -24,11 +22,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export default function App(): JSX.Element {
   const [map, setMap] = useState(devMap);
 
-  const [fontsLoaded] = useFonts({
-    Montserrat_500Medium,
-  });
-
-  return fontsLoaded ? (
+  return (
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName={"Home"}
@@ -54,7 +48,11 @@ export default function App(): JSX.Element {
           component={Purchase}
           options={{ stackPresentation: "formSheet" }}
         />
-        <Stack.Screen name="Map" component={Map} initialParams={{ map }} />
+        <Stack.Screen
+          name="Map"
+          component={MapScreen}
+          initialParams={{ map }}
+        />
         <Stack.Screen
           name="NodeInfo"
           component={NodeInfo}
@@ -65,7 +63,5 @@ export default function App(): JSX.Element {
         <Stack.Screen name="Tokens" component={Tokens} />
       </Stack.Navigator>
     </NavigationContainer>
-  ) : (
-    <AppLoading />
   );
 }

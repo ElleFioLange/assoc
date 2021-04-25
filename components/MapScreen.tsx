@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState, useRef } from "react";
+import React, { useRef } from "react";
 import { View, StyleSheet, Animated, PanResponder } from "react-native";
 // import { ReactNativeZoomableView } from "@dudigital/react-native-zoomable-view";
 import Svg, { Polygon, Text } from "react-native-svg";
@@ -88,11 +88,13 @@ function getPoints({ x, y }: { x: number; y: number }): string[] {
   return points;
 }
 
-export default function Map({ navigation, route }: MapProps): JSX.Element {
+export default function MapScreen({
+  navigation,
+  route,
+}: MapProps): JSX.Element {
   const { map } = route.params;
   const nodes = Array.from(map.data.values());
   nodes.sort((a, b) => a.minD(map.curNode.id) - b.minD(map.curNode.id));
-  const [screensToRender, setScreensToRender] = useState();
 
   const pan = useRef(new Animated.ValueXY()).current;
 
