@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "react-native-screens/native-stack";
 import { enableScreens } from "react-native-screens";
+import AppLoading from "expo-app-loading";
+import { getMap, getTokens } from "./utils/api/client";
 import {
   Answer,
   Home,
@@ -14,25 +16,29 @@ import {
   Tokens,
 } from "./components/Components";
 
-import { devMap } from "./utils/map";
+const userId = "1";
 
 enableScreens();
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App(): JSX.Element {
-  const [map, setMap] = useState(devMap);
+  const [mapLoading, setMapLoading] = useState(true);
+  const [tokensLoading, setTokensLoading] = useState(true);
 
-  return (
+  let map;
+  let tokens;
+  getMap(userId).then((value) => (map = value));
+  getTokens(userId).then((value) => (tokens = value));
+
+  return mapLoading || tokensLoading ? (
+    <AppLoading />
+  ) : (
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName={"Home"}
         screenOptions={{ headerShown: false }}
       >
-        <Stack.Screen
-          name="Home"
-          component={Home}
-          initialParams={{ map, setMap }}
-        />
+        <Stack.Screen name="Home" component={Home} initialParams={{ map }} />
         <Stack.Screen
           name="Answer"
           component={Answer}

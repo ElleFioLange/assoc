@@ -5,11 +5,9 @@ declare module "*.svg" {
   export default content;
 }
 
-type TMap = {
-  curNode: import("./map").MapNode;
-  curPosition: number;
-  data: Map<string, import("./map").MapNode>;
-};
+declare module "uuid";
+
+declare module "serialize-javascript";
 
 type RootStackParamList = {
   Home: { map: TMap; setMap: React.Dispatch<React.SetStateAction<TMap>> };

@@ -1,5 +1,6 @@
 import "react-native-get-random-values";
 import { v4 as uuid } from "uuid";
+import { serialize } from "serialize-javascript";
 
 class Base {
   name: string;
@@ -12,6 +13,10 @@ class Base {
     this.id = uuid();
     this.name = name;
     this.date = new Date().getUTCSeconds();
+  }
+
+  serialize(): string {
+    return serialize(this);
   }
 }
 
@@ -36,7 +41,7 @@ export class MapNode extends Base {
   // All content at this node (get by ID)
   items = new Map<string, Item>();
 
-  // Content at a certain position
+  // Items at a certain position, user positions.keys() to get all available positions
   positions = new Map<number, Item[]>();
 
   connect(node: MapNode, name: string, thisPos: number, nodePos: number): void {
@@ -133,43 +138,34 @@ export class Item extends Base {
   }
 }
 
-const home = new MapNode("Home");
-const dieterRams = new MapNode("Dieter Rams");
+export class MapState {
+  curNode: MapNode;
 
-const dj1 = new Item(
-  "Dior J1s",
-  "image",
-  "http://localhost:8888/assoc/dev_assets/dior_j1s.jpeg",
-  { w: 1118, h: 745 },
-  1
-);
-const tripleS = new Item(
-  "Balenciaga Triple S",
-  "image",
-  "http://localhost:8888/assoc/dev_assets/triple_s.png",
-  { w: 375, h: 183 },
-  2,
-  799
-);
-const radio = new Item(
-  "Radio",
-  "image",
-  "http://localhost:8888/assoc/dev_assets/radio.jpg",
-  { w: 424, h: 463 },
-  1,
-  49.99
-);
+  curPosition: number;
 
-home.items.set(dj1.id, dj1);
-home.items.set(tripleS.id, tripleS);
+  data: Map<string, MapNode>;
 
-dieterRams.items.set(radio.id, radio);
+  constructor(
+    curNode: MapNode,
+    curPosition: number,
+    data: Map<string, MapNode>
+  ) {
+    this.curNode = curNode;
+    this.curPosition = curPosition;
+    this.data = data;
+  }
 
-export const devMap: TMap = {
-  data: new Map([
-    [home.id, home],
-    [dieterRams.id, dieterRams],
-  ]),
-  curNode: home,
-  curPosition: 1,
-};
+  addNode(newNode: MapNode, position = 1): void {
+    this.data.set(newNode.id, newNode);
+    this.curNode = newNode;
+    this.curPosition = position;
+  }
+
+  addItem(item: Item, position = this.curPosition): void {
+    this.curNode.items.set(item.id, item);
+    const prevItemsAtPos = this.curNode.positions.get(position);
+    prevItemsAtPos
+      ? this.curNode.positions.set(position, prevItemsAtPos.concat([item]))
+      : this.curNode.positions.set(position, [item]);
+  }
+}
