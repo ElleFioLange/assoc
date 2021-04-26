@@ -73,10 +73,6 @@ export default function () {
 
         return schema.users.find(userId).tokens;
       });
-
-      this.post("/api/:userId/map", (schema, request) => {
-        
-      })
     },
   });
 }

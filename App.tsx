@@ -16,23 +16,16 @@ import {
   Tokens,
 } from "./components/Components";
 
+import makeServer from "./utils/api/server";
+
+makeServer();
 const userId = "1";
 
 enableScreens();
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App(): JSX.Element {
-  const [mapLoading, setMapLoading] = useState(true);
-  const [tokensLoading, setTokensLoading] = useState(true);
-
-  let map;
-  let tokens;
-  getMap(userId).then((value) => (map = value));
-  getTokens(userId).then((value) => (tokens = value));
-
-  return mapLoading || tokensLoading ? (
-    <AppLoading />
-  ) : (
+  return (
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName={"Home"}

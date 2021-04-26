@@ -6,7 +6,7 @@ export const OPEN_AI_ENDPOINT =
 
 export const ASSOC_API_ENDPOINT = "/api";
 
-function readMap(serializedJavascript: string): MapState {
+function readSerialized(serializedJavascript: string): MapState {
   return eval("(" + serializedJavascript + ")");
 }
 

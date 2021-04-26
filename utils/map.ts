@@ -36,7 +36,7 @@ export class MapNode extends Base {
   // Minimum distance to another node
   // Private var returns undef if not connected
   // Public func return Infinity if not connected
-  #minD = new Map<string, number>();
+  minD = new Map<string, number>();
 
   // All content at this node (get by ID)
   items = new Map<string, Item>();
@@ -60,33 +60,31 @@ export class MapNode extends Base {
     this.outgoing.set(node.id, node);
     node.incoming.set(this.id, this);
 
-    this.#minD.set(node.id, 1);
+    this.minD.set(node.id, 1);
 
     // update min distance for incoming nodes
     Array.from(this.incoming.values()).forEach((inNode) => {
-      const minDToNew = inNode.minD(node.id);
-      const minDToThis = inNode.minD(this.id);
+      const minDToNew = inNode.getMinD(node.id);
+      const minDToThis = inNode.getMinD(this.id);
       if (minDToNew > minDToThis + 1) {
-        inNode.updateMinD(node.id, minDToThis + 1);
+        inNode.minD.set(node.id, minDToThis + 1);
       }
     });
   }
 
   // Using this to return Infinity if two nodes are not connected
-  minD(id: string): number {
-    const distance = this.#minD.get(id);
+  getMinD(id: string): number {
+    const distance = this.minD.get(id);
     if (typeof distance === "number") return distance;
     return Infinity;
   }
 
-  updateMinD(id: string, distance: number): void {
-    this.#minD.set(id, distance);
+  copy(): MapNode {
+    return eval("(" + this.serialize() + ")");
   }
 }
 
-export class Edge {
-  name: string;
-
+export class Edge extends Base {
   source: MapNode;
 
   sink: MapNode;
@@ -102,11 +100,15 @@ export class Edge {
     sourcePosition: number,
     sinkPosition: number
   ) {
-    this.name = name;
+    super(name);
     this.source = source;
     this.sink = sink;
     this.sourcePosition = sourcePosition;
     this.sinkPosition = sinkPosition;
+  }
+
+  copy(): Edge {
+    return eval("(" + this.serialize() + ")");
   }
 }
 
@@ -135,6 +137,10 @@ export class Item extends Base {
     this.dims = dims;
     this.position = position;
     if (price) this.price = price;
+  }
+
+  copy(): Item {
+    return eval("(" + this.serialize() + ")");
   }
 }
 
@@ -167,5 +173,13 @@ export class MapState {
     prevItemsAtPos
       ? this.curNode.positions.set(position, prevItemsAtPos.concat([item]))
       : this.curNode.positions.set(position, [item]);
+  }
+
+  serialize(): string {
+    return serialize(this);
+  }
+
+  copy(): MapNode {
+    return eval("(" + this.serialize() + ")");
   }
 }
