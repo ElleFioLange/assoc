@@ -13,7 +13,7 @@ web-build/
 .DS_Store
 
 #dev
-dev_server/
+dev_server/assets/
 
 #playground
 playground.js

@@ -5,9 +5,33 @@ declare module "*.svg" {
   export default content;
 }
 
-declare module "uuid";
+type ItemData = {
+  name: string;
+  id: string;
+  uri: string;
+  w: number;
+  h: number;
+  price?: number;
+};
 
-declare module "serialize-javascript";
+type NodeData = {
+  name: string;
+  id: string;
+  incoming: { name: string; id: string }[];
+  outgoing: { name: string; id: string }[];
+  items: ItemData[];
+};
+
+type MapData = {
+  curNode: string;
+  nodes: NodeData[];
+};
+
+type MapAction = {
+  unlockNode: NodeData | undefined;
+  unlockItem: NodeData | undefined;
+  hint: string | undefined;
+};
 
 type RootStackParamList = {
   Home: { map: TMap; setMap: React.Dispatch<React.SetStateAction<TMap>> };
