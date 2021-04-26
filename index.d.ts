@@ -23,7 +23,7 @@ type NodeData = {
 };
 
 type MapData = {
-  curNode: string;
+  curNodeId: string;
   nodes: NodeData[];
 };
 

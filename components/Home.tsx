@@ -1,5 +1,7 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useRef } from "react";
+import { useAppSelector } from "../utils/redux/hooks";
+import { selectNodeById } from "../utils/redux/mapSlice";
 import {
   View,
   ImageBackground,
@@ -10,6 +12,7 @@ import {
   Platform,
   Keyboard,
   Pressable,
+  Text,
   ScrollView,
 } from "react-native";
 import Carousel from "react-native-snap-carousel";
@@ -20,10 +23,12 @@ import MineIcon from "../assets/mine.svg";
 import SettingsIcon from "../assets/settings.svg";
 import TokensIcon from "../assets/tokens.svg";
 import { styles, win, width } from "../utils/styles";
-import { Item } from "../utils/map";
 
 export default function Home({ navigation, route }: HomeProps): JSX.Element {
-  const { map, setMap } = route.params;
+  const curNodeId = useAppSelector((state) => state.map.curNodeId);
+  const curNode = useAppSelector((state) => selectNodeById(state, curNodeId));
+
+  const [test, set] = useState("");
 
   // States for input placeholders
   const [asc, setAsc] = useState("");
@@ -75,13 +80,13 @@ export default function Home({ navigation, route }: HomeProps): JSX.Element {
     toggleAnimation(true);
     setLoading(true);
     sleep(1500).then((value) => {
-      const newMap = { ...map };
-      newMap.curNode = Array.from(newMap.data.values())[
-        answer === "Dieter Rams" ? 1 : 0
-      ];
-      console.log(newMap.curNode.name);
+      // const newMap = { ...map };
+      // newMap.curNode = Array.from(newMap.data.values())[
+      //   answer === "Dieter Rams" ? 1 : 0
+      // ];
+      // console.log(newMap.curNode.name);
       setHideItems(true);
-      setMap(newMap);
+      // setMap(newMap);
       setHideItems(false);
       setAns("");
       toggleAnimation(false);
@@ -156,14 +161,14 @@ export default function Home({ navigation, route }: HomeProps): JSX.Element {
             <View style={styles.container}>
               <Carousel
                 layout={"default"}
-                data={Array.from(map.curNode.items.values())}
+                data={curNode ? curNode.items : []}
                 contentContainerCustomStyle={{
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
                 }}
                 style={styles.shadow}
-                renderItem={({ item }: { item: Item }) => (
+                renderItem={({ item }: { item: ItemData }) => (
                   <TouchableWithoutFeedback
                     onPress={() => {
                       navigation.navigate("ItemInfo", { item });
@@ -184,14 +189,10 @@ export default function Home({ navigation, route }: HomeProps): JSX.Element {
                           styles.carouselImage,
                         ]}
                         width={
-                          item.dims.w >= item.dims.h
-                            ? width
-                            : (width * item.dims.w) / item.dims.h
+                          item.w >= item.h ? width : (width * item.w) / item.h
                         }
                         height={
-                          item.dims.w < item.dims.h
-                            ? width
-                            : (width * item.dims.h) / item.dims.w
+                          item.w < item.h ? width : (width * item.h) / item.w
                         }
                       />
                     </View>
@@ -200,10 +201,11 @@ export default function Home({ navigation, route }: HomeProps): JSX.Element {
                 sliderWidth={win.width}
                 itemWidth={width}
               />
+              <Text>{test}</Text>
               <View style={styles.pressableContainer}>
                 <Pressable
                   onPress={() => {
-                    navigation.navigate("Map", { map });
+                    // navigation.navigate("Map");
                   }}
                   style={({ pressed }) => [
                     {
@@ -218,7 +220,8 @@ export default function Home({ navigation, route }: HomeProps): JSX.Element {
                 </Pressable>
                 <Pressable
                   onPress={() => {
-                    navigation.navigate("Mine", { map });
+                    // navigation.navigate("Mine", { map });
+                    set(curNodeId);
                   }}
                   style={({ pressed }) => [
                     {

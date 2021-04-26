@@ -120,7 +120,7 @@ new Server({
     map: Model.extend({
       user: belongsTo(),
     }),
-    curNode: Model.extend({
+    curNodeId: Model.extend({
       user: belongsTo(),
     }),
     token: Model.extend({
@@ -131,7 +131,7 @@ new Server({
   seeds(server) {
     const user = server.create("user", { id: "1" });
     server.create("map", { user, state: devMap });
-    server.create("curNode", { user, id: "auuq98u3ro3qunqwc0" });
+    server.create("curNodeId", { user, id: "auuq98u3ro3qunqwc0" });
     server.create("token", { user, quantity: 10 });
   },
 
@@ -141,10 +141,10 @@ new Server({
 
     this.get("/:userId/map", (schema, request) => {
       const userId = request.params.userId;
-      const user = schema.users.find(userId);
-      const { map, curNode } = user;
+      const user = schema.user.find(userId);
+      const { map, curNodeId } = user;
 
-      return { map, curNode };
+      return { map, curNodeId };
     });
 
     this.post("/:userId/map", (schema, request) => {
@@ -154,9 +154,9 @@ new Server({
       const { query } = JSON.parse(request.requestBody);
 
       if (query === "Dieter Rams")
-        return { map, curNode: "2iqjv9sq2f90asjvqd" };
+        return { map, curNodeId: "2iqjv9sq2f90asjvqd" };
 
-      return { map, curNode: "auuq98u3ro3qunqwc0" };
+      return { map, curNodeId: "auuq98u3ro3qunqwc0" };
     });
 
     this.get("/:userId/tokens", (schema, request) => {

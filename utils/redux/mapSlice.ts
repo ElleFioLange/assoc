@@ -3,6 +3,7 @@ import {
   createAsyncThunk,
   createEntityAdapter,
 } from "@reduxjs/toolkit";
+import { RootState } from "./store";
 import axios from "axios";
 
 // This sets up an entities property in the map state to easily find nodes by id
@@ -13,7 +14,7 @@ const mapAdapter = createEntityAdapter<NodeData>();
 // than giving it its own slice
 const initialState = mapAdapter.getInitialState({
   status: "idle",
-  curNode: "",
+  curNodeId: "",
 });
 
 // Async thunk which gets map data based on userId
@@ -39,7 +40,7 @@ const mapSlice = createSlice({
   initialState,
   reducers: {
     switchNode(state, action) {
-      state.curNode = action.payload;
+      state.curNodeId = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -49,7 +50,7 @@ const mapSlice = createSlice({
       })
       .addCase(fetchMap.fulfilled, (state, action) => {
         mapAdapter.setAll(state, action.payload.nodes);
-        (state.status = "idle"), (state.curNode = action.payload.curNode);
+        (state.status = "idle"), (state.curNodeId = action.payload.curNodeId);
       })
       .addCase(queryMap.pending, (state) => {
         state.status = "loading";
@@ -67,5 +68,10 @@ const mapSlice = createSlice({
 });
 
 export const { switchNode } = mapSlice.actions;
+
+export const {
+  selectAll: selectNodes,
+  selectById: selectNodeById,
+} = mapAdapter.getSelectors<RootState>((state) => state.map);
 
 export default mapSlice.reducer;

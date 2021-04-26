@@ -4,7 +4,6 @@ import { createNativeStackNavigator } from "react-native-screens/native-stack";
 import { enableScreens } from "react-native-screens";
 import { Provider } from "react-redux";
 import { useAppSelector } from "./utils/redux/hooks";
-import AppLoading from "expo-app-loading";
 import {
   Answer,
   Home,
@@ -34,16 +33,7 @@ export default function App(): JSX.Element {
     store.dispatch(fetchTokens(userId));
   });
 
-  const mapLoading = useAppSelector((state) => state.map.status != "idle");
-  const tokensLoading = useAppSelector(
-    (state) => state.tokens.status != "idle"
-  );
-
-  const loading = mapLoading || tokensLoading;
-
-  return loading ? (
-    <AppLoading />
-  ) : (
+  return (
     <Provider store={store}>
       <NavigationContainer>
         <Stack.Navigator
