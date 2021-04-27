@@ -14,14 +14,14 @@ const mapAdapter = createEntityAdapter<NodeData>();
 // than giving it its own slice
 const initialState = mapAdapter.getInitialState({
   status: "idle",
-  curNodeId: "",
+  curNodeId: "ererere",
 });
 
 // Async thunk which gets map data based on userId
 export const fetchMap = createAsyncThunk<MapData, string>(
   "map/fetchMap",
   async (userId) => {
-    const response = await axios.get<MapData>(`/assoc/${userId}/map`);
+    const response = await axios.get(`/assoc/${userId}/map`);
     return response.data;
   }
 );
@@ -50,7 +50,8 @@ const mapSlice = createSlice({
       })
       .addCase(fetchMap.fulfilled, (state, action) => {
         mapAdapter.setAll(state, action.payload.nodes);
-        (state.status = "idle"), (state.curNodeId = action.payload.curNodeId);
+        state.status = "idle";
+        state.curNodeId = action.payload.curNodeId;
       })
       .addCase(queryMap.pending, (state) => {
         state.status = "loading";

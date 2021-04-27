@@ -3,7 +3,6 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "react-native-screens/native-stack";
 import { enableScreens } from "react-native-screens";
 import { Provider } from "react-redux";
-import { useAppSelector } from "./utils/redux/hooks";
 import {
   Answer,
   Home,
@@ -14,7 +13,7 @@ import {
   Purchase,
   Settings,
   Tokens,
-} from "./components/Components";
+} from "./screens/Components";
 
 import "./dev_server/server";
 

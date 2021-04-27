@@ -34,13 +34,13 @@ type MapAction = {
 };
 
 type RootStackParamList = {
-  Home: { map: TMap; setMap: React.Dispatch<React.SetStateAction<TMap>> };
+  Home: undefined;
   Answer: { answer: string };
-  ItemInfo: { item: import("./map").Item };
-  Purchase: { item: import("./map").Item };
-  Map: { map: TMap };
-  NodeInfo: { node: import("./map").MapNode };
-  Mine: { map: TMap };
+  ItemInfo: undefined;
+  Purchase: undefined;
+  Map: undefined;
+  NodeInfo: undefined;
+  Mine: undefined;
   Settings: undefined;
   Tokens: undefined;
 };

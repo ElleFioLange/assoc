@@ -12,7 +12,6 @@ import {
   Platform,
   Keyboard,
   Pressable,
-  Text,
   ScrollView,
 } from "react-native";
 import Carousel from "react-native-snap-carousel";
@@ -24,13 +23,11 @@ import SettingsIcon from "../assets/settings.svg";
 import TokensIcon from "../assets/tokens.svg";
 import { styles, win, width } from "../utils/styles";
 
-export default function Home({ navigation, route }: HomeProps): JSX.Element {
-  const curNodeId = useAppSelector((state) => state.map.curNodeId);
-  const curNode = useAppSelector((state) => selectNodeById(state, curNodeId));
+export default function Home({ navigation }: HomeProps): JSX.Element {
+  const status = useAppSelector((state) => state.map.status);
+  const curNode = useAppSelector((state) => selectNodeById(state, "1"));
 
-  const [test, set] = useState("");
-
-  // States for input placeholders
+  // States for input text
   const [asc, setAsc] = useState("");
   const [ans, setAns] = useState("");
 
@@ -126,7 +123,7 @@ export default function Home({ navigation, route }: HomeProps): JSX.Element {
                     disableFullscreenUI={true}
                     enablesReturnKeyAutomatically={true}
                     value={asc}
-                    placeholder="asc"
+                    placeholder={status}
                     style={[
                       styles.input,
                       styles.shadow,
@@ -171,7 +168,7 @@ export default function Home({ navigation, route }: HomeProps): JSX.Element {
                 renderItem={({ item }: { item: ItemData }) => (
                   <TouchableWithoutFeedback
                     onPress={() => {
-                      navigation.navigate("ItemInfo", { item });
+                      navigation.navigate("ItemInfo");
                     }}
                   >
                     <View
@@ -201,11 +198,11 @@ export default function Home({ navigation, route }: HomeProps): JSX.Element {
                 sliderWidth={win.width}
                 itemWidth={width}
               />
-              <Text>{test}</Text>
               <View style={styles.pressableContainer}>
                 <Pressable
                   onPress={() => {
                     // navigation.navigate("Map");
+                    console.log("asdf");
                   }}
                   style={({ pressed }) => [
                     {
@@ -221,7 +218,6 @@ export default function Home({ navigation, route }: HomeProps): JSX.Element {
                 <Pressable
                   onPress={() => {
                     // navigation.navigate("Mine", { map });
-                    set(curNodeId);
                   }}
                   style={({ pressed }) => [
                     {
