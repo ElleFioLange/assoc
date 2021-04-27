@@ -24,8 +24,8 @@ import TokensIcon from "../assets/tokens.svg";
 import { styles, win, width } from "../utils/styles";
 
 export default function Home({ navigation }: HomeProps): JSX.Element {
-  const status = useAppSelector((state) => state.map.status);
-  const curNode = useAppSelector((state) => selectNodeById(state, "1"));
+  const curNodeId = useAppSelector((state) => state.map.curNodeId);
+  const curNode = useAppSelector((state) => selectNodeById(state, curNodeId));
 
   // States for input text
   const [asc, setAsc] = useState("");
@@ -123,7 +123,7 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
                     disableFullscreenUI={true}
                     enablesReturnKeyAutomatically={true}
                     value={asc}
-                    placeholder={status}
+                    placeholder="asc"
                     style={[
                       styles.input,
                       styles.shadow,
@@ -168,7 +168,7 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
                 renderItem={({ item }: { item: ItemData }) => (
                   <TouchableWithoutFeedback
                     onPress={() => {
-                      navigation.navigate("ItemInfo");
+                      navigation.navigate("ItemInfo", { item });
                     }}
                   >
                     <View
@@ -201,7 +201,7 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
               <View style={styles.pressableContainer}>
                 <Pressable
                   onPress={() => {
-                    // navigation.navigate("Map");
+                    navigation.navigate("Map");
                     console.log("asdf");
                   }}
                   style={({ pressed }) => [
@@ -216,8 +216,8 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
                   <MapIcon />
                 </Pressable>
                 <Pressable
-                  onPress={() => {
-                    // navigation.navigate("Mine", { map });
+                  onPress={async () => {
+                    navigation.navigate("Mine");
                   }}
                   style={({ pressed }) => [
                     {

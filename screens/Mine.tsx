@@ -6,57 +6,54 @@ import {
   Image,
   TouchableWithoutFeedback,
 } from "react-native";
+import { useAppSelector } from "../utils/redux/hooks";
+import { selectNodes } from "../utils/redux/mapSlice";
 import { styles, width } from "../utils/styles";
 
-export default function Mine({ navigation, route }: MineProps): JSX.Element {
-  const { map } = route.params;
-  const nodes = Array.from(map.data.values());
-  nodes.sort((a, b) => a.minD(map.curNode.id) - b.minD(map.curNode.id));
+export default function Mine({ navigation }: MineProps): JSX.Element {
+  const nodes = useAppSelector(selectNodes);
+  // nodes.sort((a, b) => a.minD(map.curNode.id) - b.minD(map.curNode.id));
 
   return (
     <View style={[styles.container, styles.whiteBg]}>
       <FlatList
         data={nodes}
         renderItem={(node) => {
+          // FlatList is very stupid and passes the node as a ListRenderItem
+          // Node.item is the actual MapNode
           const items = Array.from(node.item.items.values());
           return (
             <>
               <FlatList
-                // FlatList is very stupid and passes the node as a ListRenderItem
-                // Node.item is the actual MapNode
                 data={items}
-                renderItem={({ item }) => (
-                  <View style={styles.shelfItem}>
-                    <TouchableWithoutFeedback
-                      onPress={() => {
-                        navigation.navigate("ItemInfo", { item });
-                      }}
-                    >
-                      <Image
-                        source={{ uri: item.uri }}
-                        style={[styles.carouselImage]}
-                        width={
-                          item.dims.w >= item.dims.h
-                            ? width
-                            : (width * item.dims.w) / item.dims.h
-                        }
-                        height={
-                          item.dims.w < item.dims.h
-                            ? width
-                            : (width * item.dims.h) / item.dims.w
-                        }
-                      />
-                    </TouchableWithoutFeedback>
-                  </View>
-                )}
+                renderItem={({ item }) => {
+                  return (
+                    <View style={styles.shelfItem}>
+                      <TouchableWithoutFeedback
+                        onPress={() => {
+                          navigation.navigate("ItemInfo", { item });
+                        }}
+                      >
+                        <Image
+                          source={{ uri: item.uri }}
+                          style={[styles.carouselImage]}
+                          width={
+                            item.w >= item.h ? width : (width * item.w) / item.h
+                          }
+                          height={
+                            item.w < item.h ? width : (width * item.h) / item.w
+                          }
+                        />
+                      </TouchableWithoutFeedback>
+                    </View>
+                  );
+                }}
                 horizontal={true}
                 style={[
                   styles.shelf,
                   {
                     height:
-                      Math.max(
-                        ...items.map((item) => item.dims.h / item.dims.w)
-                      ) * width,
+                      Math.max(...items.map((item) => item.h / item.w)) * width,
                   },
                 ]}
                 keyExtractor={(item) => item.id}
@@ -67,7 +64,7 @@ export default function Mine({ navigation, route }: MineProps): JSX.Element {
             </>
           );
         }}
-        horizontal={false}
+        showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollPadding}
         keyExtractor={(item) => item.id}
       />

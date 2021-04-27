@@ -3,6 +3,8 @@ import React, { useRef } from "react";
 import { View, StyleSheet, Animated, PanResponder } from "react-native";
 // import { ReactNativeZoomableView } from "@dudigital/react-native-zoomable-view";
 import Svg, { Polygon, Text } from "react-native-svg";
+import { useAppSelector } from "../utils/redux/hooks";
+import { selectNodes } from "../utils/redux/mapSlice";
 import { styles, win } from "../utils/styles";
 
 // Parameters for sizing
@@ -88,13 +90,10 @@ function getPoints({ x, y }: { x: number; y: number }): string[] {
   return points;
 }
 
-export default function MapScreen({
-  navigation,
-  route,
-}: MapProps): JSX.Element {
-  const { map } = route.params;
-  const nodes = Array.from(map.data.values());
-  nodes.sort((a, b) => a.minD(map.curNode.id) - b.minD(map.curNode.id));
+export default function MapScreen({ navigation }: MapProps): JSX.Element {
+  // const curNodeId = useAppSelector((state) => state.map.curNodeId);
+  const nodes = useAppSelector(selectNodes);
+  // nodes.sort((a, b) => a.minD(curNode.id) - b.minD(curNode.id));
 
   const pan = useRef(new Animated.ValueXY()).current;
 

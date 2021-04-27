@@ -14,7 +14,7 @@ const mapAdapter = createEntityAdapter<NodeData>();
 // than giving it its own slice
 const initialState = mapAdapter.getInitialState({
   status: "idle",
-  curNodeId: "ererere",
+  curNodeId: "1",
 });
 
 // Async thunk which gets map data based on userId
@@ -22,7 +22,9 @@ export const fetchMap = createAsyncThunk<MapData, string>(
   "map/fetchMap",
   async (userId) => {
     const response = await axios.get(`/assoc/${userId}/map`);
-    return response.data;
+    const nodes = response.data.map.data;
+    const curNodeId = response.data.curNodeId.data;
+    return { nodes, curNodeId };
   }
 );
 

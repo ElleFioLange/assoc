@@ -36,10 +36,10 @@ type MapAction = {
 type RootStackParamList = {
   Home: undefined;
   Answer: { answer: string };
-  ItemInfo: undefined;
-  Purchase: undefined;
+  ItemInfo: { item: ItemData };
+  Purchase: { item: ItemData };
   Map: undefined;
-  NodeInfo: undefined;
+  NodeInfo: { node: NodeData };
   Mine: undefined;
   Settings: undefined;
   Tokens: undefined;

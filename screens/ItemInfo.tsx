@@ -8,21 +8,13 @@ export default function ItemInfo({
 }: ItemInfoProps): JSX.Element {
   const { item } = route.params;
   return (
-    <ScrollView style={[styles.whiteBg, styles.scrollPadding]}>
+    <ScrollView style={[styles.whiteBg]}>
       <View style={styles.container}>
         <Image
           source={{ uri: item.uri }}
           style={[styles.carouselImage, styles.marginTopDouble]}
-          width={
-            item.dims.w >= item.dims.h
-              ? width
-              : (width * item.dims.w) / item.dims.h
-          }
-          height={
-            item.dims.w < item.dims.h
-              ? width
-              : (width * item.dims.h) / item.dims.w
-          }
+          width={item.w >= item.h ? width : (width * item.w) / item.h}
+          height={item.w < item.h ? width : (width * item.h) / item.w}
         />
         <Text style={[styles.itemName, styles.marginTopDouble, styles.avenir]}>
           {item.name}

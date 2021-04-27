@@ -116,7 +116,11 @@ const devMap = [
 
 new Server({
   models: {
-    user: Model,
+    user: Model.extend({
+      map: belongsTo(),
+      curNodeId: belongsTo(),
+      token: belongsTo(),
+    }),
     map: Model.extend({
       user: belongsTo(),
     }),
@@ -130,9 +134,9 @@ new Server({
 
   seeds(server) {
     const user = server.create("user", { id: "1" });
-    server.create("map", { user, state: devMap });
-    server.create("curNodeId", { user, id: "auuq98u3ro3qunqwc0" });
-    server.create("token", { user, quantity: 10 });
+    server.create("map", { user, data: devMap });
+    server.create("curNodeId", { user, data: "auuq98u3ro3qunqwc0" });
+    server.create("token", { user, data: 10 });
   },
 
   routes() {
@@ -141,7 +145,7 @@ new Server({
 
     this.get("/:userId/map", (schema, request) => {
       const userId = request.params.userId;
-      const user = schema.user.find(userId);
+      const user = schema.users.find(userId);
       const { map, curNodeId } = user;
 
       return { map, curNodeId };
@@ -162,7 +166,7 @@ new Server({
     this.get("/:userId/tokens", (schema, request) => {
       const userId = request.params.userId;
 
-      return schema.users.find(userId).tokens;
+      return schema.users.find(userId).token.data;
     });
 
     this.post("/:userId/tokens", (schema, request) => {
