@@ -1,17 +1,24 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { View, StyleSheet, Animated, PanResponder } from "react-native";
-// import { ReactNativeZoomableView } from "@dudigital/react-native-zoomable-view";
-import Svg, { Polygon, Text } from "react-native-svg";
-import { useAppSelector } from "../utils/redux/hooks";
-import { selectNodes } from "../utils/redux/mapSlice";
+import Svg, { Polygon, Text, G } from "react-native-svg";
+import { useAppSelector } from "../utils/hooks";
+import { selectNodes } from "../utils/mapSlice";
 import { styles, win } from "../utils/styles";
 
 // Parameters for sizing
-const sideLength = win.width * 0.25;
+const sideLength = win.width * 0.15;
 const edgeRad = (Math.sqrt(3) / 2) * sideLength;
+const vertices: number[][] = [];
+for (let i = 0; i < 6; i++) {
+  vertices.push([
+    Math.cos((i * Math.PI) / 3) * sideLength,
+    Math.sin((i * Math.PI) / 3) * sideLength,
+  ]);
+}
+const points = vertices.join(" ");
 
-// Function to get the center coordinate of a hexagon from its index
+// Gets the center coordinate of a hexagon from its index
 function getCenter(
   index: number,
   center: { x: number; y: number }
@@ -78,25 +85,18 @@ function getCenter(
   return { x, y };
 }
 
-function getPoints({ x, y }: { x: number; y: number }): string[] {
-  const points: string[] = [];
-  for (let i = 0; i < 6; i++) {
-    points.push(
-      `${x + Math.cos((i * Math.PI) / 3) * sideLength},${
-        y + Math.sin((i * Math.PI) / 3) * sideLength
-      }`
-    );
-  }
-  return points;
-}
+const AnimatedG = Animated.createAnimatedComponent(G);
 
 export default function MapScreen({ navigation }: MapProps): JSX.Element {
   // const curNodeId = useAppSelector((state) => state.map.curNodeId);
   const nodes = useAppSelector(selectNodes);
   // nodes.sort((a, b) => a.minD(curNode.id) - b.minD(curNode.id));
 
-  const pan = useRef(new Animated.ValueXY()).current;
+  const [panX, setPanX] = useState(0);
+  const [panY, setPanY] = useState(0);
 
+  // Pan Responder setup
+  const pan = useRef(new Animated.ValueXY()).current;
   const panResponder = useRef(
     PanResponder.create({
       onMoveShouldSetPanResponder: () => true,
@@ -117,58 +117,67 @@ export default function MapScreen({ navigation }: MapProps): JSX.Element {
       },
     })
   ).current;
+  pan.x.addListener((value) => setPanX(value.value));
+  pan.y.addListener((value) => setPanY(value.value));
 
   // Only for testing
   const test = nodes.map((node) => {
     return { id: node.id, name: node.name };
   });
-  for (let i = 2; i < 100; i++) {
+  for (let i = 2; i < 10000; i++) {
     test.push({ id: `${i}`, name: `${i}` });
   }
 
+  const hexCenters = test.map((node, index) =>
+    getCenter(index, { x: win.width / 2, y: win.height / 2 })
+  );
+
+  // const offsetX = pan.x.interpolate({
+  //   inputRange: [0, 1],
+  //   outputRange: [`0 ${win.width}`, `1 ${win.width + 1}`],
+  // });
+  // const offsetY = pan.y.interpolate({
+  //   inputRange: [0, 1],
+  //   outputRange: [`0 ${win.height}`, `1 ${win.height + 1}`],
+  // });
+
   return (
     <View style={[styles.container, styles.whiteBg]}>
-      <Animated.View
-        style={{
-          transform: pan.getTranslateTransform(),
-        }}
-        {...panResponder.panHandlers}
-      >
-        <Svg height={win.height} width={win.width}>
-          {nodes.map((node, index) => {
-            const { x, y } = getCenter(index, {
-              x: win.width / 2,
-              y: win.height / 2,
-            });
-            const points = getPoints({ x, y });
-            // console.log(node.name);
-            return (
-              <>
-                <Polygon
-                  key={node.id}
-                  onPress={() => navigation.navigate("NodeInfo", { node })}
-                  points={points.join(" ")}
-                  stroke="black"
-                  // fill={"white"}
-                  strokeWidth={StyleSheet.hairlineWidth}
-                />
-                <Text
-                  key={`${node.id}-name`}
-                  fill="black"
-                  fontSize="20"
-                  fontFamily="avenir"
-                  x={x}
-                  y={y}
-                  alignmentBaseline="central"
-                  textAnchor="middle"
-                >
-                  {node.name}
-                </Text>
-              </>
-            );
-          })}
-        </Svg>
-      </Animated.View>
+      <Svg height={win.height} width={win.width}>
+        {test.map((node, index) => {
+          const center = hexCenters[index];
+          const onScreen =
+            center.x > -panX - sideLength &&
+            center.x < win.width - panX + sideLength &&
+            center.y > -panY - sideLength &&
+            center.y < win.height - panY + sideLength;
+          return onScreen ? (
+            <AnimatedG
+              x={panX + center.x}
+              y={panY + center.y}
+              key={node.id}
+              {...panResponder.panHandlers}
+            >
+              <Polygon
+                // onPress={() => navigation.navigate("NodeInfo", { node })}
+                points={points}
+                stroke="black"
+                fill={"white"}
+                strokeWidth={StyleSheet.hairlineWidth}
+              />
+              <Text
+                fill="black"
+                fontSize={sideLength * 0.25}
+                fontFamily="avenir"
+                alignmentBaseline="central"
+                textAnchor="middle"
+              >
+                {node.name}
+              </Text>
+            </AnimatedG>
+          ) : null;
+        })}
+      </Svg>
     </View>
   );
 }

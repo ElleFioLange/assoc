@@ -17,9 +17,9 @@ import {
 
 import "./dev_server/server";
 
-import store from "./utils/redux/store";
-import { fetchMap } from "./utils/redux/mapSlice";
-import { fetchTokens } from "./utils/redux/tokensSlice";
+import store from "./utils/store";
+import { fetchMap } from "./utils/mapSlice";
+import { fetchTokens } from "./utils/tokensSlice";
 
 enableScreens();
 const Stack = createNativeStackNavigator<RootStackParamList>();

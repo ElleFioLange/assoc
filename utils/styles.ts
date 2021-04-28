@@ -6,6 +6,7 @@ export const width = win.width * 0.8;
 // Accent blue = #1122f4
 
 export const styles = StyleSheet.create({
+  // Container and spacing utils
   container: {
     flex: 1,
     justifyContent: "center",
@@ -27,15 +28,16 @@ export const styles = StyleSheet.create({
   marginTopDouble: {
     marginTop: width * 0.1,
   },
+  // General styles
   bg: {
     flex: 1,
     resizeMode: "cover",
   },
-  avenir: {
-    fontFamily: "Avenir Next",
-  },
   whiteBg: {
     backgroundColor: "white",
+  },
+  avenir: {
+    fontFamily: "Avenir Next",
   },
   shadow: {
     shadowColor: "black",
@@ -47,6 +49,7 @@ export const styles = StyleSheet.create({
     borderColor: "#0000ff40",
     borderWidth: StyleSheet.hairlineWidth,
   },
+  // Home
   input: {
     backgroundColor: "white",
     width,
@@ -88,10 +91,12 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: width * 0.02,
   },
+  // Answer
   answer: {
     fontSize: 20,
     textAlign: "center",
   },
+  // Item info
   itemName: {
     width: width,
     textAlign: "left",
@@ -107,19 +112,6 @@ export const styles = StyleSheet.create({
     textAlign: "left",
     // paddingHorizontal: width * 0.1,
   },
-  shelf: {
-    width: width,
-    // height: width,
-    paddingBottom: width * 0.01,
-    borderBottomColor: "#e0e0e0",
-    borderBottomWidth: 1,
-  },
-  shelfItem: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "flex-end",
-    width: width,
-  },
   purchase: {
     width: width * 0.5,
     height: width * 0.15,
@@ -132,5 +124,19 @@ export const styles = StyleSheet.create({
     fontWeight: "600",
     fontSize: 18,
     color: "white",
+  },
+  // Mine
+  shelf: {
+    width: width,
+    // height: width,
+    paddingBottom: width * 0.01,
+    borderBottomColor: "#e0e0e0",
+    borderBottomWidth: 1,
+  },
+  shelfItem: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "flex-end",
+    width: width,
   },
 });

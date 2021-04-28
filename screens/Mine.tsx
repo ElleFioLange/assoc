@@ -6,8 +6,8 @@ import {
   Image,
   TouchableWithoutFeedback,
 } from "react-native";
-import { useAppSelector } from "../utils/redux/hooks";
-import { selectNodes } from "../utils/redux/mapSlice";
+import { useAppSelector } from "../utils/hooks";
+import { selectNodes } from "../utils/mapSlice";
 import { styles, width } from "../utils/styles";
 
 export default function Mine({ navigation }: MineProps): JSX.Element {

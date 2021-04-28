@@ -1,7 +1,8 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useRef } from "react";
-import { useAppSelector } from "../utils/redux/hooks";
-import { selectNodeById } from "../utils/redux/mapSlice";
+import AppLoading from "expo-app-loading";
+import { useAppSelector } from "../utils/hooks";
+import { selectNodeById } from "../utils/mapSlice";
 import {
   View,
   ImageBackground,
@@ -26,17 +27,18 @@ import { styles, win, width } from "../utils/styles";
 export default function Home({ navigation }: HomeProps): JSX.Element {
   const curNodeId = useAppSelector((state) => state.map.curNodeId);
   const curNode = useAppSelector((state) => selectNodeById(state, curNodeId));
+  const mapStatus = useAppSelector((state) => state.map.status);
+  const tokenStatus = useAppSelector((state) => state.tokens.status);
+  const loading = mapStatus === "loading" && tokenStatus === "loading";
 
   // States for input text
   const [asc, setAsc] = useState("");
   const [ans, setAns] = useState("");
 
-  // Loading state
-  const [loading, setLoading] = useState(false);
   // Using this to hide items as carousel updates so there's no jumping
   const [hideItems, setHideItems] = useState(false);
 
-  // This is the animation that fades the UI out for the loading.
+  // This is the animation that fades the UI out while loading.
   // The actual wobbly animation is just a gif that's loaded underneath
   const fadeAnim = useRef(new Animated.Value(1)).current;
 
@@ -62,10 +64,8 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
 
   const handleAsc = (question: string) => {
     toggleAnimation(true);
-    setLoading(true);
     sleep(1500).then((value) => {
       toggleAnimation(false);
-      setLoading(false);
       setAsc("");
       navigation.navigate("Answer", { answer: "Placeholder" });
     });
@@ -75,7 +75,6 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
     console.log(answer);
     console.log(answer === "Dieter Rams");
     toggleAnimation(true);
-    setLoading(true);
     sleep(1500).then((value) => {
       // const newMap = { ...map };
       // newMap.curNode = Array.from(newMap.data.values())[
@@ -87,11 +86,12 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
       setHideItems(false);
       setAns("");
       toggleAnimation(false);
-      setLoading(false);
     });
   };
 
-  return (
+  return loading ? (
+    <AppLoading />
+  ) : (
     <ImageBackground
       source={require("../assets/bg_anim.gif")}
       style={styles.bg}
@@ -202,7 +202,6 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
                 <Pressable
                   onPress={() => {
                     navigation.navigate("Map");
-                    console.log("asdf");
                   }}
                   style={({ pressed }) => [
                     {
