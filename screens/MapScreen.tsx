@@ -92,8 +92,17 @@ export default function MapScreen({ navigation }: MapProps): JSX.Element {
   const nodes = useAppSelector(selectNodes);
   // nodes.sort((a, b) => a.minD(curNode.id) - b.minD(curNode.id));
 
+  // Using state for pan tracking instead of animated component
+  // so that I can progressively render the hexagons instead of
+  // having to render them all at once, which actually ends up being
+  // more responsive
   const [panX, setPanX] = useState(0);
   const [panY, setPanY] = useState(0);
+
+  // Currently selected node
+  const [selected, setSelected] = useState(-1);
+  // Highlighted nodes which are connected to the currently selected node
+  const [highlights, setHighlights] = useState([]);
 
   // Pan Responder setup
   const pan = useRef(new Animated.ValueXY()).current;
@@ -159,7 +168,7 @@ export default function MapScreen({ navigation }: MapProps): JSX.Element {
               {...panResponder.panHandlers}
             >
               <Polygon
-                // onPress={() => navigation.navigate("NodeInfo", { node })}
+                onPress={() => setSelected(index)}
                 points={points}
                 stroke="black"
                 fill={"white"}
@@ -177,6 +186,31 @@ export default function MapScreen({ navigation }: MapProps): JSX.Element {
             </AnimatedG>
           ) : null;
         })}
+        {selected === -1 ? null : (
+          <AnimatedG
+            x={panX + hexCenters[selected].x}
+            y={panY + hexCenters[selected].y}
+            key={`${test[selected].id}-selected`}
+            {...panResponder.panHandlers}
+          >
+            <Polygon
+              onPress={() => setSelected(-1)}
+              points={points}
+              stroke="#1122f4"
+              fill={"white"}
+              strokeWidth={3}
+            />
+            <Text
+              fill="black"
+              fontSize={sideLength * 0.25}
+              fontFamily="avenir"
+              alignmentBaseline="central"
+              textAnchor="middle"
+            >
+              {test[selected].name}
+            </Text>
+          </AnimatedG>
+        )}
       </Svg>
     </View>
   );

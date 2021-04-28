@@ -6,7 +6,8 @@ export const width = win.width * 0.8;
 // Accent blue = #1122f4
 
 export const styles = StyleSheet.create({
-  // Container and spacing utils
+  // Container and spacing utils ---------------
+
   container: {
     flex: 1,
     justifyContent: "center",
@@ -28,7 +29,9 @@ export const styles = StyleSheet.create({
   marginTopDouble: {
     marginTop: width * 0.1,
   },
-  // General styles
+
+  // General styles ---------------
+
   bg: {
     flex: 1,
     resizeMode: "cover",
@@ -49,7 +52,9 @@ export const styles = StyleSheet.create({
     borderColor: "#0000ff40",
     borderWidth: StyleSheet.hairlineWidth,
   },
-  // Home
+
+  // Home ---------------
+
   input: {
     backgroundColor: "white",
     width,
@@ -96,7 +101,9 @@ export const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: "center",
   },
-  // Item info
+
+  // Item info ---------------
+
   itemName: {
     width: width,
     textAlign: "left",
@@ -125,7 +132,9 @@ export const styles = StyleSheet.create({
     fontSize: 18,
     color: "white",
   },
-  // Mine
+
+  // Mine ---------------
+
   shelf: {
     width: width,
     // height: width,

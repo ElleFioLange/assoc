@@ -141,7 +141,7 @@ new Server({
 
   routes() {
     this.namespace = "assoc";
-    this.timing = 2000;
+    this.timing = 100;
 
     this.get("/:userId/map", (schema, request) => {
       const userId = request.params.userId;
