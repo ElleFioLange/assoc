@@ -2,8 +2,8 @@
 import React, { useRef, useState } from "react";
 import { View, StyleSheet, Animated, PanResponder } from "react-native";
 import Svg, { Polygon, Text, G } from "react-native-svg";
-import { useAppSelector } from "../utils/hooks";
-import { selectNodes } from "../utils/mapSlice";
+import { useAppSelector, useAppDispatch } from "../utils/hooks";
+import { selectNodes, switchNode } from "../utils/mapSlice";
 import { styles, win } from "../utils/styles";
 
 // Parameters for sizing
@@ -88,8 +88,9 @@ function getCenter(
 const AnimatedG = Animated.createAnimatedComponent(G);
 
 export default function MapScreen({ navigation }: MapProps): JSX.Element {
-  // const curNodeId = useAppSelector((state) => state.map.curNodeId);
+  const curNodeId = useAppSelector((state) => state.map.curNodeId);
   const nodes = useAppSelector(selectNodes);
+  const dispatch = useAppDispatch();
   // nodes.sort((a, b) => a.minD(curNode.id) - b.minD(curNode.id));
 
   // Using state for pan tracking instead of animated component
@@ -98,11 +99,6 @@ export default function MapScreen({ navigation }: MapProps): JSX.Element {
   // more responsive
   const [panX, setPanX] = useState(0);
   const [panY, setPanY] = useState(0);
-
-  // Currently selected node
-  const [selected, setSelected] = useState(-1);
-  // Highlighted nodes which are connected to the currently selected node
-  const [highlights, setHighlights] = useState([]);
 
   // Pan Responder setup
   const pan = useRef(new Animated.ValueXY()).current;
@@ -129,11 +125,21 @@ export default function MapScreen({ navigation }: MapProps): JSX.Element {
   pan.x.addListener((value) => setPanX(value.value));
   pan.y.addListener((value) => setPanY(value.value));
 
+  // Sort list of nodes according to their minimum
+  // distance from the current node. Array spread first
+  // so as to not mutate the selector array
+  const data = [...nodes];
+  data.sort((a, b) => {
+    if (!a.minD[curNodeId]) return -1;
+    if (!b.minD[curNodeId]) return 1;
+    return a.minD[curNodeId] - b.minD[curNodeId];
+  });
+
   // Only for testing
-  const test = nodes.map((node) => {
+  const test = data.map((node) => {
     return { id: node.id, name: node.name };
   });
-  for (let i = 2; i < 10000; i++) {
+  for (let i = 2; i < 90; i++) {
     test.push({ id: `${i}`, name: `${i}` });
   }
 
@@ -141,20 +147,16 @@ export default function MapScreen({ navigation }: MapProps): JSX.Element {
     getCenter(index, { x: win.width / 2, y: win.height / 2 })
   );
 
-  // const offsetX = pan.x.interpolate({
-  //   inputRange: [0, 1],
-  //   outputRange: [`0 ${win.width}`, `1 ${win.width + 1}`],
-  // });
-  // const offsetY = pan.y.interpolate({
-  //   inputRange: [0, 1],
-  //   outputRange: [`0 ${win.height}`, `1 ${win.height + 1}`],
-  // });
-
   return (
     <View style={[styles.container, styles.whiteBg]}>
       <Svg height={win.height} width={win.width}>
-        {test.map((node, index) => {
-          const center = hexCenters[index];
+        {/* 
+        Reverse test (and invert the index based calculations)
+        in order to draw from outside in. This makes sure that 
+        they hexagons overlap in the correct way.
+        */}
+        {test.reverse().map((node, index) => {
+          const center = hexCenters[test.length - index - 1];
           const onScreen =
             center.x > -panX - sideLength &&
             center.x < win.width - panX + sideLength &&
@@ -162,20 +164,38 @@ export default function MapScreen({ navigation }: MapProps): JSX.Element {
             center.y < win.height - panY + sideLength;
           return onScreen ? (
             <AnimatedG
+              // x={Animated.add(pan.x, new Animated.Value(center.x))}
+              // y={Animated.add(pan.y, new Animated.Value(center.y))}
               x={panX + center.x}
               y={panY + center.y}
               key={node.id}
               {...panResponder.panHandlers}
             >
               <Polygon
-                onPress={() => setSelected(index)}
+                onPress={() =>
+                  navigation.navigate("NodeInfo", { node: data[0] })
+                }
+                onLongPress={() => {
+                  dispatch(switchNode(data[1].id));
+                  navigation.navigate("Home");
+                }}
+                // rotation={test.length - 1 - index}
+                delayLongPress={250}
                 points={points}
-                stroke="black"
-                fill={"white"}
-                strokeWidth={StyleSheet.hairlineWidth}
+                stroke="#1122f4"
+                fill={index != test.length - 1 ? "white" : "#1122f4"}
+                strokeWidth={Math.max(
+                  StyleSheet.hairlineWidth,
+                  4 -
+                    0.007 *
+                      Math.sqrt(
+                        (center.x - win.width / 2) ** 2 +
+                          (center.y - win.height / 2) ** 2
+                      )
+                )}
               />
               <Text
-                fill="black"
+                fill={index != test.length - 1 ? "black" : "white"}
                 fontSize={sideLength * 0.25}
                 fontFamily="avenir"
                 alignmentBaseline="central"
@@ -186,32 +206,8 @@ export default function MapScreen({ navigation }: MapProps): JSX.Element {
             </AnimatedG>
           ) : null;
         })}
-        {selected === -1 ? null : (
-          <AnimatedG
-            x={panX + hexCenters[selected].x}
-            y={panY + hexCenters[selected].y}
-            key={`${test[selected].id}-selected`}
-            {...panResponder.panHandlers}
-          >
-            <Polygon
-              onPress={() => setSelected(-1)}
-              points={points}
-              stroke="#1122f4"
-              fill={"white"}
-              strokeWidth={3}
-            />
-            <Text
-              fill="black"
-              fontSize={sideLength * 0.25}
-              fontFamily="avenir"
-              alignmentBaseline="central"
-              textAnchor="middle"
-            >
-              {test[selected].name}
-            </Text>
-          </AnimatedG>
-        )}
       </Svg>
+      <View></View>
     </View>
   );
 }

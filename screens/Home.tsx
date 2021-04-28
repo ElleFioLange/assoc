@@ -43,8 +43,8 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
   const fadeAnim = useRef(new Animated.Value(1)).current;
 
   // Toggle the loading animation
-  const toggleAnimation = (loading: boolean) => {
-    loading
+  const toggleAnimation = (anim: boolean) => {
+    anim
       ? Animated.timing(fadeAnim, {
           toValue: 0.25,
           duration: 650,

@@ -19,6 +19,7 @@ type NodeData = {
   id: string;
   incoming: { name: string; id: string }[];
   outgoing: { name: string; id: string }[];
+  minD: Record<string, number>;
   items: ItemData[];
 };
 

@@ -8,6 +8,7 @@ const devMap = [
     id: "auuq98u3ro3qunqwc0",
     outgoing: [{ name: "Design", id: "2iqjv9sq2f90asjvqd" }],
     incoming: [],
+    minD: { "2iqjv9sq2f90asjvqd": 1 },
     items: [
       {
         name: "Dior J1s",
@@ -71,6 +72,8 @@ const devMap = [
     id: "2iqjv9sq2f90asjvqd",
     outgoing: [],
     incoming: [{ name: "Design", id: "auuq98u3ro3qunqwc0" }],
+    // eslint-disable-next-line prettier/prettier
+    minD: { "auuq98u3ro3qunqwc0": 1 },
     items: [
       {
         name: "Ipod",
