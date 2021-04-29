@@ -3,6 +3,9 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "react-native-screens/native-stack";
 import { enableScreens } from "react-native-screens";
 import { Provider } from "react-redux";
+import { withAuthentication } from "aws-amplify-react-native";
+import Amplify from "@aws-amplify/core";
+import config from "./aws-exports";
 import {
   Answer,
   Home,
