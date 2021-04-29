@@ -5,13 +5,30 @@ declare module "*.svg" {
   export default content;
 }
 
-type ItemData = {
-  name: string;
-  id: string;
+type ContentData = {
+  isVideo: boolean;
   uri: string;
   w: number;
   h: number;
-  price?: number;
+};
+
+type ItemData = {
+  name: string;
+  id: string;
+  parentName: string;
+  parentId: string;
+  mainContent: ContentData;
+  secondaryContent?: ContentData[];
+  numUnlocked: number;
+  purchaseInfo: {
+    static?: number;
+    dynamic?: {
+      maxPrice: number;
+      minPrice: number;
+      numNeededForMin: number;
+      maxAvailable?: number;
+    };
+  };
 };
 
 type NodeData = {
@@ -41,7 +58,7 @@ type RootStackParamList = {
   Purchase: { item: ItemData };
   Map: undefined;
   NodeInfo: { node: NodeData };
-  Mine: undefined;
+  Collection: undefined;
   Settings: undefined;
   Tokens: undefined;
 };
@@ -78,7 +95,7 @@ type NodeInfoProps = import("react-native-screens/native-stack").NativeStackScre
 
 type MineProps = import("react-native-screens/native-stack").NativeStackScreenProps<
   RootStackParamList,
-  "Mine"
+  "Collection"
 >;
 
 type SettingsProps = import("react-native-screens/native-stack").NativeStackScreenProps<

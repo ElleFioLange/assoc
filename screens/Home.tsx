@@ -25,6 +25,7 @@ import TokensIcon from "../assets/tokens.svg";
 import { styles, win, width } from "../utils/styles";
 
 export default function Home({ navigation }: HomeProps): JSX.Element {
+  const invertBg = useAppSelector((state) => state.settings.invertBg);
   const curNodeId = useAppSelector((state) => state.map.curNodeId);
   const curNode = useAppSelector((state) => selectNodeById(state, curNodeId));
   const mapStatus = useAppSelector((state) => state.map.status);
@@ -89,18 +90,22 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
     });
   };
 
+  const staticBackground = invertBg
+    ? require("../assets/bg_invert.png")
+    : require("../assets/bg.png");
+  const animBackground = invertBg
+    ? require("../assets/bg_anim_invert.gif")
+    : require("../assets/bg_anim.gif");
+
   return loading ? (
     <AppLoading />
   ) : (
-    <ImageBackground
-      source={require("../assets/bg_anim.gif")}
-      style={styles.bg}
-    >
+    <ImageBackground source={animBackground} style={styles.bg}>
       <Animated.View
         style={[styles.bg, { opacity: fadeAnim }]}
         pointerEvents={loading ? "none" : "auto"}
       >
-        <ImageBackground source={require("../assets/bg.png")} style={styles.bg}>
+        <ImageBackground source={staticBackground} style={styles.bg}>
           <ScrollView style={styles.scrollPadding}>
             <TouchableWithoutFeedback
               style={styles.container}
@@ -164,6 +169,8 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
                   justifyContent: "center",
                   alignItems: "center",
                 }}
+                // enableMomentum={true}
+                decelerationRate={"fast"}
                 style={styles.shadow}
                 renderItem={({ item }: { item: ItemData }) => (
                   <TouchableWithoutFeedback
@@ -180,16 +187,20 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
                       ]}
                     >
                       <Image
-                        source={{ uri: item.uri }}
+                        source={{ uri: item.mainContent.uri }}
                         style={[
                           { opacity: hideItems ? 0 : 1 },
                           styles.carouselImage,
                         ]}
                         width={
-                          item.w >= item.h ? width : (width * item.w) / item.h
+                          item.mainContent.w >= item.mainContent.h
+                            ? width
+                            : (width * item.mainContent.w) / item.mainContent.h
                         }
                         height={
-                          item.w < item.h ? width : (width * item.h) / item.w
+                          item.mainContent.w < item.mainContent.h
+                            ? width
+                            : (width * item.mainContent.h) / item.mainContent.w
                         }
                       />
                     </View>
@@ -216,7 +227,7 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
                 </Pressable>
                 <Pressable
                   onPress={async () => {
-                    navigation.navigate("Mine");
+                    navigation.navigate("Collection");
                   }}
                   style={({ pressed }) => [
                     {

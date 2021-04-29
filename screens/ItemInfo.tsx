@@ -11,10 +11,18 @@ export default function ItemInfo({
     <ScrollView style={[styles.whiteBg]}>
       <View style={styles.container}>
         <Image
-          source={{ uri: item.uri }}
+          source={{ uri: item.mainContent.uri }}
           style={[styles.carouselImage, styles.marginTopDouble]}
-          width={item.w >= item.h ? width : (width * item.w) / item.h}
-          height={item.w < item.h ? width : (width * item.h) / item.w}
+          width={
+            item.mainContent.w >= item.mainContent.h
+              ? width
+              : (width * item.mainContent.w) / item.mainContent.h
+          }
+          height={
+            item.mainContent.w < item.mainContent.h
+              ? width
+              : (width * item.mainContent.h) / item.mainContent.w
+          }
         />
         <Text style={[styles.itemName, styles.marginTopDouble, styles.avenir]}>
           {item.name}
@@ -33,7 +41,7 @@ export default function ItemInfo({
           hendrerit nec lectus sit amet, commodo rhoncus ex. Praesent gravida
           maximus dignissim.
         </Text>
-        {item.price ? (
+        {item.purchaseInfo ? (
           <Pressable
             style={({ pressed }) => [
               {
@@ -44,9 +52,7 @@ export default function ItemInfo({
             ]}
             onPress={() => navigation.navigate("Purchase", { item })}
           >
-            <Text style={[styles.avenir, styles.purchaseText]}>
-              Purchase ${item.price}
-            </Text>
+            <Text style={[styles.avenir, styles.purchaseText]}>Purchase</Text>
           </Pressable>
         ) : null}
       </View>

@@ -19,11 +19,8 @@ for (let i = 0; i < 6; i++) {
 const points = vertices.join(" ");
 
 // Gets the center coordinate of a hexagon from its index
-function getCenter(
-  index: number,
-  center: { x: number; y: number }
-): { x: number; y: number } {
-  if (index === 0) return { x: center.x, y: center.y };
+function getCenter(index: number): { x: number; y: number } {
+  if (index === 0) return { x: win.width / 2, y: win.height / 2 };
 
   let ring = 0;
   while ((ring ** 2 + ring) / 2 < Math.ceil(index / 6)) ring++;
@@ -58,7 +55,7 @@ function getCenter(
   // Subtract 1 for each index away from top, up to ring (hexagons arranged in a column from here on out)
   // Subtract 2 for each past ring (hexagons in a column are offset by twice the vertical distance)
 
-  const y = vertSign * vertOffsetFactor * edgeRad + center.y;
+  const y = vertSign * vertOffsetFactor * edgeRad + win.height / 2;
 
   const horizSign = ringIndex < ring * 3 ? 1 : -1;
   const horizIndex = Math.min(
@@ -67,7 +64,7 @@ function getCenter(
     Math.abs(ring * 6 - ringIndex),
     ring
   );
-  const x = horizSign * horizIndex * 1.5 * sideLength + center.x;
+  const x = horizSign * horizIndex * 1.5 * sideLength + win.width / 2;
 
   // console.log(
   //   `Data for index: ${index}
@@ -139,24 +136,23 @@ export default function MapScreen({ navigation }: MapProps): JSX.Element {
   const test = data.map((node) => {
     return { id: node.id, name: node.name };
   });
-  for (let i = 2; i < 90; i++) {
+  for (let i = 2; i < 91; i++) {
     test.push({ id: `${i}`, name: `${i}` });
   }
 
-  const hexCenters = test.map((node, index) =>
-    getCenter(index, { x: win.width / 2, y: win.height / 2 })
-  );
+  const hexCenters: { x: number; y: number }[] = [];
+  for (let i = 0; i < test.length; i++) {
+    hexCenters.push(getCenter(i));
+  }
+  // const hexCenters = test.map((node, index) =>
+  //   getCenter(index, { x: win.width / 2, y: win.height / 2 })
+  // );
 
   return (
     <View style={[styles.container, styles.whiteBg]}>
       <Svg height={win.height} width={win.width}>
-        {/* 
-        Reverse test (and invert the index based calculations)
-        in order to draw from outside in. This makes sure that 
-        they hexagons overlap in the correct way.
-        */}
-        {test.reverse().map((node, index) => {
-          const center = hexCenters[test.length - index - 1];
+        {test.map((node, index) => {
+          const center = hexCenters[index];
           const onScreen =
             center.x > -panX - sideLength &&
             center.x < win.width - panX + sideLength &&
@@ -183,7 +179,7 @@ export default function MapScreen({ navigation }: MapProps): JSX.Element {
                 delayLongPress={250}
                 points={points}
                 stroke="#1122f4"
-                fill={index != test.length - 1 ? "white" : "#1122f4"}
+                fill={index ? "white" : "#1122f4"}
                 strokeWidth={Math.max(
                   StyleSheet.hairlineWidth,
                   4 -
@@ -195,7 +191,7 @@ export default function MapScreen({ navigation }: MapProps): JSX.Element {
                 )}
               />
               <Text
-                fill={index != test.length - 1 ? "black" : "white"}
+                fill={index ? "black" : "white"}
                 fontSize={sideLength * 0.25}
                 fontFamily="avenir"
                 alignmentBaseline="central"

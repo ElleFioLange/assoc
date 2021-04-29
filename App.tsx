@@ -8,7 +8,7 @@ import {
   Home,
   ItemInfo,
   MapScreen,
-  Mine,
+  Collection,
   NodeInfo,
   Purchase,
   Settings,
@@ -61,7 +61,7 @@ export default function App(): JSX.Element {
             component={NodeInfo}
             options={{ stackPresentation: "formSheet" }}
           />
-          <Stack.Screen name="Mine" component={Mine} />
+          <Stack.Screen name="Collection" component={Collection} />
           <Stack.Screen name="Settings" component={Settings} />
           <Stack.Screen name="Tokens" component={Tokens} />
         </Stack.Navigator>

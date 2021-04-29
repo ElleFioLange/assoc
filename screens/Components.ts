@@ -2,7 +2,7 @@ import Answer from "./Answer";
 import Home from "./Home";
 import ItemInfo from "./ItemInfo";
 import MapScreen from "./MapScreen";
-import Mine from "./Mine";
+import Collection from "./Collection";
 import NodeInfo from "./NodeInfo";
 import Purchase from "./Purchase";
 import Settings from "./Settings";
@@ -13,7 +13,7 @@ export {
   Home,
   ItemInfo,
   MapScreen,
-  Mine,
+  Collection,
   NodeInfo,
   Purchase,
   Settings,

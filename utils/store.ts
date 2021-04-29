@@ -4,12 +4,14 @@ import { useDispatch } from "react-redux";
 import mapReducer from "./mapSlice";
 import tokensReducer from "./tokensSlice";
 import userReducer from "./userSlice";
+import settingsReducer from "./settingsSlice";
 
 const store = configureStore({
   reducer: {
     map: mapReducer,
     tokens: tokensReducer,
     user: userReducer,
+    settings: settingsReducer,
   },
 });
 

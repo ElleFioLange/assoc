@@ -27,10 +27,18 @@ export default function NodeInfo({
                 }}
               >
                 <Image
-                  source={{ uri: item.uri }}
+                  source={{ uri: item.mainContent.uri }}
                   style={[styles.carouselImage]}
-                  width={item.w >= item.h ? width : (width * item.w) / item.h}
-                  height={item.w < item.h ? width : (width * item.h) / item.w}
+                  width={
+                    item.mainContent.w >= item.mainContent.h
+                      ? width
+                      : (width * item.mainContent.w) / item.mainContent.h
+                  }
+                  height={
+                    item.mainContent.w < item.mainContent.h
+                      ? width
+                      : (width * item.mainContent.h) / item.mainContent.w
+                  }
                 />
               </TouchableWithoutFeedback>
             </View>
@@ -42,7 +50,7 @@ export default function NodeInfo({
               height:
                 Math.max(
                   ...Array.from(node.items.values()).map(
-                    (item) => item.h / item.w
+                    (item) => item.mainContent.h / item.mainContent.w
                   )
                 ) * width,
               width,

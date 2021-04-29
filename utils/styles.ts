@@ -96,7 +96,8 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: width * 0.02,
   },
-  // Answer
+
+  // Answer ---------------
   answer: {
     fontSize: 20,
     textAlign: "center",
@@ -133,7 +134,7 @@ export const styles = StyleSheet.create({
     color: "white",
   },
 
-  // Mine ---------------
+  // Collection ---------------
 
   shelf: {
     width: width,
@@ -147,5 +148,25 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "flex-end",
     width: width,
+  },
+
+  // Settings ---------------
+
+  settingsTitle: {
+    fontSize: 50,
+    fontWeight: "100",
+  },
+  settingContainer: {
+    display: "flex",
+    flexDirection: "row",
+    width: width,
+    // height: width * 0.15,
+    justifyContent: "space-between",
+    // alignContent: "space-between",
+  },
+  settingName: {
+    fontSize: 18,
+    fontWeight: "500",
+    width: width * 0.7,
   },
 });
