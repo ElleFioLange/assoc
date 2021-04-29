@@ -1,8 +1,8 @@
 {
-    "identityPoolName": "assoc0f697e83_identitypool_0f697e83",
+    "identityPoolName": "assoc07e2a282_identitypool_07e2a282",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "assoc0f697e83",
-    "userPoolName": "assoc0f697e83_userpool_0f697e83",
+    "resourceNameTruncated": "assoc07e2a282",
+    "userPoolName": "assoc07e2a282_userpool_07e2a282",
     "autoVerifiedAttributes": [
         "email"
     ],
@@ -18,8 +18,7 @@
     "passwordPolicyMinLength": 8,
     "passwordPolicyCharacters": [],
     "requiredAttributes": [
-        "email",
-        "name"
+        "email"
     ],
     "userpoolClientGenerateSecret": false,
     "userpoolClientRefreshTokenValidity": 30,
@@ -29,10 +28,10 @@
     "userpoolClientReadAttributes": [
         "email"
     ],
-    "userpoolClientLambdaRole": "assoc00f697e83_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "assoc007e2a282_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "0f697e83",
-    "resourceName": "assoc0f697e83",
+    "sharedId": "07e2a282",
+    "resourceName": "assoc07e2a282",
     "authSelections": "identityPoolAndUserPool",
     "authRoleArn": {
         "Fn::GetAtt": [
@@ -47,16 +46,8 @@
         ]
     },
     "useDefault": "default",
-    "usernameAttributes": [
-        "email, phone_number"
-    ],
-    "triggers": "{}",
     "userPoolGroupList": [],
     "serviceName": "Cognito",
     "usernameCaseSensitive": false,
-    "parentStack": {
-        "Ref": "AWS::StackId"
-    },
-    "permissions": [],
     "dependsOn": []
 }

@@ -3,7 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "react-native-screens/native-stack";
 import { enableScreens } from "react-native-screens";
 import { Provider } from "react-redux";
-import { withAuthentication } from "aws-amplify-react-native";
+import { withAuthenticator } from "aws-amplify-react-native";
 import Amplify from "@aws-amplify/core";
 import config from "./aws-exports";
 import {
@@ -24,10 +24,12 @@ import store from "./utils/store";
 import { fetchMap } from "./utils/mapSlice";
 import { fetchTokens } from "./utils/tokensSlice";
 
+Amplify.configure(config);
+
 enableScreens();
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-export default function App(): JSX.Element {
+function App(): JSX.Element {
   useEffect(() => {
     store.dispatch(fetchMap(null));
     store.dispatch(fetchTokens(null));
@@ -70,3 +72,5 @@ export default function App(): JSX.Element {
     </Provider>
   );
 }
+
+export default withAuthenticator(App, { includeGreetings: true });
