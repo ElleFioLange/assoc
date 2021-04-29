@@ -21,15 +21,13 @@ export default function Settings(): JSX.Element {
   return (
     <ScrollView style={[styles.scrollPadding, styles.whiteBg]}>
       <View style={styles.container}>
-        <Text
-          style={[styles.avenir, styles.settingsTitle, styles.marginTopDouble]}
-        >
+        <Text style={[styles.avenir, styles.s_tTitle, styles.marginTopDouble]}>
           Hi, {userName}
         </Text>
       </View>
       <View style={[styles.container, styles.marginTopDouble]}>
-        <View style={[styles.marginTopDouble, styles.settingContainer]}>
-          <Text style={[styles.avenir, styles.settingName]}>Invert Colors</Text>
+        <View style={[styles.marginTopDouble, styles.s_tContainer]}>
+          <Text style={[styles.avenir, styles.s_tName]}>Invert Colors</Text>
           <Switch
             value={invertBg}
             trackColor={{ false: "white", true: "#1122f4" }}
@@ -38,8 +36,8 @@ export default function Settings(): JSX.Element {
             onValueChange={toggleInvertBg}
           />
         </View>
-        <View style={[styles.marginTopDouble, styles.settingContainer]}>
-          <Text style={[styles.avenir, styles.settingName]}>
+        <View style={[styles.marginTopDouble, styles.s_tContainer]}>
+          <Text style={[styles.avenir, styles.s_tName]}>
             Automatically play ad when out of tokens
           </Text>
           <Switch

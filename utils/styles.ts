@@ -3,7 +3,7 @@ import { StyleSheet, Dimensions } from "react-native";
 export const win = Dimensions.get("window");
 export const width = win.width * 0.8;
 
-// Accent blue = #1122f4
+export const accentBlue = "#1122f4";
 
 export const styles = StyleSheet.create({
   // Container and spacing utils ---------------
@@ -106,7 +106,7 @@ export const styles = StyleSheet.create({
   // Item info ---------------
 
   itemName: {
-    width: width,
+    width,
     textAlign: "left",
     fontSize: 25,
     fontWeight: "600",
@@ -116,7 +116,7 @@ export const styles = StyleSheet.create({
   itemDescription: {
     fontSize: 15,
     fontWeight: "300",
-    width: width,
+    width,
     textAlign: "left",
     // paddingHorizontal: width * 0.1,
   },
@@ -137,7 +137,7 @@ export const styles = StyleSheet.create({
   // Collection ---------------
 
   shelf: {
-    width: width,
+    width,
     // height: width,
     paddingBottom: width * 0.01,
     borderBottomColor: "#e0e0e0",
@@ -147,26 +147,38 @@ export const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "flex-end",
-    width: width,
+    width,
   },
 
-  // Settings ---------------
+  // Settings & Tokens ---------------
 
-  settingsTitle: {
+  s_tTitle: {
+    // Also using this for the tokens title
     fontSize: 50,
     fontWeight: "100",
+    width,
+    textAlign: "center",
   },
-  settingContainer: {
+  s_tContainer: {
     display: "flex",
     flexDirection: "row",
-    width: width,
+    width,
     // height: width * 0.15,
     justifyContent: "space-between",
-    // alignContent: "space-between",
+    alignItems: "center",
   },
-  settingName: {
+  s_tName: {
     fontSize: 18,
-    fontWeight: "500",
-    width: width * 0.7,
+    fontWeight: "400",
+    maxWidth: width * 0.7,
+  },
+  tokenPurchase: {
+    // width: width * 0.2,
+    paddingHorizontal: width * 0.05,
+    height: width * 0.15,
+    borderRadius: width * 0.015,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

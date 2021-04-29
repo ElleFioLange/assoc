@@ -25,11 +25,9 @@ enableScreens();
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App(): JSX.Element {
-  const { userId } = store.getState().user;
-
   useEffect(() => {
-    store.dispatch(fetchMap(userId));
-    store.dispatch(fetchTokens(userId));
+    store.dispatch(fetchMap(null));
+    store.dispatch(fetchTokens(null));
   });
 
   return (

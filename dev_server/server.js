@@ -1,4 +1,6 @@
-// Writing this in JS instead of TS because it's only for testing and Mirage hates TS for some reason
+// Writing this in JS instead of TS because it's only for
+// testing and Mirage hates TS for some reason. Just change
+// the extension to ts if you need linting or intellisense.
 
 import { Server, Model, belongsTo, Response } from "miragejs";
 
@@ -264,18 +266,28 @@ new Server({
       return schema.users.find(userId).token.data;
     });
 
-    this.post("/:userId/tokens", (schema, request) => {
+    this.post("/:userId/tokens/use", (schema, request) => {
       const userId = request.params.userId;
-      const user = schema.user.find(userId);
-      const { tokens } = user;
+      const user = schema.users.find(userId);
+      let { tokens } = user;
       const { quantity } = JSON.parse(request.requestBody);
 
       if (tokens < quantity)
         return new Response(400, undefined, {
-          quantity: quantity,
-          e: "Error: Not enough tokens",
+          msg: "Error: Not enough tokens",
         });
-      return tokens - quantity;
+      tokens = tokens - quantity;
+      return tokens;
+    });
+
+    this.post("/:userId/tokens/add", (schema, request) => {
+      const userId = request.params.userId;
+      const user = schema.users.find(userId);
+      const { token } = user;
+      const { quantity } = JSON.parse(request.requestBody);
+      token.update({ data: token.data + quantity });
+
+      return token.data;
     });
   },
 });

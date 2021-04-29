@@ -13,15 +13,17 @@ const mapAdapter = createEntityAdapter<NodeData>();
 // CurNode stored within MapSlice because it makes more sense
 // than giving it its own slice
 const initialState = mapAdapter.getInitialState({
-  status: "idle",
+  loading: false,
   curNodeId: "1",
 });
 
 // Async thunk which gets map data based on userId
-export const fetchMap = createAsyncThunk<MapData, string>(
+export const fetchMap = createAsyncThunk<MapData, null, { state: RootState }>(
   "map/fetchMap",
-  async (userId) => {
+  async (_, thunkApi) => {
+    const userId = thunkApi.getState().user.userId;
     const response = await axios.get(`/assoc/${userId}/map`);
+    // Mirage is so fucking weird man
     const nodes = response.data.map.data;
     const curNodeId = response.data.curNodeId.data;
     return { nodes, curNodeId };
@@ -31,8 +33,10 @@ export const fetchMap = createAsyncThunk<MapData, string>(
 // Async thunk which queries map with a userId
 export const queryMap = createAsyncThunk<
   MapAction,
-  { userId: string; query: string }
->("map/queryMap", async ({ userId, query }) => {
+  string,
+  { state: RootState }
+>("map/queryMap", async (query, thunkApi) => {
+  const userId = thunkApi.getState().user.userId;
   const response = await axios.post<MapAction>(`/${userId}/map`, { query });
   return response.data;
 });
@@ -48,15 +52,15 @@ const mapSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchMap.pending, (state) => {
-        state.status = "loading";
+        state.loading = true;
       })
       .addCase(fetchMap.fulfilled, (state, action) => {
         mapAdapter.setAll(state, action.payload.nodes);
-        state.status = "idle";
+        state.loading = false;
         state.curNodeId = action.payload.curNodeId;
       })
       .addCase(queryMap.pending, (state) => {
-        state.status = "loading";
+        state.loading = true;
       })
       .addCase(queryMap.fulfilled, (state, action) => {
         if (action.payload.unlockItem)

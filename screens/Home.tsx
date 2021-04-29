@@ -28,9 +28,8 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
   const invertBg = useAppSelector((state) => state.settings.invertBg);
   const curNodeId = useAppSelector((state) => state.map.curNodeId);
   const curNode = useAppSelector((state) => selectNodeById(state, curNodeId));
-  const mapStatus = useAppSelector((state) => state.map.status);
-  const tokenStatus = useAppSelector((state) => state.tokens.status);
-  const loading = mapStatus === "loading" && tokenStatus === "loading";
+  const mapLoading = useAppSelector((state) => state.map.loading);
+  const tokenLoading = useAppSelector((state) => state.tokens.loading);
 
   // States for input text
   const [asc, setAsc] = useState("");
@@ -97,13 +96,13 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
     ? require("../assets/bg_anim_invert.gif")
     : require("../assets/bg_anim.gif");
 
-  return loading ? (
+  return mapLoading && tokenLoading ? (
     <AppLoading />
   ) : (
     <ImageBackground source={animBackground} style={styles.bg}>
       <Animated.View
         style={[styles.bg, { opacity: fadeAnim }]}
-        pointerEvents={loading ? "none" : "auto"}
+        pointerEvents={mapLoading && tokenLoading ? "none" : "auto"}
       >
         <ImageBackground source={staticBackground} style={styles.bg}>
           <ScrollView style={styles.scrollPadding}>
