@@ -18,17 +18,18 @@ const initialState = mapAdapter.getInitialState({
 });
 
 // Async thunk which gets map data based on userId
-export const fetchMap = createAsyncThunk<MapData, null, { state: RootState }>(
-  "map/fetchMap",
-  async (_, thunkApi) => {
-    const userId = thunkApi.getState().user.userId;
-    const response = await axios.get(`/assoc/${userId}/map`);
-    // Mirage is so fucking weird man
-    const nodes = response.data.map.data;
-    const curNodeId = response.data.curNodeId.data;
-    return { nodes, curNodeId };
-  }
-);
+export const fetchMap = createAsyncThunk<
+  MapData,
+  undefined,
+  { state: RootState }
+>("map/fetchMap", async (_, thunkApi) => {
+  const userId = thunkApi.getState().user.userId;
+  const response = await axios.get(`/assoc/${userId}/map`);
+  // Mirage is so fucking weird man
+  const nodes = response.data.map.data;
+  const curNodeId = response.data.curNodeId.data;
+  return { nodes, curNodeId };
+});
 
 // Async thunk which queries map with a userId
 export const queryMap = createAsyncThunk<

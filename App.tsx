@@ -6,17 +6,17 @@ import { Provider } from "react-redux";
 import { withAuthenticator } from "aws-amplify-react-native";
 import Amplify from "@aws-amplify/core";
 import config from "./aws-exports";
-import {
-  Answer,
-  Home,
-  ItemInfo,
-  MapScreen,
-  Collection,
-  NodeInfo,
-  Purchase,
-  Settings,
-  Tokens,
-} from "./screens/Components";
+
+import SignIn from "./screens/SignIn";
+import Home from "./screens/Home";
+import Answer from "./screens/Answer";
+import ItemInfo from "./screens/ItemInfo";
+import MapScreen from "./screens/MapScreen";
+import Collection from "./screens/Collection";
+import NodeInfo from "./screens/NodeInfo";
+import Purchase from "./screens/Purchase";
+import Settings from "./screens/Settings";
+import Tokens from "./screens/Tokens";
 
 import "./dev_server/server";
 
@@ -31,17 +31,18 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function App(): JSX.Element {
   useEffect(() => {
-    store.dispatch(fetchMap(null));
-    store.dispatch(fetchTokens(null));
+    store.dispatch(fetchMap());
+    store.dispatch(fetchTokens());
   });
 
   return (
     <Provider store={store}>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName={"Home"}
+          initialRouteName={"SignIn"}
           screenOptions={{ headerShown: false }}
         >
+          <Stack.Screen name="SignIn" component={SignIn} />
           <Stack.Screen name="Home" component={Home} />
           <Stack.Screen
             name="Answer"
@@ -56,7 +57,7 @@ function App(): JSX.Element {
           <Stack.Screen
             name="Purchase"
             component={Purchase}
-            options={{ stackPresentation: "formSheet" }}
+            options={{ stackPresentation: "fullScreenModal" }}
           />
           <Stack.Screen name="Map" component={MapScreen} />
           <Stack.Screen
@@ -73,4 +74,5 @@ function App(): JSX.Element {
   );
 }
 
-export default withAuthenticator(App, { includeGreetings: true });
+export default App;
+// export default withAuthenticator(App);

@@ -55,6 +55,7 @@ type MapAction = {
 };
 
 type RootStackParamList = {
+  SignIn: undefined;
   Home: undefined;
   Answer: { answer: string };
   ItemInfo: { item: ItemData };
@@ -65,6 +66,11 @@ type RootStackParamList = {
   Settings: undefined;
   Tokens: undefined;
 };
+
+type SignInProps = import("react-native-screens/native-stack").NativeStackScreenProps<
+  RootStackParamList,
+  "SignIn"
+>;
 
 type HomeProps = import("react-native-screens/native-stack").NativeStackScreenProps<
   RootStackParamList,

@@ -1,5 +1,6 @@
 import React from "react";
-import { ScrollView, Text, Switch, View } from "react-native";
+import { Auth } from "aws-amplify";
+import { ScrollView, Text, Switch, View, Pressable } from "react-native";
 import { useAppSelector, useAppDispatch } from "../utils/hooks";
 import { setInvertBg, setAutoAd } from "../utils/settingsSlice";
 import { styles } from "../utils/styles";
@@ -48,6 +49,18 @@ export default function Settings(): JSX.Element {
             onValueChange={toggleAutoAd}
           />
         </View>
+        <Pressable
+          style={({ pressed }) => [
+            {
+              backgroundColor: pressed ? "#395aff" : "#1122f4",
+            },
+            styles.logOut,
+            styles.marginTopDouble,
+          ]}
+          onPress={async () => Auth.signOut()}
+        >
+          <Text style={[styles.avenir, styles.logOutText]}>Sign out</Text>
+        </Pressable>
       </View>
     </ScrollView>
   );

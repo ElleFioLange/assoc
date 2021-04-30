@@ -7,14 +7,15 @@ const initialState = {
   quantity: 10,
 };
 
-export const fetchTokens = createAsyncThunk<number, null, { state: RootState }>(
-  "tokens/fetchTokens",
-  async (_, thunkApi) => {
-    const userId = thunkApi.getState().user.userId;
-    const response = await axios.get<number>(`/assoc/${userId}/tokens`);
-    return response.data;
-  }
-);
+export const fetchTokens = createAsyncThunk<
+  number,
+  undefined,
+  { state: RootState }
+>("tokens/fetchTokens", async (_, thunkApi) => {
+  const userId = thunkApi.getState().user.userId;
+  const response = await axios.get<number>(`/assoc/${userId}/tokens`);
+  return response.data;
+});
 
 export const useTokens = createAsyncThunk<number, number, { state: RootState }>(
   "tokens/useTokens",
