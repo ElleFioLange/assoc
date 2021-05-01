@@ -20,11 +20,10 @@ import Purchase from "./screens/Purchase";
 import Settings from "./screens/Settings";
 import Tokens from "./screens/Tokens";
 
-// import "./dev_server/server";
-
 import store from "./utils/store";
-import { setMapData } from "./utils/mapSlice";
-import { setUserInfo } from "./utils/userSlice";
+import { setUser } from "./utils/userSlice";
+import { setTokens } from "./utils/tokensSlice";
+import { setMap, setCurNodeId } from "./utils/mapSlice";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBBrOZTRhISAGWaj6JjVm8DTPpzHRT9VRI",
@@ -39,9 +38,33 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 firebase.auth().onAuthStateChanged((user) => {
-  if (user != null) {
+  if (user) {
     const { uid, displayName } = user;
-    store.dispatch(setUserInfo({ uid, displayName }));
+    store.dispatch(setUser({ uid, displayName }));
+    firebase
+      .database()
+      .ref(`users/${uid}/tokens`)
+      .on("value", (snapshot) => {
+        store.dispatch(setTokens(snapshot.val()));
+      });
+    firebase
+      .database()
+      .ref(`users/${uid}/map`)
+      .on("value", (snapshot) => {
+        store.dispatch(setMap(snapshot.val()));
+      });
+    firebase
+      .database()
+      .ref(`users/${uid}/curNodeId`)
+      .on("value", (snapshot) => {
+        store.dispatch(setCurNodeId(snapshot.val()));
+      });
+  } else {
+    const uid = store.getState().user.uid;
+    firebase.database().ref(`users/${uid}/tokens`).off();
+    firebase.database().ref(`users/${uid}/map`).off();
+    firebase.database().ref(`users/${uid}/curNodeId`).off();
+    store.dispatch(setUser({ uid: "", displayName: "" }));
   }
 });
 

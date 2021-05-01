@@ -14,7 +14,6 @@ type ContentData = {
 
 type ItemData = {
   name: string;
-  id: string;
   parentName: string;
   parentId: string;
   mainContent: ContentData;
@@ -32,23 +31,13 @@ type ItemData = {
 };
 
 type NodeData = {
-  name: string;
   id: string;
-  incoming: { name: string; id: string }[];
-  outgoing: { name: string; id: string }[];
+  name: string;
+  parentId: string;
+  incoming: Record<string, string>;
+  outgoing: Record<string, string>;
   minD: Record<string, number>;
-  items: ItemData[];
-};
-
-type MapData = {
-  curNodeId: string;
-  nodes: NodeData[];
-};
-
-type MapAction = {
-  unlockNode: NodeData | undefined;
-  unlockItem: NodeData | undefined;
-  hint: string | undefined;
+  items: Record<string, ItemData>;
 };
 
 type RootStackParamList = {

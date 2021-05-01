@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useRef } from "react";
-import AppLoading from "expo-app-loading";
 import { useAppSelector } from "../utils/hooks";
 import { selectNodeById } from "../utils/mapSlice";
+import AppLoading from "expo-app-loading";
 import {
   View,
   ImageBackground,
@@ -28,8 +28,9 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
   const invertBg = useAppSelector((state) => state.settings.invertBg);
   const curNodeId = useAppSelector((state) => state.map.curNodeId);
   const curNode = useAppSelector((state) => selectNodeById(state, curNodeId));
-  const mapLoading = useAppSelector((state) => state.map.loading);
-  const tokenLoading = useAppSelector((state) => state.tokens.loading);
+
+  // Loading state to block interaction during the animation
+  const [loading, setLoading] = useState(false);
 
   // States for input text
   const [asc, setAsc] = useState("");
@@ -96,13 +97,11 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
     ? require("../assets/bg_anim_invert.gif")
     : require("../assets/bg_anim.gif");
 
-  return mapLoading && tokenLoading ? (
-    <AppLoading />
-  ) : (
+  return (
     <ImageBackground source={animBackground} style={styles.bg}>
       <Animated.View
         style={[styles.bg, { opacity: fadeAnim }]}
-        pointerEvents={mapLoading && tokenLoading ? "none" : "auto"}
+        pointerEvents={loading ? "none" : "auto"}
       >
         <ImageBackground source={staticBackground} style={styles.bg}>
           <ScrollView style={styles.scrollPadding}>
@@ -162,7 +161,13 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
             <View style={styles.container}>
               <Carousel
                 layout={"default"}
-                data={curNode ? curNode.items : []}
+                data={
+                  curNode
+                    ? Object.keys(curNode.items).map(
+                        (key) => curNode.items[key]
+                      )
+                    : []
+                }
                 contentContainerCustomStyle={{
                   display: "flex",
                   justifyContent: "center",

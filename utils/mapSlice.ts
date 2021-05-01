@@ -17,10 +17,21 @@ const mapSlice = createSlice({
     setCurNodeId(state, action) {
       state.curNodeId = action.payload;
     },
+    setMap(state, action) {
+      mapAdapter.setAll(state, action);
+      // const nodes = action.payload;
+      // Object.keys(nodes).map((key) => {
+      //   const node = nodes[key];
+      //   node.incoming = node.incoming || {};
+      //   node.outgoing = node.outgoing || {};
+      //   node.items = node.items || {};
+      // });
+      // mapAdapter.setAll(state, nodes);
+    },
   },
 });
 
-export const { setCurNodeId } = mapSlice.actions;
+export const { setCurNodeId, setMap } = mapSlice.actions;
 
 export const {
   selectAll: selectNodes,
