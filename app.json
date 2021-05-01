@@ -18,7 +18,7 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.PaigeTech.Assoc",
+      "bundleIdentifier": "com.paigetech.assoc",
       "buildNumber": "1.0.0"
     },
     "android": {
@@ -26,7 +26,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.PaigeTech.Assoc"
+      "package": "com.paigetech.assoc"
     },
     "web": {
       "favicon": "./assets/favicon.png"

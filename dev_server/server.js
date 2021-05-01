@@ -311,6 +311,6 @@ new Server({
       return token.data;
     });
 
-    this.passthrough("https://cognito-idp.us-west-2.amazonaws.com/");
+    this.passthrough("");
   },
 });

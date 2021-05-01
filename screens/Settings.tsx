@@ -1,15 +1,14 @@
 import React from "react";
-import { Auth } from "aws-amplify";
 import { ScrollView, Text, Switch, View, Pressable } from "react-native";
 import { useAppSelector, useAppDispatch } from "../utils/hooks";
 import { setInvertBg, setAutoAd } from "../utils/settingsSlice";
 import { styles } from "../utils/styles";
 
-export default function Settings(): JSX.Element {
-  const dispatch = useAppDispatch();
-  const userName = useAppSelector((state) => state.user.userName);
+export default function Settings({ navigation }: SettingsProps): JSX.Element {
+  const userName = useAppSelector((state) => state.user.displayName);
   const invertBg = useAppSelector((state) => state.settings.invertBg);
   const autoAd = useAppSelector((state) => state.settings.autoAd);
+  const dispatch = useAppDispatch();
 
   function toggleInvertBg() {
     dispatch(setInvertBg(!invertBg));
@@ -57,7 +56,7 @@ export default function Settings(): JSX.Element {
             styles.logOut,
             styles.marginTopDouble,
           ]}
-          onPress={async () => Auth.signOut()}
+          // onPress={() => navigation.navigate("SignIn")}
         >
           <Text style={[styles.avenir, styles.logOutText]}>Sign out</Text>
         </Pressable>

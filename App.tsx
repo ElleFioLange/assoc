@@ -1,11 +1,13 @@
-import React, { useEffect } from "react";
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "react-native-screens/native-stack";
+import AppLoading from "expo-app-loading";
+import { Alert } from "react-native";
 import { enableScreens } from "react-native-screens";
 import { Provider } from "react-redux";
-import { withAuthenticator } from "aws-amplify-react-native";
-import Amplify from "@aws-amplify/core";
-import config from "./aws-exports";
+import * as firebase from "firebase";
+import * as SecureStore from "expo-secure-store";
 
 import SignIn from "./screens/SignIn";
 import Home from "./screens/Home";
@@ -18,32 +20,83 @@ import Purchase from "./screens/Purchase";
 import Settings from "./screens/Settings";
 import Tokens from "./screens/Tokens";
 
-import "./dev_server/server";
+// import "./dev_server/server";
 
 import store from "./utils/store";
-import { fetchMap } from "./utils/mapSlice";
-import { fetchTokens } from "./utils/tokensSlice";
+import { setMapData } from "./utils/mapSlice";
+import { setUserInfo } from "./utils/userSlice";
 
-Amplify.configure(config);
+const firebaseConfig = {
+  apiKey: "AIzaSyBBrOZTRhISAGWaj6JjVm8DTPpzHRT9VRI",
+  authDomain: "assoc-d30ac.firebaseapp.com",
+  databaseURL: "https://assoc-d30ac-default-rtdb.firebaseio.com",
+  projectId: "assoc-d30ac",
+  storageBucket: "assoc-d30ac.appspot.com",
+  messagingSenderId: "341782713355",
+  appId: "1:341782713355:web:bb2c956fcfa4c73f85630e",
+  measurementId: "G-VVME0TLGNG",
+};
+
+firebase.initializeApp(firebaseConfig);
+firebase.auth().onAuthStateChanged((user) => {
+  if (user != null) {
+    const { uid, displayName } = user;
+    store.dispatch(setUserInfo({ uid, displayName }));
+  }
+});
 
 enableScreens();
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-function App(): JSX.Element {
+export default function App(): JSX.Element {
+  const [credStatus, setCredStatus] = useState("checking");
+
   useEffect(() => {
-    store.dispatch(fetchMap());
-    store.dispatch(fetchTokens());
+    checkForCredential().then((available) => {
+      if (available) {
+        setCredStatus("available");
+      } else {
+        setCredStatus("unavailable");
+      }
+    });
   });
 
-  return (
+  async function checkForCredential() {
+    const data = await SecureStore.getItemAsync("credential");
+    if (data) {
+      const { email, password } = JSON.parse(data);
+      return firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password)
+        .then(
+          () => {
+            return true;
+          },
+          (e: Error) => {
+            Alert.alert("Error signing in", e.message);
+            return false;
+          }
+        );
+    } else {
+      return false;
+    }
+  }
+
+  return credStatus === "checking" ? (
+    <AppLoading />
+  ) : (
     <Provider store={store}>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName={"SignIn"}
+          initialRouteName={credStatus === "available" ? "Home" : "SignIn"}
           screenOptions={{ headerShown: false }}
         >
           <Stack.Screen name="SignIn" component={SignIn} />
-          <Stack.Screen name="Home" component={Home} />
+          <Stack.Screen
+            name="Home"
+            component={Home}
+            options={{ gestureEnabled: false }}
+          />
           <Stack.Screen
             name="Answer"
             component={Answer}
@@ -73,6 +126,3 @@ function App(): JSX.Element {
     </Provider>
   );
 }
-
-export default App;
-// export default withAuthenticator(App);

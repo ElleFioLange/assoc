@@ -5,9 +5,6 @@ declare module "*.svg" {
   export default content;
 }
 
-declare module "aws-amplify-react-native";
-declare module "*aws-exports";
-
 type ContentData = {
   isVideo: boolean;
   uri: string;
