@@ -1,10 +1,13 @@
 import React from "react";
-import { ScrollView, Text, Switch, View, Pressable } from "react-native";
+import * as firebase from "firebase";
+import { ScrollView, Text, Switch, View, Pressable, Alert } from "react-native";
 import { useAppSelector, useAppDispatch } from "../utils/hooks";
 import { setInvertBg, setAutoAd } from "../utils/settingsSlice";
 import { styles } from "../utils/styles";
 
 export default function Settings({ navigation }: SettingsProps): JSX.Element {
+  firebase.app();
+
   const userName = useAppSelector((state) => state.user.displayName);
   const invertBg = useAppSelector((state) => state.settings.invertBg);
   const autoAd = useAppSelector((state) => state.settings.autoAd);
@@ -16,6 +19,14 @@ export default function Settings({ navigation }: SettingsProps): JSX.Element {
 
   function toggleAutoAd() {
     dispatch(setAutoAd(!autoAd));
+  }
+
+  function signOut() {
+    firebase
+      .auth()
+      .signOut()
+      .then(() => navigation.navigate("Landing"))
+      .catch((e) => Alert.alert("Error signing out", e.message));
   }
 
   return (
@@ -56,7 +67,7 @@ export default function Settings({ navigation }: SettingsProps): JSX.Element {
             styles.logOut,
             styles.marginTopDouble,
           ]}
-          // onPress={() => navigation.navigate("SignIn")}
+          onPress={signOut}
         >
           <Text style={[styles.avenir, styles.logOutText]}>Sign out</Text>
         </Pressable>

@@ -9,7 +9,7 @@ import { Provider } from "react-redux";
 import * as firebase from "firebase";
 import * as SecureStore from "expo-secure-store";
 
-import SignIn from "./screens/SignIn";
+import Landing from "./screens/Landing";
 import Home from "./screens/Home";
 import Answer from "./screens/Answer";
 import ItemInfo from "./screens/ItemInfo";
@@ -65,6 +65,7 @@ firebase.auth().onAuthStateChanged((user) => {
     firebase.database().ref(`users/${uid}/map`).off();
     firebase.database().ref(`users/${uid}/curNodeId`).off();
     store.dispatch(setUser({ uid: "", displayName: "" }));
+    SecureStore.deleteItemAsync("credential");
   }
 });
 
@@ -111,10 +112,14 @@ export default function App(): JSX.Element {
     <Provider store={store}>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName={credStatus === "available" ? "Home" : "SignIn"}
+          initialRouteName={credStatus === "available" ? "Home" : "Landing"}
           screenOptions={{ headerShown: false }}
         >
-          <Stack.Screen name="SignIn" component={SignIn} />
+          <Stack.Screen
+            name="Landing"
+            component={Landing}
+            options={{ gestureEnabled: false }}
+          />
           <Stack.Screen
             name="Home"
             component={Home}

@@ -1,11 +1,9 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useState, useRef } from "react";
 import * as firebase from "firebase";
-import * as SecureStore from "expo-secure-store";
-import { useAppDispatch, useThunkDispatch } from "../utils/hooks";
-import { setUserInfo } from "../utils/userSlice";
+import { useAppDispatch } from "../utils/hooks";
+import { setUser } from "../utils/userSlice";
 import {
-  View,
   TextInput,
   Pressable,
   Alert,
@@ -21,11 +19,8 @@ import {
 import { styles, width } from "../utils/styles";
 const AnimTextInput = Animated.createAnimatedComponent(TextInput);
 
-export default function SignIn({ navigation }: SignInProps): JSX.Element {
+export default function Landing({ navigation }: LandingProps): JSX.Element {
   firebase.app();
-
-  const dispatch = useAppDispatch();
-  const thunkDispatch = useThunkDispatch();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -68,44 +63,35 @@ export default function SignIn({ navigation }: SignInProps): JSX.Element {
         }).start();
   };
 
-  async function signIn(
-    email: string,
-    password: string,
-    successCb: () => void,
-    errCb: (e: Error) => void
-  ) {
-    const credential = firebase.auth.EmailAuthProvider.credential(
-      email,
-      password
-    );
+  async function signIn(email: string, password: string) {
     firebase
       .auth()
-      .signInWithCredential(credential)
-      .then(async (credential) => {
-        console.log(credential);
-        await SecureStore.setItemAsync(
-          "credential",
-          JSON.stringify({ email, password })
-        );
-        const { uid, displayName } = credential.user!;
-        dispatch(setUserInfo({ uid, displayName }));
-        thunkDispatch(fetchMap());
-        thunkDispatch(fetchTokens());
-        successCb();
-      }, errCb);
+      .signInWithEmailAndPassword(email, password)
+      .then(() => {
+        setEmail("");
+        setPassword("");
+        navigation.navigate("Home");
+      })
+      .catch((e) => Alert.alert("Error signing in", e.message));
   }
 
-  function successCb() {
-    Keyboard.dismiss();
-    emailRef.current!.blur();
-    passwordRef.current!.blur();
-    setEmail("");
-    setPassword("");
-    navigation.navigate("Home");
-  }
-
-  function errCb(e: Error) {
-    Alert.alert("Error signing in", e.message);
+  async function signUp(email: string, password: string) {
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then(({ user }) => {
+        firebase
+          .database()
+          .ref("userInit")
+          .once("value", (snapshot) => {
+            firebase.database().ref(`users/${user!.uid}`).set(snapshot.val());
+          });
+        user!.updateProfile({ displayName: "budyy" });
+        setEmail("");
+        setPassword("");
+        navigation.navigate("Home");
+      })
+      .catch((e) => Alert.alert("Error signing up", e.message));
   }
 
   return (
@@ -193,10 +179,10 @@ export default function SignIn({ navigation }: SignInProps): JSX.Element {
             ]}
             onPress={() => {
               Keyboard.dismiss();
-              if (emailRef.current) emailRef.current.blur();
-              if (passwordRef.current) passwordRef.current.blur();
+              emailRef.current!.blur();
+              passwordRef.current!.blur();
 
-              signIn(email, password, successCb, errCb);
+              signIn(email, password);
             }}
           >
             <Text style={styles.purchaseText}>Sign In</Text>
@@ -209,7 +195,13 @@ export default function SignIn({ navigation }: SignInProps): JSX.Element {
               styles.logOut,
               styles.marginTop,
             ]}
-            onPress={() => navigation.navigate("Home")}
+            onPress={() => {
+              Keyboard.dismiss();
+              emailRef.current!.blur();
+              passwordRef.current!.blur();
+
+              signUp(email, password);
+            }}
           >
             <Text style={styles.purchaseText}>Sign Up</Text>
           </Pressable>

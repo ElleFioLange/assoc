@@ -41,7 +41,7 @@ type NodeData = {
 };
 
 type RootStackParamList = {
-  SignIn: undefined;
+  Landing: undefined;
   Home: undefined;
   Answer: { answer: string };
   ItemInfo: { item: ItemData };
@@ -53,9 +53,9 @@ type RootStackParamList = {
   Tokens: undefined;
 };
 
-type SignInProps = import("react-native-screens/native-stack").NativeStackScreenProps<
+type LandingProps = import("react-native-screens/native-stack").NativeStackScreenProps<
   RootStackParamList,
-  "SignIn"
+  "Landing"
 >;
 
 type HomeProps = import("react-native-screens/native-stack").NativeStackScreenProps<
