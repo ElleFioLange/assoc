@@ -1,22 +1,22 @@
 import React from "react";
 import { ScrollView, View, Text, Pressable } from "react-native";
 import { useAppSelector, useThunkDispatch } from "../utils/hooks";
-import { addTokens } from "../utils/tokensSlice";
+import { setTokens } from "../utils/tokensSlice";
 import { styles } from "../utils/styles";
 
 export default function Tokens(): JSX.Element {
   const dispatch = useThunkDispatch();
-  const quantity = useAppSelector((state) => state.tokens.quantity);
+  const tokens = useAppSelector((state) => state.tokens);
 
   function buyTokens(quantity: number) {
-    dispatch(addTokens(quantity));
+    dispatch(setTokens(quantity + tokens));
   }
 
   return (
     <ScrollView style={[styles.scrollPadding, styles.whiteBg]}>
       <View style={styles.container}>
         <Text style={[styles.avenir, styles.s_tTitle, styles.marginTopDouble]}>
-          You have {quantity} tokens
+          You have {tokens} tokens
         </Text>
       </View>
       <View style={[styles.container, styles.marginTopDouble]}>

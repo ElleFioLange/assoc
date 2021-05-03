@@ -5,6 +5,8 @@ export const width = win.width * 0.8;
 
 export const accentBlue = "#1122f4";
 
+// TODO clean this shit up bro
+
 export const styles = StyleSheet.create({
   // Container and spacing utils ---------------
 
@@ -78,6 +80,7 @@ export const styles = StyleSheet.create({
   carouselImage: {
     flex: 1,
     resizeMode: "contain",
+    // alignSelf: "center",
   },
   pressableContainer: {
     display: "flex",
@@ -98,6 +101,7 @@ export const styles = StyleSheet.create({
   },
 
   // Answer ---------------
+
   answer: {
     fontSize: 20,
     textAlign: "center",
@@ -146,7 +150,7 @@ export const styles = StyleSheet.create({
   shelfItem: {
     display: "flex",
     justifyContent: "center",
-    alignItems: "flex-end",
+    alignItems: "center",
     width,
   },
 

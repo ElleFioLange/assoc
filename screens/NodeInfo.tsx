@@ -14,11 +14,12 @@ export default function NodeInfo({
   route,
 }: NodeInfoProps): JSX.Element {
   const { node } = route.params;
+  const items = Object.keys(node.items).map((key) => node.items[key]);
   return (
     <ScrollView style={[styles.whiteBg, styles.scrollPadding]}>
       <View style={styles.container}>
         <FlatList
-          data={Array.from(node.items.values())}
+          data={items}
           renderItem={({ item }) => (
             <View style={styles.shelfItem}>
               <TouchableWithoutFeedback
@@ -49,7 +50,7 @@ export default function NodeInfo({
             {
               height:
                 Math.max(
-                  ...Array.from(node.items.values()).map(
+                  ...items.map(
                     (item) => item.mainContent.h / item.mainContent.w
                   )
                 ) * width,

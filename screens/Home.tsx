@@ -45,6 +45,7 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
 
   // Toggle the loading animation
   const toggleAnimation = (anim: boolean) => {
+    setLoading(anim);
     anim
       ? Animated.timing(fadeAnim, {
           toValue: 0.25,
@@ -283,3 +284,5 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
     </ImageBackground>
   );
 }
+
+// TODO fix the image to use the new item.content property instead of item.mainContent

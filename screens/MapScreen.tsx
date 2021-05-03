@@ -3,7 +3,7 @@ import React, { useRef, useState } from "react";
 import { View, StyleSheet, Animated, PanResponder } from "react-native";
 import Svg, { Polygon, Text, G } from "react-native-svg";
 import { useAppSelector, useAppDispatch } from "../utils/hooks";
-import { selectNodes, switchNode } from "../utils/mapSlice";
+import { selectNodes, setCurNodeId } from "../utils/mapSlice";
 import { styles, win } from "../utils/styles";
 
 // Parameters for sizing
@@ -172,7 +172,7 @@ export default function MapScreen({ navigation }: MapProps): JSX.Element {
                   navigation.navigate("NodeInfo", { node: data[0] })
                 }
                 onLongPress={() => {
-                  dispatch(switchNode(data[1].id));
+                  dispatch(setCurNodeId(data[1].id));
                   navigation.navigate("Home");
                 }}
                 // rotation={test.length - 1 - index}

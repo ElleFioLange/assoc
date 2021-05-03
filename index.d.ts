@@ -13,11 +13,13 @@ type ContentData = {
 };
 
 type ItemData = {
+  id: string;
   name: string;
+  description: string;
   parentName: string;
   parentId: string;
-  mainContent: ContentData;
-  secondaryContent?: ContentData[];
+  content: ContentData[];
+  type: "image" | "video" | "audio";
   numUnlocked: number;
   purchaseInfo: {
     static?: number;
@@ -33,6 +35,7 @@ type ItemData = {
 type NodeData = {
   id: string;
   name: string;
+  description: string;
   parentId: string;
   incoming: Record<string, string>;
   outgoing: Record<string, string>;

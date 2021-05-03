@@ -24,6 +24,7 @@ import store from "./utils/store";
 import { setUser } from "./utils/userSlice";
 import { setTokens } from "./utils/tokensSlice";
 import { setMap, setCurNodeId } from "./utils/mapSlice";
+import { fetchSettings } from "./utils/settingsSlice";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBBrOZTRhISAGWaj6JjVm8DTPpzHRT9VRI",
@@ -65,7 +66,7 @@ firebase.auth().onAuthStateChanged((user) => {
     firebase.database().ref(`users/${uid}/map`).off();
     firebase.database().ref(`users/${uid}/curNodeId`).off();
     store.dispatch(setUser({ uid: "", displayName: "" }));
-    SecureStore.deleteItemAsync("credential");
+    // SecureStore.deleteItemAsync("credential");
   }
 });
 
@@ -76,6 +77,7 @@ export default function App(): JSX.Element {
   const [credStatus, setCredStatus] = useState("checking");
 
   useEffect(() => {
+    store.dispatch(fetchSettings());
     checkForCredential().then((available) => {
       if (available) {
         setCredStatus("available");

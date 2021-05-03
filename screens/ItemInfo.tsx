@@ -1,6 +1,16 @@
 import React from "react";
-import { View, Image, Text, ScrollView, Pressable } from "react-native";
+import {
+  View,
+  Image,
+  Text,
+  ScrollView,
+  Pressable,
+  FlatList,
+} from "react-native";
 import { styles, width } from "../utils/styles";
+
+// TODO fix the image to use the new item.content property instead of item.mainContent
+// TODO item description
 
 export default function ItemInfo({
   navigation,
@@ -10,7 +20,43 @@ export default function ItemInfo({
   return (
     <ScrollView style={[styles.whiteBg]}>
       <View style={styles.container}>
-        <Image
+        <FlatList
+          data={items}
+          renderItem={({ item }) => {
+            return (
+              <View style={styles.shelfItem}>
+                <Image
+                  source={{ uri: item.mainContent.uri }}
+                  style={[styles.carouselImage]}
+                  width={
+                    item.mainContent.w >= item.mainContent.h
+                      ? width
+                      : (width * item.mainContent.w) / item.mainContent.h
+                  }
+                  height={
+                    item.mainContent.w < item.mainContent.h
+                      ? width
+                      : (width * item.mainContent.h) / item.mainContent.w
+                  }
+                />
+              </View>
+            );
+          }}
+          horizontal={true}
+          style={[
+            styles.shelf,
+            {
+              height:
+                Math.max(
+                  ...items.map(
+                    (item) => item.mainContent.h / item.mainContent.w
+                  )
+                ) * width,
+            },
+          ]}
+          keyExtractor={(item) => item.id}
+        />
+        {/* <Image
           source={{ uri: item.mainContent.uri }}
           style={[styles.carouselImage, styles.marginTopDouble]}
           width={
@@ -23,7 +69,7 @@ export default function ItemInfo({
               ? width
               : (width * item.mainContent.h) / item.mainContent.w
           }
-        />
+        /> */}
         <Text style={[styles.itemName, styles.marginTopDouble, styles.avenir]}>
           {item.name}
         </Text>

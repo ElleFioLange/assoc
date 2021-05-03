@@ -1,9 +1,12 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useState, useRef } from "react";
 import * as firebase from "firebase";
+import * as SecureStore from "expo-secure-store";
 import { useAppDispatch } from "../utils/hooks";
 import { setUser } from "../utils/userSlice";
 import {
+  Modal,
+  View,
   TextInput,
   Pressable,
   Alert,
@@ -16,21 +19,44 @@ import {
   Keyboard,
   Platform,
 } from "react-native";
-import { styles, width } from "../utils/styles";
+import { styles, width, win } from "../utils/styles";
 const AnimTextInput = Animated.createAnimatedComponent(TextInput);
+
+// TODO add an age check to sign up
+// TODO make a more interesting background
 
 export default function Landing({ navigation }: LandingProps): JSX.Element {
   firebase.app();
+  const dispatch = useAppDispatch();
 
+  const [modal, setModal] = useState(false);
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const nameAnim = useRef(new Animated.Value(0)).current;
   const emailAnim = useRef(new Animated.Value(0)).current;
   const passwordAnim = useRef(new Animated.Value(0)).current;
 
+  const nameRef = useRef<TextInput>();
   const emailRef = useRef<TextInput>();
   const passwordRef = useRef<TextInput>();
 
+  const toggleName = (focused: boolean) => {
+    focused
+      ? Animated.timing(nameAnim, {
+          useNativeDriver: true,
+          toValue: 1,
+          duration: 200,
+          easing: Easing.ease,
+        }).start()
+      : Animated.timing(nameAnim, {
+          useNativeDriver: true,
+          toValue: 0,
+          duration: 200,
+          easing: Easing.ease,
+        }).start();
+  };
   const toggleEmail = (focused: boolean) => {
     focused
       ? Animated.timing(emailAnim, {
@@ -46,7 +72,6 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
           easing: Easing.ease,
         }).start();
   };
-
   const togglePassword = (focused: boolean) => {
     focused
       ? Animated.timing(passwordAnim, {
@@ -63,33 +88,70 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
         }).start();
   };
 
-  async function signIn(email: string, password: string) {
-    firebase
-      .auth()
-      .signInWithEmailAndPassword(email, password)
-      .then(() => {
-        setEmail("");
-        setPassword("");
-        navigation.navigate("Home");
-      })
-      .catch((e) => Alert.alert("Error signing in", e.message));
+  function testInputs() {
+    const regex = RegExp(
+      // eslint-disable-next-line no-useless-escape
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+    if (!regex.test(email)) {
+      Alert.alert("Invalid email", "You probably have a typo");
+      return false;
+    }
+    if (password.length < 12) {
+      Alert.alert(
+        "Password too short",
+        'Passwords must be at least 12 characters. Try using a passphrase to make it easier to remember, like "crabsatthebeach"'
+      );
+      return false;
+    }
+    return true;
   }
 
-  async function signUp(email: string, password: string) {
+  async function signIn() {
+    if (testInputs()) {
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password)
+        .then(() => {
+          SecureStore.setItemAsync(
+            "credential",
+            JSON.stringify({ email, password })
+          );
+          setEmail("");
+          setPassword("");
+          navigation.replace("Home");
+        })
+        .catch((e) => Alert.alert("Error signing in", e.message));
+    }
+  }
+
+  function getName() {
+    if (testInputs()) {
+      setModal(true);
+    }
+  }
+
+  async function signUp() {
     firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
       .then(({ user }) => {
+        SecureStore.setItemAsync(
+          "credential",
+          JSON.stringify({ email, password })
+        );
         firebase
           .database()
           .ref("userInit")
           .once("value", (snapshot) => {
             firebase.database().ref(`users/${user!.uid}`).set(snapshot.val());
           });
-        user!.updateProfile({ displayName: "budyy" });
+        user!.updateProfile({ displayName: name });
+        dispatch(setUser({ displayName: name }));
         setEmail("");
         setPassword("");
-        navigation.navigate("Home");
+        setName("");
+        navigation.replace("Home");
       })
       .catch((e) => Alert.alert("Error signing up", e.message));
   }
@@ -107,6 +169,85 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           style={styles.container}
         >
+          <Modal
+            visible={modal}
+            transparent={false}
+            animationType="slide"
+            onRequestClose={() => setModal(false)}
+          >
+            <TouchableWithoutFeedback
+              style={styles.container}
+              onPress={Keyboard.dismiss}
+            >
+              <KeyboardAvoidingView
+                behavior={Platform.OS === "ios" ? "padding" : "height"}
+                style={styles.container}
+              >
+                <View style={[styles.container, { minWidth: win.width }]}>
+                  <AnimTextInput
+                    onChangeText={setName}
+                    allowFontScaling={false}
+                    // disableFullscreenUI
+                    value={name}
+                    placeholder="name"
+                    placeholderTextColor="#9194ab"
+                    ref={nameRef}
+                    style={[
+                      styles.input,
+                      styles.shadow,
+                      {
+                        shadowOffset: {
+                          width: 0,
+                          height: nameAnim.interpolate({
+                            inputRange: [0, 1],
+                            outputRange: [0, width],
+                          }),
+                        },
+                        shadowRadius: nameAnim.interpolate({
+                          inputRange: [0, 1],
+                          outputRange: [0, 10],
+                        }),
+                      },
+                      styles.border,
+                    ]}
+                    onFocus={() => toggleName(true)}
+                    onBlur={() => toggleName(false)}
+                  />
+                  <Pressable
+                    style={({ pressed }) => [
+                      {
+                        backgroundColor: pressed ? "#395aff" : "#1122f4",
+                      },
+                      styles.logOut,
+                      styles.marginTopDouble,
+                    ]}
+                    onPress={() => {
+                      setModal(false);
+                      signUp();
+                    }}
+                  >
+                    <Text style={styles.purchaseText}>Submit</Text>
+                  </Pressable>
+                  <Pressable
+                    style={({ pressed }) => [
+                      {
+                        backgroundColor: pressed ? "#395aff" : "#1122f4",
+                      },
+                      styles.logOut,
+                      styles.marginTop,
+                    ]}
+                    onPress={() => {
+                      setName("");
+                      toggleName(false);
+                      setModal(false);
+                    }}
+                  >
+                    <Text style={styles.purchaseText}>Cancel</Text>
+                  </Pressable>
+                </View>
+              </KeyboardAvoidingView>
+            </TouchableWithoutFeedback>
+          </Modal>
           <AnimTextInput
             keyboardType="email-address"
             onChangeText={setEmail}
@@ -115,6 +256,7 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
             disableFullscreenUI
             value={email}
             placeholder="email"
+            placeholderTextColor="#9194ab"
             ref={emailRef}
             style={[
               styles.input,
@@ -140,12 +282,13 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
           />
           <AnimTextInput
             secureTextEntry
-            onChangeText={setPassword}
+            onChangeText={(input) => setPassword(input.trim())}
             allowFontScaling={false}
             autoCapitalize="none"
             disableFullscreenUI
             value={password}
             placeholder="password"
+            placeholderTextColor="#9194ab"
             ref={passwordRef}
             style={[
               styles.input,
@@ -182,7 +325,7 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
               emailRef.current!.blur();
               passwordRef.current!.blur();
 
-              signIn(email, password);
+              signIn();
             }}
           >
             <Text style={styles.purchaseText}>Sign In</Text>
@@ -200,7 +343,7 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
               emailRef.current!.blur();
               passwordRef.current!.blur();
 
-              signUp(email, password);
+              getName();
             }}
           >
             <Text style={styles.purchaseText}>Sign Up</Text>

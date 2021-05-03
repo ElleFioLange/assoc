@@ -1,5 +1,10 @@
-const a = null;
+const a = {
+  b: 1,
+  c: 2
+};
 
-const b = a || 193;
+const d = {
+  b: 3
+}
 
-console.log(b);
+b = 

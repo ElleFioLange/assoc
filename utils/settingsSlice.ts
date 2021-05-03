@@ -1,10 +1,17 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const initialState = {
   invertBg: false,
   autoAd: false,
-  saveCredentials: false,
+  disableAnimations: false,
 };
+
+export const fetchSettings = createAsyncThunk("settings/fetch", async () => {
+  const settings = await AsyncStorage.getItem("settings");
+  console.log(settings);
+  return settings;
+});
 
 const settingsSlice = createSlice({
   name: "settings",
@@ -12,20 +19,44 @@ const settingsSlice = createSlice({
   reducers: {
     setInvertBg(state, action) {
       state.invertBg = action.payload;
+      AsyncStorage.setItem(
+        "settings",
+        JSON.stringify({ ...state, invertBg: action.payload })
+      );
     },
     setAutoAd(state, action) {
       state.autoAd = action.payload;
+      AsyncStorage.setItem(
+        "settings",
+        JSON.stringify({ ...state, autoAd: action.payload })
+      );
     },
-    setSaveCredentials(state, action) {
-      state.saveCredentials = action.payload;
+    setDisableAnimations(state, action) {
+      state.disableAnimations = action.payload;
+      AsyncStorage.setItem(
+        "settings",
+        JSON.stringify({ ...state, disableAnimations: action.payload })
+      );
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(fetchSettings.fulfilled, (state, action) => {
+      if (action.payload) {
+        const { invertBg, autoAd, disableAnimations } = JSON.parse(
+          action.payload
+        );
+        state.invertBg = invertBg;
+        state.autoAd = autoAd;
+        state.disableAnimations = disableAnimations;
+      }
+    });
   },
 });
 
 export const {
   setInvertBg,
   setAutoAd,
-  setSaveCredentials,
+  setDisableAnimations,
 } = settingsSlice.actions;
 
 export default settingsSlice.reducer;
