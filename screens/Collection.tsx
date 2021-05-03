@@ -1,20 +1,14 @@
 import React from "react";
-import {
-  FlatList,
-  View,
-  Text,
-  Image,
-  TouchableWithoutFeedback,
-} from "react-native";
+import { FlatList, View, Text } from "react-native";
+import NodeItemList from "../components/NodeItemList";
 import { useAppSelector } from "../utils/hooks";
 import { selectNodes } from "../utils/mapSlice";
-import { styles, width } from "../utils/styles";
-
-// TODO fix the image to use the new item.content property instead of item.mainContent
+import { styles } from "../utils/styles";
 
 export default function Collection({ navigation }: MineProps): JSX.Element {
+  const curNodeId = useAppSelector((state) => state.map.curNodeId);
   const nodes = useAppSelector(selectNodes);
-  // nodes.sort((a, b) => a.minD(map.curNode.id) - b.minD(map.curNode.id));
+  nodes.sort((a, b) => a.minD[curNodeId] - b.minD[curNodeId]);
 
   return (
     <View style={[styles.container, styles.whiteBg]}>
@@ -25,60 +19,17 @@ export default function Collection({ navigation }: MineProps): JSX.Element {
           // as an object with the node and index, instead of just
           // passing them as separate optional values.
           // node.item is the actual NodeData
-          const items = Object.keys(node.item.items).map(
-            (key) => node.item.items[key]
-          );
           return (
             <React.Fragment key={node.item.id}>
-              <FlatList
-                data={items}
-                renderItem={({ item }) => {
-                  return (
-                    <View style={styles.shelfItem}>
-                      <TouchableWithoutFeedback
-                        onPress={() => {
-                          navigation.navigate("ItemInfo", { item });
-                        }}
-                      >
-                        <Image
-                          source={{ uri: item.mainContent.uri }}
-                          style={[styles.carouselImage]}
-                          width={
-                            item.mainContent.w >= item.mainContent.h
-                              ? width
-                              : (width * item.mainContent.w) /
-                                item.mainContent.h
-                          }
-                          height={
-                            item.mainContent.w < item.mainContent.h
-                              ? width
-                              : (width * item.mainContent.h) /
-                                item.mainContent.w
-                          }
-                        />
-                      </TouchableWithoutFeedback>
-                    </View>
-                  );
-                }}
-                horizontal={true}
-                style={[
-                  styles.shelf,
-                  {
-                    height:
-                      Math.max(
-                        ...items.map(
-                          (item) => item.mainContent.h / item.mainContent.w
-                        )
-                      ) * width,
-                  },
-                ]}
-                keyExtractor={(item) => item.id}
+              <NodeItemList
+                node={node.item}
+                openItem={(item) => navigation.navigate("ItemInfo", { item })}
               />
               <Text
                 style={[
                   styles.avenir,
                   styles.marginTop,
-                  { fontSize: 20, fontWeight: "200" },
+                  { fontSize: 20, fontWeight: "400" },
                 ]}
               >
                 {node.item.name}

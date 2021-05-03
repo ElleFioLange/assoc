@@ -143,11 +143,7 @@ export default function App(): JSX.Element {
             options={{ stackPresentation: "fullScreenModal" }}
           />
           <Stack.Screen name="Map" component={MapScreen} />
-          <Stack.Screen
-            name="NodeInfo"
-            component={NodeInfo}
-            options={{ stackPresentation: "formSheet" }}
-          />
+          <Stack.Screen name="NodeInfo" component={NodeInfo} />
           <Stack.Screen name="Collection" component={Collection} />
           <Stack.Screen name="Settings" component={Settings} />
           <Stack.Screen name="Tokens" component={Tokens} />

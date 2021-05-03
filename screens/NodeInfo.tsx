@@ -1,12 +1,6 @@
 import React from "react";
-import {
-  View,
-  Image,
-  Text,
-  ScrollView,
-  FlatList,
-  TouchableWithoutFeedback,
-} from "react-native";
+import { View, Text, ScrollView } from "react-native";
+import NodeItemList from "../components/NodeItemList";
 import { styles, width } from "../utils/styles";
 
 export default function NodeInfo({
@@ -14,49 +8,12 @@ export default function NodeInfo({
   route,
 }: NodeInfoProps): JSX.Element {
   const { node } = route.params;
-  const items = Object.keys(node.items).map((key) => node.items[key]);
   return (
     <ScrollView style={[styles.whiteBg, styles.scrollPadding]}>
       <View style={styles.container}>
-        <FlatList
-          data={items}
-          renderItem={({ item }) => (
-            <View style={styles.shelfItem}>
-              <TouchableWithoutFeedback
-                onPress={() => {
-                  navigation.navigate("ItemInfo", { item });
-                }}
-              >
-                <Image
-                  source={{ uri: item.mainContent.uri }}
-                  style={[styles.carouselImage]}
-                  width={
-                    item.mainContent.w >= item.mainContent.h
-                      ? width
-                      : (width * item.mainContent.w) / item.mainContent.h
-                  }
-                  height={
-                    item.mainContent.w < item.mainContent.h
-                      ? width
-                      : (width * item.mainContent.h) / item.mainContent.w
-                  }
-                />
-              </TouchableWithoutFeedback>
-            </View>
-          )}
-          horizontal={true}
-          style={[
-            styles.shelf,
-            {
-              height:
-                Math.max(
-                  ...items.map(
-                    (item) => item.mainContent.h / item.mainContent.w
-                  )
-                ) * width,
-              width,
-            },
-          ]}
+        <NodeItemList
+          node={node}
+          openItem={(item) => navigation.navigate("ItemInfo", { item })}
         />
         <Text style={[styles.itemName, styles.marginTopDouble, styles.avenir]}>
           {node.name}

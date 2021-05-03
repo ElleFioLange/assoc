@@ -34,6 +34,48 @@ export default function Tokens(): JSX.Element {
             <Text style={[styles.avenir, styles.purchaseText]}>$1.00</Text>
           </Pressable>
         </View>
+        <View style={[styles.s_tContainer, styles.marginTop]}>
+          <Text style={styles.s_tName}>25 Tokens</Text>
+          <Pressable
+            style={({ pressed }) => [
+              {
+                backgroundColor: pressed ? "#395aff" : "#1122f4",
+              },
+              styles.tokenPurchase,
+            ]}
+            onPress={() => buyTokens(25)}
+          >
+            <Text style={[styles.avenir, styles.purchaseText]}>$2.00</Text>
+          </Pressable>
+        </View>
+        <View style={[styles.s_tContainer, styles.marginTop]}>
+          <Text style={styles.s_tName}>75 Tokens</Text>
+          <Pressable
+            style={({ pressed }) => [
+              {
+                backgroundColor: pressed ? "#395aff" : "#1122f4",
+              },
+              styles.tokenPurchase,
+            ]}
+            onPress={() => buyTokens(75)}
+          >
+            <Text style={[styles.avenir, styles.purchaseText]}>$5.00</Text>
+          </Pressable>
+        </View>
+        <View style={[styles.s_tContainer, styles.marginTop]}>
+          <Text style={styles.s_tName}>200 Tokens</Text>
+          <Pressable
+            style={({ pressed }) => [
+              {
+                backgroundColor: pressed ? "#395aff" : "#1122f4",
+              },
+              styles.tokenPurchase,
+            ]}
+            onPress={() => buyTokens(200)}
+          >
+            <Text style={[styles.avenir, styles.purchaseText]}>$10.00</Text>
+          </Pressable>
+        </View>
       </View>
     </ScrollView>
   );

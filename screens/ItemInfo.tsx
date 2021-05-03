@@ -20,72 +20,57 @@ export default function ItemInfo({
   return (
     <ScrollView style={[styles.whiteBg]}>
       <View style={styles.container}>
-        <FlatList
-          data={items}
-          renderItem={({ item }) => {
-            return (
-              <View style={styles.shelfItem}>
-                <Image
-                  source={{ uri: item.mainContent.uri }}
-                  style={[styles.carouselImage]}
-                  width={
-                    item.mainContent.w >= item.mainContent.h
-                      ? width
-                      : (width * item.mainContent.w) / item.mainContent.h
-                  }
-                  height={
-                    item.mainContent.w < item.mainContent.h
-                      ? width
-                      : (width * item.mainContent.h) / item.mainContent.w
-                  }
-                />
-              </View>
-            );
-          }}
-          horizontal={true}
-          style={[
-            styles.shelf,
-            {
-              height:
-                Math.max(
-                  ...items.map(
-                    (item) => item.mainContent.h / item.mainContent.w
-                  )
-                ) * width,
-            },
-          ]}
-          keyExtractor={(item) => item.id}
-        />
-        {/* <Image
-          source={{ uri: item.mainContent.uri }}
-          style={[styles.carouselImage, styles.marginTopDouble]}
-          width={
-            item.mainContent.w >= item.mainContent.h
-              ? width
-              : (width * item.mainContent.w) / item.mainContent.h
-          }
-          height={
-            item.mainContent.w < item.mainContent.h
-              ? width
-              : (width * item.mainContent.h) / item.mainContent.w
-          }
-        /> */}
+        {item.content.length > 1 ? (
+          <FlatList
+            data={item.content}
+            // FlatList is very stupid and passes the data
+            // as an object with the content under the key "item"
+            renderItem={({ item }) => {
+              return (
+                <View style={styles.shelfItem}>
+                  <Image
+                    source={{ uri: item.uri }}
+                    style={[styles.carouselImage]}
+                    width={item.w >= item.h ? width : (width * item.w) / item.h}
+                    height={item.w < item.h ? width : (width * item.h) / item.w}
+                  />
+                </View>
+              );
+            }}
+            horizontal={true}
+            style={[
+              styles.shelf,
+              {
+                height:
+                  Math.max(
+                    ...item.content.map((content) => content.h / content.w)
+                  ) * width,
+              },
+              styles.marginTopDouble,
+            ]}
+            keyExtractor={(_, index) => `${item.id}-content-${index}`}
+          />
+        ) : (
+          <Image
+            source={{ uri: item.content[0].uri }}
+            style={[styles.carouselImage, styles.marginTopDouble]}
+            width={
+              item.content[0].w >= item.content[0].h
+                ? width
+                : (width * item.content[0].w) / item.content[0].h
+            }
+            height={
+              item.content[0].w < item.content[0].h
+                ? width
+                : (width * item.content[0].h) / item.content[0].w
+            }
+          />
+        )}
         <Text style={[styles.itemName, styles.marginTopDouble, styles.avenir]}>
           {item.name}
         </Text>
         <Text style={[styles.itemDescription, styles.marginTop, styles.avenir]}>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas et
-          velit nec lacus mattis viverra laoreet nec magna. Mauris semper turpis
-          non commodo bibendum. Vivamus consectetur nulla id nunc fermentum, eu
-          rhoncus ex aliquet. Curabitur vehicula justo viverra ex facilisis, et
-          facilisis ante pulvinar. Curabitur convallis purus non augue dapibus,
-          vel tristique nunc feugiat. Etiam et elit interdum, lobortis odio sit
-          amet, aliquet odio. Duis mollis vestibulum velit in tincidunt. Cras
-          massa leo, blandit in facilisis a, euismod in elit. Nulla gravida
-          blandit finibus. Proin tincidunt augue sapien, at porttitor quam
-          egestas quis. Suspendisse quis aliquet turpis. Phasellus tortor orci,
-          hendrerit nec lectus sit amet, commodo rhoncus ex. Praesent gravida
-          maximus dignissim.
+          {item.description}
         </Text>
         {item.purchaseInfo ? (
           <Pressable

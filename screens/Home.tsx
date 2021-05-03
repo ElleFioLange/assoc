@@ -2,7 +2,6 @@
 import React, { useState, useRef } from "react";
 import { useAppSelector } from "../utils/hooks";
 import { selectNodeById } from "../utils/mapSlice";
-import AppLoading from "expo-app-loading";
 import {
   View,
   ImageBackground,
@@ -66,7 +65,7 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
 
   const handleAsc = (question: string) => {
     toggleAnimation(true);
-    sleep(1500).then((value) => {
+    sleep(1500).then(() => {
       toggleAnimation(false);
       setAsc("");
       navigation.navigate("Answer", { answer: "Placeholder" });
@@ -192,20 +191,20 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
                       ]}
                     >
                       <Image
-                        source={{ uri: item.mainContent.uri }}
+                        source={{ uri: item.content[0].uri }}
                         style={[
                           { opacity: hideItems ? 0 : 1 },
                           styles.carouselImage,
                         ]}
                         width={
-                          item.mainContent.w >= item.mainContent.h
+                          item.content[0].w >= item.content[0].h
                             ? width
-                            : (width * item.mainContent.w) / item.mainContent.h
+                            : (width * item.content[0].w) / item.content[0].h
                         }
                         height={
-                          item.mainContent.w < item.mainContent.h
+                          item.content[0].w < item.content[0].h
                             ? width
-                            : (width * item.mainContent.h) / item.mainContent.w
+                            : (width * item.content[0].h) / item.content[0].w
                         }
                       />
                     </View>
