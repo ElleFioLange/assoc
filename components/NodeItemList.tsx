@@ -18,9 +18,14 @@ export default function NodeItemList({
         return (
           <View style={styles.shelfItem}>
             <TouchableWithoutFeedback onPress={() => openItem(item)}>
+              {/* 
+              I have absolutely no idea why, but if I use the
+              custom image component that I wrote then it eats the
+              touch responder or something and openItem never gets called.
+              */}
               <Image
-                source={{ uri: content.uri }}
-                style={[styles.carouselImage]}
+                source={{ uri: content.uri, cache: "force-cache" }}
+                style={styles.image}
                 width={
                   content.w >= content.h
                     ? width
@@ -37,15 +42,7 @@ export default function NodeItemList({
         );
       }}
       horizontal={true}
-      style={[
-        styles.shelf,
-        {
-          height:
-            Math.max(
-              ...items.map((item) => item.content[0].h / item.content[0].w)
-            ) * width,
-        },
-      ]}
+      style={styles.shelf}
       keyExtractor={(item) => item.id}
     />
   );

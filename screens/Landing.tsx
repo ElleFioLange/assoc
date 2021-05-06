@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useState, useRef } from "react";
 import * as firebase from "firebase";
 import * as SecureStore from "expo-secure-store";
@@ -23,7 +22,6 @@ import { styles, width, win } from "../utils/styles";
 const AnimTextInput = Animated.createAnimatedComponent(TextInput);
 
 // TODO add an age check to sign up
-// TODO make a more interesting background
 
 export default function Landing({ navigation }: LandingProps): JSX.Element {
   firebase.app();
@@ -132,28 +130,33 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
   }
 
   async function signUp() {
-    firebase
-      .auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then(({ user }) => {
-        SecureStore.setItemAsync(
-          "credential",
-          JSON.stringify({ email, password })
-        );
-        firebase
-          .database()
-          .ref("userInit")
-          .once("value", (snapshot) => {
-            firebase.database().ref(`users/${user!.uid}`).set(snapshot.val());
-          });
-        user!.updateProfile({ displayName: name });
-        dispatch(setUser({ displayName: name }));
-        setEmail("");
-        setPassword("");
-        setName("");
-        navigation.replace("Home");
-      })
-      .catch((e) => Alert.alert("Error signing up", e.message));
+    name
+      ? firebase
+          .auth()
+          .createUserWithEmailAndPassword(email, password)
+          .then(({ user }) => {
+            SecureStore.setItemAsync(
+              "credential",
+              JSON.stringify({ email, password })
+            );
+            firebase
+              .database()
+              .ref("userInit")
+              .once("value", (snapshot) => {
+                firebase
+                  .database()
+                  .ref(`users/${user?.uid}`)
+                  .set(snapshot.val());
+              });
+            user?.updateProfile({ displayName: name });
+            dispatch(setUser({ displayName: name }));
+            setEmail("");
+            setPassword("");
+            setName("");
+            navigation.replace("Home");
+          })
+          .catch((e) => Alert.alert("Error signing up", e.message))
+      : Alert.alert("Name is required");
   }
 
   return (
@@ -322,8 +325,8 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
             ]}
             onPress={() => {
               Keyboard.dismiss();
-              emailRef.current!.blur();
-              passwordRef.current!.blur();
+              emailRef.current?.blur();
+              passwordRef.current?.blur();
 
               signIn();
             }}
@@ -340,8 +343,8 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
             ]}
             onPress={() => {
               Keyboard.dismiss();
-              emailRef.current!.blur();
-              passwordRef.current!.blur();
+              emailRef.current?.blur();
+              passwordRef.current?.blur();
 
               getName();
             }}

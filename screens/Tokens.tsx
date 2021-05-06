@@ -1,15 +1,19 @@
 import React from "react";
+import * as firebase from "firebase";
 import { ScrollView, View, Text, Pressable } from "react-native";
-import { useAppSelector, useThunkDispatch } from "../utils/hooks";
-import { setTokens } from "../utils/tokensSlice";
+import TokenOption from "../components/TokenOption";
+import { useAppSelector } from "../utils/hooks";
 import { styles } from "../utils/styles";
 
 export default function Tokens(): JSX.Element {
-  const dispatch = useThunkDispatch();
   const tokens = useAppSelector((state) => state.tokens);
 
   function buyTokens(quantity: number) {
-    dispatch(setTokens(quantity + tokens));
+    const uid = firebase.auth().currentUser?.uid;
+    firebase
+      .database()
+      .ref(`users/${uid}/tokens`)
+      .set(tokens + quantity);
   }
 
   return (
@@ -19,63 +23,11 @@ export default function Tokens(): JSX.Element {
           You have {tokens} tokens
         </Text>
       </View>
-      <View style={[styles.container, styles.marginTopDouble]}>
-        <View style={styles.s_tContainer}>
-          <Text style={styles.s_tName}>10 Tokens</Text>
-          <Pressable
-            style={({ pressed }) => [
-              {
-                backgroundColor: pressed ? "#395aff" : "#1122f4",
-              },
-              styles.tokenPurchase,
-            ]}
-            onPress={() => buyTokens(10)}
-          >
-            <Text style={[styles.avenir, styles.purchaseText]}>$1.00</Text>
-          </Pressable>
-        </View>
-        <View style={[styles.s_tContainer, styles.marginTop]}>
-          <Text style={styles.s_tName}>25 Tokens</Text>
-          <Pressable
-            style={({ pressed }) => [
-              {
-                backgroundColor: pressed ? "#395aff" : "#1122f4",
-              },
-              styles.tokenPurchase,
-            ]}
-            onPress={() => buyTokens(25)}
-          >
-            <Text style={[styles.avenir, styles.purchaseText]}>$2.00</Text>
-          </Pressable>
-        </View>
-        <View style={[styles.s_tContainer, styles.marginTop]}>
-          <Text style={styles.s_tName}>75 Tokens</Text>
-          <Pressable
-            style={({ pressed }) => [
-              {
-                backgroundColor: pressed ? "#395aff" : "#1122f4",
-              },
-              styles.tokenPurchase,
-            ]}
-            onPress={() => buyTokens(75)}
-          >
-            <Text style={[styles.avenir, styles.purchaseText]}>$5.00</Text>
-          </Pressable>
-        </View>
-        <View style={[styles.s_tContainer, styles.marginTop]}>
-          <Text style={styles.s_tName}>200 Tokens</Text>
-          <Pressable
-            style={({ pressed }) => [
-              {
-                backgroundColor: pressed ? "#395aff" : "#1122f4",
-              },
-              styles.tokenPurchase,
-            ]}
-            onPress={() => buyTokens(200)}
-          >
-            <Text style={[styles.avenir, styles.purchaseText]}>$10.00</Text>
-          </Pressable>
-        </View>
+      <View style={[styles.container, styles.marginTop]}>
+        <TokenOption quantity={10} price={1} cb={buyTokens} />
+        <TokenOption quantity={25} price={2} cb={buyTokens} />
+        <TokenOption quantity={75} price={5} cb={buyTokens} />
+        <TokenOption quantity={200} price={10} cb={buyTokens} />
       </View>
     </ScrollView>
   );

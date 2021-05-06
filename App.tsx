@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useEffect, useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "react-native-screens/native-stack";
@@ -36,6 +35,8 @@ const firebaseConfig = {
   appId: "1:341782713355:web:bb2c956fcfa4c73f85630e",
   measurementId: "G-VVME0TLGNG",
 };
+
+// TODO add save functionality
 
 firebase.initializeApp(firebaseConfig);
 firebase.auth().onAuthStateChanged((user) => {

@@ -4,8 +4,7 @@ export const win = Dimensions.get("window");
 export const width = win.width * 0.8;
 
 export const accentBlue = "#1122f4";
-
-// TODO clean this shit up bro
+export const accentBlueLite = "#395aff";
 
 export const styles = StyleSheet.create({
   // Container and spacing utils ---------------
@@ -44,6 +43,10 @@ export const styles = StyleSheet.create({
   avenir: {
     fontFamily: "Avenir Next",
   },
+  image: {
+    flex: 1,
+    resizeMode: "contain",
+  },
   shadow: {
     shadowColor: "black",
     shadowOffset: { width: 0, height: width * 0.02 },
@@ -51,7 +54,7 @@ export const styles = StyleSheet.create({
     shadowOpacity: 0.25,
   },
   border: {
-    borderColor: "#0000ff40",
+    borderColor: accentBlue,
     borderWidth: StyleSheet.hairlineWidth,
   },
 
@@ -76,11 +79,6 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     padding: width * 0.02,
     marginBottom: width * 0.1,
-  },
-  carouselImage: {
-    flex: 1,
-    resizeMode: "contain",
-    // alignSelf: "center",
   },
   pressableContainer: {
     display: "flex",
@@ -142,10 +140,14 @@ export const styles = StyleSheet.create({
 
   shelf: {
     width,
-    // height: width,
+    height: width,
     paddingBottom: width * 0.01,
     borderBottomColor: "#e0e0e0",
     borderBottomWidth: 1,
+  },
+  shelfName: {
+    fontSize: 15,
+    fontWeight: "400",
   },
   shelfItem: {
     display: "flex",
@@ -157,7 +159,6 @@ export const styles = StyleSheet.create({
   // Settings & Tokens ---------------
 
   s_tTitle: {
-    // Also using this for the tokens title
     fontSize: 50,
     fontWeight: "100",
     width,
@@ -167,10 +168,17 @@ export const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     width,
-    // height: width * 0.15,
     justifyContent: "space-between",
     alignItems: "center",
   },
+  // Abstracting this to this stylesheet broke it,
+  // so I'm just hard defining it into the component.
+  // Only appears in settings and tokens, so should be fine.
+  // s_tContentContainer: {
+  //   flex: 1,
+  //   justifyContent: "space-between",
+  //   alignItems: "center",
+  // },
   s_tName: {
     fontSize: 18,
     fontWeight: "400",

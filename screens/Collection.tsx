@@ -25,13 +25,7 @@ export default function Collection({ navigation }: MineProps): JSX.Element {
                 node={node.item}
                 openItem={(item) => navigation.navigate("ItemInfo", { item })}
               />
-              <Text
-                style={[
-                  styles.avenir,
-                  styles.marginTop,
-                  { fontSize: 20, fontWeight: "400" },
-                ]}
-              >
+              <Text style={[styles.avenir, styles.marginTop, styles.shelfName]}>
                 {node.item.name}
               </Text>
             </React.Fragment>

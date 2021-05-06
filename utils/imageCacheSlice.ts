@@ -1,4 +1,5 @@
 import { createSlice, createEntityAdapter } from "@reduxjs/toolkit";
+import { RootState } from "./store";
 
 const imageCacheAdapter = createEntityAdapter<Blob>();
 
@@ -23,5 +24,9 @@ export const {
   deleteMultiple,
   deleteAll,
 } = imageCacheSlice.actions;
+
+export const {
+  selectById: selectImageById,
+} = imageCacheAdapter.getSelectors<RootState>((state) => state.imageCache);
 
 export default imageCacheSlice.reducer;

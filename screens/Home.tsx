@@ -5,7 +5,6 @@ import { selectNodeById } from "../utils/mapSlice";
 import {
   View,
   ImageBackground,
-  Image,
   TextInput,
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
@@ -14,6 +13,7 @@ import {
   Pressable,
   ScrollView,
 } from "react-native";
+import Image from "../components/Image";
 import Carousel from "react-native-snap-carousel";
 import Animated, { Easing } from "react-native-reanimated";
 import Logo from "../assets/logo.svg";
@@ -76,13 +76,14 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
     console.log(answer);
     console.log(answer === "Dieter Rams");
     toggleAnimation(true);
+    setHideItems(true);
     sleep(1500).then((value) => {
       // const newMap = { ...map };
       // newMap.curNode = Array.from(newMap.data.values())[
       //   answer === "Dieter Rams" ? 1 : 0
       // ];
       // console.log(newMap.curNode.name);
-      setHideItems(true);
+      // setHideItems(true);
       // setMap(newMap);
       setHideItems(false);
       setAns("");
@@ -191,21 +192,8 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
                       ]}
                     >
                       <Image
-                        source={{ uri: item.content[0].uri }}
-                        style={[
-                          { opacity: hideItems ? 0 : 1 },
-                          styles.carouselImage,
-                        ]}
-                        width={
-                          item.content[0].w >= item.content[0].h
-                            ? width
-                            : (width * item.content[0].w) / item.content[0].h
-                        }
-                        height={
-                          item.content[0].w < item.content[0].h
-                            ? width
-                            : (width * item.content[0].h) / item.content[0].w
-                        }
+                        content={item.content[0]}
+                        style={{ opacity: hideItems ? 0 : 1 }}
                       />
                     </View>
                   </TouchableWithoutFeedback>
@@ -283,5 +271,3 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
     </ImageBackground>
   );
 }
-
-// TODO fix the image to use the new item.content property instead of item.mainContent

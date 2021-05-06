@@ -1,16 +1,9 @@
 import React from "react";
-import {
-  View,
-  Image,
-  Text,
-  ScrollView,
-  Pressable,
-  FlatList,
-} from "react-native";
-import { styles, width } from "../utils/styles";
+import { View, Text, ScrollView, Pressable, FlatList } from "react-native";
+import Image from "../components/Image";
+import { styles, width, accentBlue, accentBlueLite } from "../utils/styles";
 
-// TODO fix the image to use the new item.content property instead of item.mainContent
-// TODO item description
+// TODO add share and save buttons
 
 export default function ItemInfo({
   navigation,
@@ -18,6 +11,8 @@ export default function ItemInfo({
 }: ItemInfoProps): JSX.Element {
   const { item } = route.params;
   return (
+    // No scroll padding bc it's too much for the top and not enough
+    // for the bottom.
     <ScrollView style={[styles.whiteBg]}>
       <View style={styles.container}>
         {item.content.length > 1 ? (
@@ -28,43 +23,16 @@ export default function ItemInfo({
             renderItem={({ item }) => {
               return (
                 <View style={styles.shelfItem}>
-                  <Image
-                    source={{ uri: item.uri }}
-                    style={[styles.carouselImage]}
-                    width={item.w >= item.h ? width : (width * item.w) / item.h}
-                    height={item.w < item.h ? width : (width * item.h) / item.w}
-                  />
+                  <Image content={item} />
                 </View>
               );
             }}
             horizontal={true}
-            style={[
-              styles.shelf,
-              {
-                height:
-                  Math.max(
-                    ...item.content.map((content) => content.h / content.w)
-                  ) * width,
-              },
-              styles.marginTopDouble,
-            ]}
+            style={[styles.shelf, styles.marginTopDouble]}
             keyExtractor={(_, index) => `${item.id}-content-${index}`}
           />
         ) : (
-          <Image
-            source={{ uri: item.content[0].uri }}
-            style={[styles.carouselImage, styles.marginTopDouble]}
-            width={
-              item.content[0].w >= item.content[0].h
-                ? width
-                : (width * item.content[0].w) / item.content[0].h
-            }
-            height={
-              item.content[0].w < item.content[0].h
-                ? width
-                : (width * item.content[0].h) / item.content[0].w
-            }
-          />
+          <Image content={item.content[0]} style={styles.marginTopDouble} />
         )}
         <Text style={[styles.itemName, styles.marginTopDouble, styles.avenir]}>
           {item.name}
@@ -76,7 +44,7 @@ export default function ItemInfo({
           <Pressable
             style={({ pressed }) => [
               {
-                backgroundColor: pressed ? "#395aff" : "#1122f4",
+                backgroundColor: pressed ? accentBlueLite : accentBlue,
               },
               styles.purchase,
               styles.marginTopDouble,
@@ -87,6 +55,7 @@ export default function ItemInfo({
           </Pressable>
         ) : null}
       </View>
+      {/* Just to give some space on the bottom for scrolling */}
       <View style={{ marginBottom: width * 0.25 }} />
     </ScrollView>
   );

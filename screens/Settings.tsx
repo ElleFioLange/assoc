@@ -3,6 +3,7 @@ import React from "react";
 import * as firebase from "firebase";
 import * as SecureStore from "expo-secure-store";
 import { ScrollView, Text, Switch, View, Pressable, Alert } from "react-native";
+import Setting from "../components/Setting";
 import { useAppSelector, useAppDispatch } from "../utils/hooks";
 import {
   setInvertBg,
@@ -10,7 +11,7 @@ import {
   setDisableAnimations,
 } from "../utils/settingsSlice";
 import { setUser } from "../utils/userSlice";
-import { styles } from "../utils/styles";
+import { accentBlue, accentBlueLite, styles } from "../utils/styles";
 
 export default function Settings({ navigation }: SettingsProps): JSX.Element {
   firebase.app();
@@ -61,7 +62,10 @@ export default function Settings({ navigation }: SettingsProps): JSX.Element {
     );
   }
 
-  function deleteAccount() {
+  async function deleteAccount() {
+    const credential = await SecureStore.getItemAsync("credential");
+    const { email, password } = JSON.parse(credential!);
+    await firebase.auth().signInWithEmailAndPassword(email, password);
     const uid = firebase.auth().currentUser!.uid;
     firebase
       .auth()
@@ -78,6 +82,9 @@ export default function Settings({ navigation }: SettingsProps): JSX.Element {
   return (
     <ScrollView
       style={[styles.scrollPadding, styles.whiteBg]}
+      // I have absolutely no idea why, but I can't abstract this
+      // into the stylesheet. Luckily it's only used here, hah! not!
+      // It's also in tokens but that's the only other place
       contentContainerStyle={{
         flex: 1,
         justifyContent: "space-between",
@@ -88,46 +95,27 @@ export default function Settings({ navigation }: SettingsProps): JSX.Element {
         <Text style={[styles.avenir, styles.s_tTitle, styles.marginTopDouble]}>
           Hi, {displayName}
         </Text>
-        <View style={[styles.s_tContainer, styles.marginTopDouble]}>
-          <Text style={[styles.avenir, styles.s_tName]}>Invert background</Text>
-          <Switch
-            value={invertBg}
-            trackColor={{ false: "white", true: "#1122f4" }}
-            thumbColor={invertBg ? "white" : "black"}
-            ios_backgroundColor={"white"}
-            onValueChange={toggleInvertBg}
-          />
-        </View>
-        <View style={[styles.marginTopDouble, styles.s_tContainer]}>
-          <Text style={[styles.avenir, styles.s_tName]}>
-            Automatically play ad when out of tokens
-          </Text>
-          <Switch
-            value={autoAd}
-            trackColor={{ false: "white", true: "#1122f4" }}
-            thumbColor={autoAd ? "white" : "black"}
-            ios_backgroundColor={"white"}
-            onValueChange={toggleAutoAd}
-          />
-        </View>
-        <View style={[styles.marginTopDouble, styles.s_tContainer]}>
-          <Text style={[styles.avenir, styles.s_tName]}>
-            Disable animations
-          </Text>
-          <Switch
-            value={disableAnimations}
-            trackColor={{ false: "white", true: "#1122f4" }}
-            thumbColor={disableAnimations ? "white" : "black"}
-            ios_backgroundColor={"white"}
-            onValueChange={toggleDisableAnimations}
-          />
-        </View>
+        <Setting
+          title="Invert background"
+          value={invertBg}
+          cb={toggleInvertBg}
+        />
+        <Setting
+          title="Automatically play ad when out of tokens"
+          value={autoAd}
+          cb={toggleAutoAd}
+        />
+        <Setting
+          title="Disable animations"
+          value={disableAnimations}
+          cb={toggleDisableAnimations}
+        />
       </View>
       <View>
         <Pressable
           style={({ pressed }) => [
             {
-              backgroundColor: pressed ? "#395aff" : "#1122f4",
+              backgroundColor: pressed ? accentBlueLite : "#1122f4",
             },
             styles.logOut,
             styles.marginTopDouble,
