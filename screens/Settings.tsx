@@ -2,7 +2,7 @@
 import React from "react";
 import * as firebase from "firebase";
 import * as SecureStore from "expo-secure-store";
-import { ScrollView, Text, Switch, View, Pressable, Alert } from "react-native";
+import { ScrollView, Text, View, Pressable, Alert } from "react-native";
 import Setting from "../components/Setting";
 import { useAppSelector, useAppDispatch } from "../utils/hooks";
 import {
@@ -72,8 +72,6 @@ export default function Settings({ navigation }: SettingsProps): JSX.Element {
       .currentUser!.delete()
       .then(() => {
         firebase.database().ref(`/users/${uid}`).set(null);
-        SecureStore.deleteItemAsync("credential");
-        dispatch(setUser({ uid: "", displayName: "" }));
         navigation.navigate("Landing");
       })
       .catch((e) => Alert.alert("Error deleting account", e.message));
@@ -115,7 +113,7 @@ export default function Settings({ navigation }: SettingsProps): JSX.Element {
         <Pressable
           style={({ pressed }) => [
             {
-              backgroundColor: pressed ? accentBlueLite : "#1122f4",
+              backgroundColor: pressed ? accentBlueLite : accentBlue,
             },
             styles.logOut,
             styles.marginTopDouble,
@@ -127,7 +125,7 @@ export default function Settings({ navigation }: SettingsProps): JSX.Element {
         <Pressable
           style={({ pressed }) => [
             {
-              backgroundColor: pressed ? "#395aff" : "#1122f4",
+              backgroundColor: pressed ? accentBlueLite : accentBlue,
             },
             styles.logOut,
             styles.marginTop,

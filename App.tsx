@@ -36,8 +36,6 @@ const firebaseConfig = {
   measurementId: "G-VVME0TLGNG",
 };
 
-// TODO add save functionality
-
 firebase.initializeApp(firebaseConfig);
 firebase.auth().onAuthStateChanged((user) => {
   if (user) {

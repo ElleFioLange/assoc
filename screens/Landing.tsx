@@ -18,10 +18,11 @@ import {
   Keyboard,
   Platform,
 } from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import { styles, width, win } from "../utils/styles";
 const AnimTextInput = Animated.createAnimatedComponent(TextInput);
 
-// TODO add an age check to sign up
+// TODO Add a loading animation
 
 export default function Landing({ navigation }: LandingProps): JSX.Element {
   firebase.app();
@@ -29,6 +30,7 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
 
   const [modal, setModal] = useState(false);
   const [name, setName] = useState("");
+  const [birthDate, setBirthDate] = useState<Date>();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -123,40 +125,40 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
     }
   }
 
-  function getName() {
+  function getSignUpInfo() {
     if (testInputs()) {
       setModal(true);
     }
   }
 
   async function signUp() {
-    name
-      ? firebase
-          .auth()
-          .createUserWithEmailAndPassword(email, password)
-          .then(({ user }) => {
-            SecureStore.setItemAsync(
-              "credential",
-              JSON.stringify({ email, password })
-            );
+    firebase
+      .auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then(({ user }) => {
+        SecureStore.setItemAsync(
+          "credential",
+          JSON.stringify({ email, password })
+        );
+        firebase
+          .database()
+          .ref("userInit")
+          .once("value", (snapshot) => {
+            firebase.database().ref(`users/${user?.uid}`).set(snapshot.val());
             firebase
               .database()
-              .ref("userInit")
-              .once("value", (snapshot) => {
-                firebase
-                  .database()
-                  .ref(`users/${user?.uid}`)
-                  .set(snapshot.val());
-              });
-            user?.updateProfile({ displayName: name });
-            dispatch(setUser({ displayName: name }));
-            setEmail("");
-            setPassword("");
-            setName("");
-            navigation.replace("Home");
-          })
-          .catch((e) => Alert.alert("Error signing up", e.message))
-      : Alert.alert("Name is required");
+              .ref(`users/${user?.uid}/birthDate`)
+              .set(birthDate?.toJSON());
+          });
+        user?.updateProfile({ displayName: name });
+        dispatch(setUser({ displayName: name }));
+        setEmail("");
+        setPassword("");
+        setName("");
+        setBirthDate(undefined);
+        navigation.replace("Home");
+      })
+      .catch((e) => Alert.alert("Error signing up", e.message));
   }
 
   return (
@@ -216,6 +218,36 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
                     onFocus={() => toggleName(true)}
                     onBlur={() => toggleName(false)}
                   />
+                  <View
+                    style={[
+                      styles.input,
+                      styles.birthDatePicker,
+                      styles.border,
+                      styles.marginTop,
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        styles.avenir,
+                        styles.birthDateLabel,
+                        {
+                          color: birthDate ? "black" : "gray",
+                        },
+                      ]}
+                    >
+                      {birthDate?.toLocaleDateString() || "birthdate"}
+                    </Text>
+                  </View>
+                  <DateTimePicker
+                    style={{ width: width }}
+                    value={birthDate || new Date()}
+                    mode="date"
+                    display="spinner"
+                    onChange={(_, selectedDate) =>
+                      setBirthDate(selectedDate || birthDate)
+                    }
+                    maximumDate={new Date()}
+                  />
                   <Pressable
                     style={({ pressed }) => [
                       {
@@ -225,8 +257,12 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
                       styles.marginTopDouble,
                     ]}
                     onPress={() => {
-                      setModal(false);
-                      signUp();
+                      if (!name) Alert.alert("Name is required");
+                      else if (!birthDate) Alert.alert("Birthdate is required");
+                      else {
+                        setModal(false);
+                        signUp();
+                      }
                     }}
                   >
                     <Text style={[styles.avenir, styles.logOutText]}>
@@ -243,6 +279,7 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
                     ]}
                     onPress={() => {
                       setName("");
+                      setBirthDate(undefined);
                       toggleName(false);
                       setModal(false);
                     }}
@@ -350,7 +387,7 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
               emailRef.current?.blur();
               passwordRef.current?.blur();
 
-              getName();
+              getSignUpInfo();
             }}
           >
             <Text style={[styles.avenir, styles.logOutText]}>Sign Up</Text>

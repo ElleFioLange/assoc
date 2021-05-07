@@ -9,7 +9,6 @@ const initialState = {
 
 export const fetchSettings = createAsyncThunk("settings/fetch", async () => {
   const settings = await AsyncStorage.getItem("settings");
-  console.log(settings);
   return settings;
 });
 

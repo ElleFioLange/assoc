@@ -7,6 +7,7 @@ import Image from "../components/Image";
 import { styles, width, accentBlue, accentBlueLite } from "../utils/styles";
 
 // TODO Figure out a way to incorporate links into item description
+// TODO Optional: Show connected locations from the item?
 
 export default function ItemInfo({
   navigation,

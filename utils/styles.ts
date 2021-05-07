@@ -207,4 +207,23 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+
+  // Landing ---------------
+
+  birthDateContainer: {
+    display: "flex",
+    flexDirection: "row",
+    width,
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  birthDatePicker: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  birthDateLabel: {
+    fontSize: 18,
+    fontWeight: "400",
+  },
 });
