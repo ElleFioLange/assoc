@@ -2,14 +2,14 @@ import React from "react";
 import { FlatList, View, TouchableWithoutFeedback, Image } from "react-native";
 import { styles, width } from "../utils/styles";
 
-export default function NodeItemList({
-  node,
+export default function LocationItemList({
+  location,
   openItem,
 }: {
-  node: NodeData;
+  location: LocationData;
   openItem: (item: ItemData) => void;
 }): JSX.Element {
-  const items = Object.keys(node.items).map((key) => node.items[key]);
+  const items = Object.keys(location.items).map((key) => location.items[key]);
   return (
     <FlatList
       data={items}

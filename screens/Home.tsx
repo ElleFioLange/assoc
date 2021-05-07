@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useRef } from "react";
 import { useAppSelector } from "../utils/hooks";
-import { selectNodeById } from "../utils/mapSlice";
+import { selectLocationById } from "../utils/mapSlice";
 import {
   View,
   ImageBackground,
@@ -18,15 +18,17 @@ import Carousel from "react-native-snap-carousel";
 import Animated, { Easing } from "react-native-reanimated";
 import Logo from "../assets/logo.svg";
 import MapIcon from "../assets/map.svg";
-import MineIcon from "../assets/mine.svg";
+import CollectionIcon from "../assets/collection.svg";
 import SettingsIcon from "../assets/settings.svg";
 import TokensIcon from "../assets/tokens.svg";
 import { styles, win, width } from "../utils/styles";
 
 export default function Home({ navigation }: HomeProps): JSX.Element {
   const invertBg = useAppSelector((state) => state.settings.invertBg);
-  const curNodeId = useAppSelector((state) => state.map.curNodeId);
-  const curNode = useAppSelector((state) => selectNodeById(state, curNodeId));
+  const curLocationId = useAppSelector((state) => state.map.curLocationId);
+  const curLocation = useAppSelector((state) =>
+    selectLocationById(state, curLocationId)
+  );
 
   // Loading state to block interaction during the animation
   const [loading, setLoading] = useState(false);
@@ -78,13 +80,6 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
     toggleAnimation(true);
     setHideItems(true);
     sleep(1500).then((value) => {
-      // const newMap = { ...map };
-      // newMap.curNode = Array.from(newMap.data.values())[
-      //   answer === "Dieter Rams" ? 1 : 0
-      // ];
-      // console.log(newMap.curNode.name);
-      // setHideItems(true);
-      // setMap(newMap);
       setHideItems(false);
       setAns("");
       toggleAnimation(false);
@@ -163,9 +158,9 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
               <Carousel
                 layout={"default"}
                 data={
-                  curNode
-                    ? Object.keys(curNode.items).map(
-                        (key) => curNode.items[key]
+                  curLocation
+                    ? Object.keys(curLocation.items).map(
+                        (key) => curLocation.items[key]
                       )
                     : []
                 }
@@ -230,7 +225,7 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
                     styles.border,
                   ]}
                 >
-                  <MineIcon />
+                  <CollectionIcon />
                 </Pressable>
                 <Pressable
                   onPress={() => {

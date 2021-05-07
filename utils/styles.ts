@@ -112,28 +112,29 @@ export const styles = StyleSheet.create({
     textAlign: "left",
     fontSize: 25,
     fontWeight: "600",
-    // paddingLeft: width * 0.05,
-    // paddingHorizontal: width * 0.1,
   },
   itemDescription: {
     fontSize: 15,
     fontWeight: "300",
     width,
     textAlign: "left",
-    // paddingHorizontal: width * 0.1,
   },
-  purchase: {
-    width: width * 0.5,
+  itemActionContainer: {
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    width,
+    justifyContent: "flex-end",
+    alignItems: "center",
+  },
+  itemAction: {
+    width: width * 0.2,
     height: width * 0.15,
     borderRadius: width * 0.015,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-  },
-  purchaseText: {
-    fontWeight: "600",
-    fontSize: 18,
-    color: "white",
+    marginLeft: width * 0.035,
   },
 
   // Collection ---------------

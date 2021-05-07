@@ -3,7 +3,7 @@ import React, { useRef, useState } from "react";
 import { View, StyleSheet, Animated, PanResponder } from "react-native";
 import Svg, { Polygon, Text, G } from "react-native-svg";
 import { useAppSelector, useAppDispatch } from "../utils/hooks";
-import { selectNodes, setCurNodeId } from "../utils/mapSlice";
+import { selectLocations, setCurLocationId } from "../utils/mapSlice";
 import { styles, win } from "../utils/styles";
 
 // Parameters for sizing
@@ -85,10 +85,9 @@ function getCenter(index: number): { x: number; y: number } {
 const AnimatedG = Animated.createAnimatedComponent(G);
 
 export default function MapScreen({ navigation }: MapProps): JSX.Element {
-  const curNodeId = useAppSelector((state) => state.map.curNodeId);
-  const nodes = useAppSelector(selectNodes);
+  const curLocationId = useAppSelector((state) => state.map.curLocationId);
+  const locations = useAppSelector(selectLocations);
   const dispatch = useAppDispatch();
-  // nodes.sort((a, b) => a.minD(curNode.id) - b.minD(curNode.id));
 
   // Using state for pan tracking instead of animated component
   // so that I can progressively render the hexagons instead of
@@ -122,19 +121,19 @@ export default function MapScreen({ navigation }: MapProps): JSX.Element {
   pan.x.addListener((value) => setPanX(value.value));
   pan.y.addListener((value) => setPanY(value.value));
 
-  // Sort list of nodes according to their minimum
-  // distance from the current node. Array spread first
+  // Sort list of locations according to their minimum
+  // distance from the current location. Array spread first
   // so as to not mutate the selector array
-  const data = [...nodes];
+  const data = [...locations];
   data.sort((a, b) => {
-    if (!a.minD[curNodeId]) return -1;
-    if (!b.minD[curNodeId]) return 1;
-    return a.minD[curNodeId] - b.minD[curNodeId];
+    if (!a.minD[curLocationId]) return -1;
+    if (!b.minD[curLocationId]) return 1;
+    return a.minD[curLocationId] - b.minD[curLocationId];
   });
 
   // Only for testing
-  const test = data.map((node) => {
-    return { id: node.id, name: node.name };
+  const test = data.map((location) => {
+    return { id: location.id, name: location.name };
   });
   for (let i = 2; i < 91; i++) {
     test.push({ id: `${i}`, name: `${i}` });
@@ -144,14 +143,11 @@ export default function MapScreen({ navigation }: MapProps): JSX.Element {
   for (let i = 0; i < test.length; i++) {
     hexCenters.push(getCenter(i));
   }
-  // const hexCenters = test.map((node, index) =>
-  //   getCenter(index, { x: win.width / 2, y: win.height / 2 })
-  // );
 
   return (
     <View style={[styles.container, styles.whiteBg]}>
       <Svg height={win.height} width={win.width}>
-        {test.map((node, index) => {
+        {test.map((location, index) => {
           const center = hexCenters[index];
           const onScreen =
             center.x > -panX - sideLength &&
@@ -164,15 +160,15 @@ export default function MapScreen({ navigation }: MapProps): JSX.Element {
               // y={Animated.add(pan.y, new Animated.Value(center.y))}
               x={panX + center.x}
               y={panY + center.y}
-              key={node.id}
+              key={location.id}
               {...panResponder.panHandlers}
             >
               <Polygon
                 onPress={() =>
-                  navigation.navigate("NodeInfo", { node: data[0] })
+                  navigation.navigate("LocationInfo", { location: data[0] })
                 }
                 onLongPress={() => {
-                  dispatch(setCurNodeId(data[1].id));
+                  dispatch(setCurLocationId(data[1].id));
                   navigation.navigate("Home");
                 }}
                 // rotation={test.length - 1 - index}
@@ -197,7 +193,7 @@ export default function MapScreen({ navigation }: MapProps): JSX.Element {
                 alignmentBaseline="central"
                 textAnchor="middle"
               >
-                {node.name}
+                {location.name}
               </Text>
             </AnimatedG>
           ) : null;

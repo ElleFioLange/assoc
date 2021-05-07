@@ -1,17 +1,18 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const { getDefaultConfig } = require("metro-config");
+const { getDefaultConfig } = require("@expo/metro-config");
+
+const defaultConfig = getDefaultConfig(__dirname);
 
 module.exports = (async () => {
-  const {
-    resolver: { sourceExts, assetExts },
-  } = await getDefaultConfig();
   return {
     transformer: {
-      babelTransformerPath: require.resolve("react-native-svg-transformer"),
+      babelTransformerPath: require.resolve("./custom-transformer.js"),
     },
     resolver: {
-      assetExts: assetExts.filter((ext) => ext !== "svg"),
-      sourceExts: [...sourceExts, "svg"],
+      assetExts: [
+        ...defaultConfig.resolver.assetExts.filter((ext) => ext !== "svg"),
+      ],
+      sourceExts: [...defaultConfig.resolver.sourceExts, "svg"],
     },
   };
 })();

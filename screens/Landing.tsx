@@ -229,7 +229,9 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
                       signUp();
                     }}
                   >
-                    <Text style={styles.purchaseText}>Submit</Text>
+                    <Text style={[styles.avenir, styles.logOutText]}>
+                      Submit
+                    </Text>
                   </Pressable>
                   <Pressable
                     style={({ pressed }) => [
@@ -245,7 +247,9 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
                       setModal(false);
                     }}
                   >
-                    <Text style={styles.purchaseText}>Cancel</Text>
+                    <Text style={[styles.avenir, styles.logOutText]}>
+                      Cancel
+                    </Text>
                   </Pressable>
                 </View>
               </KeyboardAvoidingView>
@@ -331,7 +335,7 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
               signIn();
             }}
           >
-            <Text style={styles.purchaseText}>Sign In</Text>
+            <Text style={[styles.avenir, styles.logOutText]}>Sign In</Text>
           </Pressable>
           <Pressable
             style={({ pressed }) => [
@@ -349,7 +353,7 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
               getName();
             }}
           >
-            <Text style={styles.purchaseText}>Sign Up</Text>
+            <Text style={[styles.avenir, styles.logOutText]}>Sign Up</Text>
           </Pressable>
         </KeyboardAvoidingView>
       </TouchableWithoutFeedback>

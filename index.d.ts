@@ -32,7 +32,7 @@ type ItemData = {
   };
 };
 
-type NodeData = {
+type LocationData = {
   id: string;
   name: string;
   description: string;
@@ -50,7 +50,7 @@ type RootStackParamList = {
   ItemInfo: { item: ItemData };
   Purchase: { item: ItemData };
   Map: undefined;
-  NodeInfo: { node: NodeData };
+  LocationInfo: { location: LocationData };
   Collection: undefined;
   Settings: undefined;
   Tokens: undefined;
@@ -86,9 +86,9 @@ type MapProps = import("react-native-screens/native-stack").NativeStackScreenPro
   "Map"
 >;
 
-type NodeInfoProps = import("react-native-screens/native-stack").NativeStackScreenProps<
+type LocationInfoProps = import("react-native-screens/native-stack").NativeStackScreenProps<
   RootStackParamList,
-  "NodeInfo"
+  "LocationInfo"
 >;
 
 type MineProps = import("react-native-screens/native-stack").NativeStackScreenProps<

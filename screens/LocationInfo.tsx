@@ -1,22 +1,24 @@
 import React from "react";
 import { View, Text, ScrollView } from "react-native";
-import NodeItemList from "../components/NodeItemList";
+import LocationItemList from "../components/LocationItemList";
 import { styles, width } from "../utils/styles";
 
-export default function NodeInfo({
+// TODO Show connected locations
+
+export default function LocationInfo({
   navigation,
   route,
-}: NodeInfoProps): JSX.Element {
-  const { node } = route.params;
+}: LocationInfoProps): JSX.Element {
+  const { location } = route.params;
   return (
     <ScrollView style={[styles.whiteBg, styles.scrollPadding]}>
       <View style={styles.container}>
-        <NodeItemList
-          node={node}
+        <LocationItemList
+          location={location}
           openItem={(item) => navigation.navigate("ItemInfo", { item })}
         />
         <Text style={[styles.itemName, styles.marginTopDouble, styles.avenir]}>
-          {node.name}
+          {location.name}
         </Text>
         <Text style={[styles.itemDescription, styles.marginTop, styles.avenir]}>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas et

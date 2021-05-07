@@ -1,19 +1,34 @@
 import React from "react";
+import * as firebase from "firebase";
 import { View, Text, ScrollView, Pressable, FlatList } from "react-native";
+import { useAppSelector } from "../utils/hooks";
+import { FontAwesome5 } from "@expo/vector-icons";
 import Image from "../components/Image";
 import { styles, width, accentBlue, accentBlueLite } from "../utils/styles";
 
-// TODO add share and save buttons
+// TODO Figure out a way to incorporate links into item description
 
 export default function ItemInfo({
   navigation,
   route,
 }: ItemInfoProps): JSX.Element {
+  firebase.app();
+
   const { item } = route.params;
+
+  const saved = useAppSelector((state) => state.user.saved);
+
+  function toggleSaved() {
+    const uid = firebase.auth().currentUser?.uid;
+    saved && saved[item.id]
+      ? firebase.database().ref(`users/${uid}/saved/${item.id}`).remove()
+      : firebase.database().ref(`users/${uid}/saved/${item.id}`).set(true);
+  }
+
   return (
     // No scroll padding bc it's too much for the top and not enough
     // for the bottom.
-    <ScrollView style={[styles.whiteBg]}>
+    <ScrollView style={styles.whiteBg}>
       <View style={styles.container}>
         {item.content.length > 1 ? (
           <FlatList
@@ -40,20 +55,52 @@ export default function ItemInfo({
         <Text style={[styles.itemDescription, styles.marginTop, styles.avenir]}>
           {item.description}
         </Text>
-        {item.purchaseInfo ? (
+        <View style={[styles.marginTopDouble, styles.itemActionContainer]}>
           <Pressable
             style={({ pressed }) => [
               {
                 backgroundColor: pressed ? accentBlueLite : accentBlue,
               },
-              styles.purchase,
-              styles.marginTopDouble,
+              styles.itemAction,
             ]}
-            onPress={() => navigation.navigate("Purchase", { item })}
+            onPress={() => toggleSaved()}
           >
-            <Text style={[styles.avenir, styles.purchaseText]}>Purchase</Text>
+            <FontAwesome5
+              name="star"
+              color="white"
+              size={width * 0.07}
+              solid={saved ? saved[item.id] : false}
+            />
           </Pressable>
-        ) : null}
+          {item.purchaseInfo ? (
+            <Pressable
+              style={({ pressed }) => [
+                {
+                  backgroundColor: pressed ? accentBlueLite : accentBlue,
+                },
+                styles.itemAction,
+              ]}
+              onPress={() => navigation.navigate("Purchase", { item })}
+            >
+              <FontAwesome5
+                name="shopping-cart"
+                color="white"
+                size={width * 0.07}
+              />
+            </Pressable>
+          ) : null}
+          <Pressable
+            style={({ pressed }) => [
+              {
+                backgroundColor: pressed ? accentBlueLite : accentBlue,
+              },
+              styles.itemAction,
+            ]}
+            onPress={() => console.log(saved)}
+          >
+            <FontAwesome5 name="share" color="white" size={width * 0.07} />
+          </Pressable>
+        </View>
       </View>
       {/* Just to give some space on the bottom for scrolling */}
       <View style={{ marginBottom: width * 0.25 }} />

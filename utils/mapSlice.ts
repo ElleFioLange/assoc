@@ -1,32 +1,32 @@
 import { createSlice, createEntityAdapter } from "@reduxjs/toolkit";
 import { RootState } from "./store";
 
-// This sets up an entities property in the map state to easily find nodes by id
-const mapAdapter = createEntityAdapter<NodeData>();
+// This sets up an entities property in the map state to easily find locations by id
+const mapAdapter = createEntityAdapter<LocationData>();
 
-// CurNode stored within MapSlice because it makes more sense
+// CurLocation stored within MapSlice because it makes more sense
 // than giving it its own slice
 const initialState = mapAdapter.getInitialState({
-  curNodeId: "",
+  curLocationId: "",
 });
 
 const mapSlice = createSlice({
   name: "map",
   initialState,
   reducers: {
-    setCurNodeId(state, action) {
-      state.curNodeId = action.payload;
+    setCurLocationId(state, action) {
+      state.curLocationId = action.payload;
     },
     setMap: mapAdapter.setAll,
     deleteMap: mapAdapter.removeAll,
   },
 });
 
-export const { setCurNodeId, setMap, deleteMap } = mapSlice.actions;
+export const { setCurLocationId, setMap, deleteMap } = mapSlice.actions;
 
 export const {
-  selectAll: selectNodes,
-  selectById: selectNodeById,
+  selectAll: selectLocations,
+  selectById: selectLocationById,
 } = mapAdapter.getSelectors<RootState>((state) => state.map);
 
 export default mapSlice.reducer;

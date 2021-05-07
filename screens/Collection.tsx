@@ -1,32 +1,32 @@
 import React from "react";
 import { FlatList, View, Text } from "react-native";
-import NodeItemList from "../components/NodeItemList";
+import LocationItemList from "../components/LocationItemList";
 import { useAppSelector } from "../utils/hooks";
-import { selectNodes } from "../utils/mapSlice";
+import { selectLocations } from "../utils/mapSlice";
 import { styles } from "../utils/styles";
 
 export default function Collection({ navigation }: MineProps): JSX.Element {
-  const curNodeId = useAppSelector((state) => state.map.curNodeId);
-  const nodes = useAppSelector(selectNodes);
-  nodes.sort((a, b) => a.minD[curNodeId] - b.minD[curNodeId]);
+  const curLocationId = useAppSelector((state) => state.map.curLocationId);
+  const locations = useAppSelector(selectLocations);
+  locations.sort((a, b) => a.minD[curLocationId] - b.minD[curLocationId]);
 
   return (
     <View style={[styles.container, styles.whiteBg]}>
       <FlatList
-        data={nodes}
-        renderItem={(node) => {
+        data={locations}
+        renderItem={(location) => {
           // FlatList is very stupid and passes the data
-          // as an object with the node and index, instead of just
+          // as an object with the location and index, instead of just
           // passing them as separate optional values.
-          // node.item is the actual NodeData
+          // location.item is the actual LocationData
           return (
-            <React.Fragment key={node.item.id}>
-              <NodeItemList
-                node={node.item}
+            <React.Fragment key={location.item.id}>
+              <LocationItemList
+                location={location.item}
                 openItem={(item) => navigation.navigate("ItemInfo", { item })}
               />
               <Text style={[styles.avenir, styles.marginTop, styles.shelfName]}>
-                {node.item.name}
+                {location.item.name}
               </Text>
             </React.Fragment>
           );

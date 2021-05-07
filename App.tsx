@@ -14,15 +14,15 @@ import Answer from "./screens/Answer";
 import ItemInfo from "./screens/ItemInfo";
 import MapScreen from "./screens/MapScreen";
 import Collection from "./screens/Collection";
-import NodeInfo from "./screens/NodeInfo";
+import LocationInfo from "./screens/LocationInfo";
 import Purchase from "./screens/Purchase";
 import Settings from "./screens/Settings";
 import Tokens from "./screens/Tokens";
 
 import store from "./utils/store";
-import { setUser } from "./utils/userSlice";
+import { setUser, setSaved } from "./utils/userSlice";
 import { setTokens } from "./utils/tokensSlice";
-import { setMap, setCurNodeId } from "./utils/mapSlice";
+import { setMap, setCurLocationId } from "./utils/mapSlice";
 import { fetchSettings } from "./utils/settingsSlice";
 
 const firebaseConfig = {
@@ -57,17 +57,24 @@ firebase.auth().onAuthStateChanged((user) => {
       });
     firebase
       .database()
-      .ref(`users/${uid}/curNodeId`)
+      .ref(`users/${uid}/curLocationId`)
       .on("value", (snapshot) => {
-        store.dispatch(setCurNodeId(snapshot.val()));
+        store.dispatch(setCurLocationId(snapshot.val()));
+      });
+    firebase
+      .database()
+      .ref(`users/${uid}/saved`)
+      .on("value", (snapshot) => {
+        store.dispatch(setSaved(snapshot.val()));
       });
   } else {
     const uid = store.getState().user.uid;
     firebase.database().ref(`users/${uid}/tokens`).off();
     firebase.database().ref(`users/${uid}/map`).off();
-    firebase.database().ref(`users/${uid}/curNodeId`).off();
+    firebase.database().ref(`users/${uid}/curLocationId`).off();
+    firebase.database().ref(`users/${uid}/saved`).off();
     store.dispatch(setUser({ uid: "", displayName: "" }));
-    // SecureStore.deleteItemAsync("credential");
+    SecureStore.deleteItemAsync("credential");
   }
 });
 
@@ -144,7 +151,7 @@ export default function App(): JSX.Element {
             options={{ stackPresentation: "fullScreenModal" }}
           />
           <Stack.Screen name="Map" component={MapScreen} />
-          <Stack.Screen name="NodeInfo" component={NodeInfo} />
+          <Stack.Screen name="LocationInfo" component={LocationInfo} />
           <Stack.Screen name="Collection" component={Collection} />
           <Stack.Screen name="Settings" component={Settings} />
           <Stack.Screen name="Tokens" component={Tokens} />
