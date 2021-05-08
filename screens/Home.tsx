@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 import React, { useState, useRef } from "react";
 import { useAppSelector } from "../utils/hooks";
 import { selectLocationById } from "../utils/mapSlice";
@@ -13,7 +12,7 @@ import {
   Pressable,
   ScrollView,
 } from "react-native";
-import Image from "../components/Image";
+import Content from "../components/Content";
 import Carousel from "react-native-snap-carousel";
 import Animated, { Easing } from "react-native-reanimated";
 import Logo from "../assets/logo.svg";
@@ -22,6 +21,10 @@ import CollectionIcon from "../assets/collection.svg";
 import SettingsIcon from "../assets/settings.svg";
 import TokensIcon from "../assets/tokens.svg";
 import { styles, win, width } from "../utils/styles";
+
+// TODO Write the asc and answer functionality
+// TODO Edit the SVG icons to add the gradient borders like the collection icon
+// TODO Advert functionality
 
 export default function Home({ navigation }: HomeProps): JSX.Element {
   const invertBg = useAppSelector((state) => state.settings.invertBg);
@@ -186,7 +189,7 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
                         styles.border,
                       ]}
                     >
-                      <Image
+                      <Content
                         content={item.content[0]}
                         style={{ opacity: hideItems ? 0 : 1 }}
                       />

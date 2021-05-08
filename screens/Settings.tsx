@@ -13,6 +13,8 @@ import {
 import { setUser } from "../utils/userSlice";
 import { accentBlue, accentBlueLite, styles } from "../utils/styles";
 
+// TODO Add animation disabling functionality
+
 export default function Settings({ navigation }: SettingsProps): JSX.Element {
   firebase.app();
 

@@ -3,11 +3,11 @@ import * as firebase from "firebase";
 import { View, Text, ScrollView, Pressable, FlatList } from "react-native";
 import { useAppSelector } from "../utils/hooks";
 import { FontAwesome5 } from "@expo/vector-icons";
-import Image from "../components/Image";
+import Content from "../components/Content";
 import { styles, width, accentBlue, accentBlueLite } from "../utils/styles";
 
 // TODO Figure out a way to incorporate links into item description
-// TODO Optional: Show connected locations from the item?
+// TODO Add sharing functionality
 
 export default function ItemInfo({
   navigation,
@@ -23,7 +23,7 @@ export default function ItemInfo({
     const uid = firebase.auth().currentUser?.uid;
     saved && saved[item.id]
       ? firebase.database().ref(`users/${uid}/saved/${item.id}`).remove()
-      : firebase.database().ref(`users/${uid}/saved/${item.id}`).set(true);
+      : firebase.database().ref(`users/${uid}/saved/${item.id}`).set(item);
   }
 
   return (
@@ -39,16 +39,16 @@ export default function ItemInfo({
             renderItem={({ item }) => {
               return (
                 <View style={styles.shelfItem}>
-                  <Image content={item} />
+                  <Content content={item} />
                 </View>
               );
             }}
             horizontal={true}
-            style={[styles.shelf, styles.marginTopDouble]}
+            style={[styles.locationShelf, styles.marginTopDouble]}
             keyExtractor={(_, index) => `${item.id}-content-${index}`}
           />
         ) : (
-          <Image content={item.content[0]} style={styles.marginTopDouble} />
+          <Content content={item.content[0]} style={styles.marginTopDouble} />
         )}
         <Text style={[styles.itemName, styles.marginTopDouble, styles.avenir]}>
           {item.name}
@@ -70,7 +70,7 @@ export default function ItemInfo({
               name="star"
               color="white"
               size={width * 0.07}
-              solid={saved ? saved[item.id] : false}
+              solid={saved ? saved[item.id] !== undefined : false}
             />
           </Pressable>
           {item.purchaseInfo ? (

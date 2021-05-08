@@ -76,6 +76,9 @@ firebase.auth().onAuthStateChanged((user) => {
   }
 });
 
+// TODO Push notifications
+// TODO Analytics
+
 enableScreens();
 const Stack = createNativeStackNavigator<RootStackParamList>();
 

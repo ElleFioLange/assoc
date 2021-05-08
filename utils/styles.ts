@@ -139,10 +139,14 @@ export const styles = StyleSheet.create({
 
   // Collection ---------------
 
-  shelf: {
+  locationShelf: {
     width,
     height: width,
     paddingBottom: width * 0.01,
+    borderBottomColor: "#e0e0e0",
+    borderBottomWidth: 1,
+  },
+  itemShelf: {
     borderBottomColor: "#e0e0e0",
     borderBottomWidth: 1,
   },

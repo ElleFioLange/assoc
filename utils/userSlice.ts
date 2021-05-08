@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState: {
   uid: string;
   displayName: string;
-  saved: Record<string, boolean> | null;
+  saved: Record<string, ItemData> | null;
 } = {
   uid: "",
   displayName: "",

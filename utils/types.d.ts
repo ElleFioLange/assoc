@@ -52,9 +52,31 @@ type RootStackParamList = {
   Map: undefined;
   LocationInfo: { location: LocationData };
   Collection: undefined;
+  // Collection: import("@react-navigation/native").NavigatorScreenParams<CollectionTabParamList>;
   Settings: undefined;
   Tokens: undefined;
 };
+
+type CollectionTabParamList = {
+  All: { curLocation: LocationData };
+  Saved: { curLocation: LocationData };
+};
+
+type CollectionAllScreenNavigationProp = import("@react-navigation/native").CompositeNavigationProp<
+  import("@react-navigation/bottom-tabs").BottomTabNavigationProp<
+    CollectionTabParamList,
+    "All"
+  >,
+  import("@react-navigation/stack").StackNavigationProp<RootStackParamList>
+>;
+
+type CollectionSavedScreenNavigationProp = import("@react-navigation/native").CompositeNavigationProp<
+  import("@react-navigation/bottom-tabs").BottomTabNavigationProp<
+    CollectionTabParamList,
+    "Saved"
+  >,
+  import("@react-navigation/stack").StackNavigationProp<RootStackParamList>
+>;
 
 type LandingProps = import("react-native-screens/native-stack").NativeStackScreenProps<
   RootStackParamList,
@@ -91,9 +113,19 @@ type LocationInfoProps = import("react-native-screens/native-stack").NativeStack
   "LocationInfo"
 >;
 
-type MineProps = import("react-native-screens/native-stack").NativeStackScreenProps<
+type CollectionProps = import("react-native-screens/native-stack").NativeStackScreenProps<
   RootStackParamList,
   "Collection"
+>;
+
+type CollectionAllProps = import("@react-navigation/bottom-tabs").BottomTabScreenProps<
+  CollectionTabParamList,
+  "All"
+>;
+
+type CollectionSavedProps = import("@react-navigation/bottom-tabs").BottomTabScreenProps<
+  CollectionTabParamList,
+  "Saved"
 >;
 
 type SettingsProps = import("react-native-screens/native-stack").NativeStackScreenProps<

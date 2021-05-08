@@ -19,10 +19,14 @@ import {
   Platform,
 } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { styles, width, win } from "../utils/styles";
+import {
+  styles,
+  width,
+  win,
+  accentBlue,
+  accentBlueLite,
+} from "../utils/styles";
 const AnimTextInput = Animated.createAnimatedComponent(TextInput);
-
-// TODO Add a loading animation
 
 export default function Landing({ navigation }: LandingProps): JSX.Element {
   firebase.app();
@@ -33,6 +37,8 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
   const [birthDate, setBirthDate] = useState<Date>();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loadingSignIn, setLoadingSignIn] = useState(false);
+  const [loadingSignUp, setLoadingSignUp] = useState(false);
 
   const nameAnim = useRef(new Animated.Value(0)).current;
   const emailAnim = useRef(new Animated.Value(0)).current;
@@ -109,6 +115,7 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
 
   async function signIn() {
     if (testInputs()) {
+      setLoadingSignIn(true);
       firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
@@ -119,6 +126,7 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
           );
           setEmail("");
           setPassword("");
+          setLoadingSignIn(false);
           navigation.replace("Home");
         })
         .catch((e) => Alert.alert("Error signing in", e.message));
@@ -132,6 +140,7 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
   }
 
   async function signUp() {
+    setLoadingSignUp(true);
     firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
@@ -156,6 +165,7 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
         setPassword("");
         setName("");
         setBirthDate(undefined);
+        setLoadingSignUp(false);
         navigation.replace("Home");
       })
       .catch((e) => Alert.alert("Error signing up", e.message));
@@ -231,7 +241,7 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
                         styles.avenir,
                         styles.birthDateLabel,
                         {
-                          color: birthDate ? "black" : "gray",
+                          color: birthDate ? "black" : "#9194ab",
                         },
                       ]}
                     >
@@ -251,7 +261,7 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
                   <Pressable
                     style={({ pressed }) => [
                       {
-                        backgroundColor: pressed ? "#395aff" : "#1122f4",
+                        backgroundColor: pressed ? accentBlueLite : accentBlue,
                       },
                       styles.logOut,
                       styles.marginTopDouble,
@@ -272,7 +282,7 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
                   <Pressable
                     style={({ pressed }) => [
                       {
-                        backgroundColor: pressed ? "#395aff" : "#1122f4",
+                        backgroundColor: pressed ? accentBlueLite : accentBlue,
                       },
                       styles.logOut,
                       styles.marginTop,
@@ -359,7 +369,7 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
           <Pressable
             style={({ pressed }) => [
               {
-                backgroundColor: pressed ? "#395aff" : "#1122f4",
+                backgroundColor: pressed ? accentBlueLite : accentBlue,
               },
               styles.logOut,
               styles.marginTopDouble,
@@ -372,12 +382,14 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
               signIn();
             }}
           >
-            <Text style={[styles.avenir, styles.logOutText]}>Sign In</Text>
+            <Text style={[styles.avenir, styles.logOutText]}>
+              {loadingSignIn ? "Loading..." : "Sign In"}
+            </Text>
           </Pressable>
           <Pressable
             style={({ pressed }) => [
               {
-                backgroundColor: pressed ? "#395aff" : "#1122f4",
+                backgroundColor: pressed ? accentBlueLite : accentBlue,
               },
               styles.logOut,
               styles.marginTop,
@@ -390,7 +402,9 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
               getSignUpInfo();
             }}
           >
-            <Text style={[styles.avenir, styles.logOutText]}>Sign Up</Text>
+            <Text style={[styles.avenir, styles.logOutText]}>
+              {loadingSignUp ? "Loading..." : "Sign Up"}
+            </Text>
           </Pressable>
         </KeyboardAvoidingView>
       </TouchableWithoutFeedback>

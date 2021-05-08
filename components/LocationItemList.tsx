@@ -20,7 +20,7 @@ export default function LocationItemList({
             <TouchableWithoutFeedback onPress={() => openItem(item)}>
               {/* 
               I have absolutely no idea why, but if I use the
-              custom image component that I wrote then it eats the
+              custom content component that I wrote then it eats the
               touch responder or something and openItem never gets called.
               */}
               <Image
@@ -42,7 +42,7 @@ export default function LocationItemList({
         );
       }}
       horizontal={true}
-      style={styles.shelf}
+      style={styles.locationShelf}
       keyExtractor={(item) => item.id}
     />
   );

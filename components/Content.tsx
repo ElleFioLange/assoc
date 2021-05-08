@@ -1,10 +1,10 @@
 import React from "react";
-import { Image as RNImage, StyleProp, ImageStyle } from "react-native";
+import { Image, StyleProp, ImageStyle } from "react-native";
 import { styles, width } from "../utils/styles";
 
 // TODO Make this a content object that can handle videos, audio, maps, 3d models???? nfts????
 
-export default function Image({
+export default function Content({
   content,
   style,
 }: {
@@ -12,17 +12,21 @@ export default function Image({
   style?: StyleProp<ImageStyle>;
 }): JSX.Element {
   return (
-    <RNImage
+    <Image
       source={{ uri: content.uri, cache: "force-cache" }}
       style={[styles.image, style]}
-      // Scale width down slightly so that the image
-      // doesn't draw over the carousel border
+      // Scale width and height down slightly so that the image
+      // doesn't draw over any of the borders
       width={
         content.w >= content.h
           ? width * 0.99
           : (width * 0.99 * content.w) / content.h
       }
-      height={content.w < content.h ? width : (width * content.h) / content.w}
+      height={
+        content.w < content.h
+          ? width * 0.99
+          : (width * 0.99 * content.h) / content.w
+      }
     />
   );
 }
