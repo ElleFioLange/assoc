@@ -42,36 +42,26 @@ firebase.auth().onAuthStateChanged((user) => {
   if (user) {
     const { uid, displayName } = user;
     store.dispatch(setUser({ uid, displayName }));
-    firebase
-      .database()
-      .ref(`users/${uid}/tokens`)
-      .on("value", (snapshot) => {
-        store.dispatch(setTokens(snapshot.val()));
-      });
-    firebase
-      .database()
-      .ref(`users/${uid}/map`)
-      .on("value", (snapshot) => {
-        store.dispatch(setMap(snapshot.val()));
-      });
-    firebase
-      .database()
-      .ref(`users/${uid}/curLocationId`)
-      .on("value", (snapshot) => {
-        store.dispatch(setCurLocationId(snapshot.val()));
-      });
-    firebase
-      .database()
-      .ref(`users/${uid}/saved`)
-      .on("value", (snapshot) => {
-        store.dispatch(setSaved(snapshot.val()));
-      });
+    const uidRef = firebase.database().ref(`users/${uid}`);
+    uidRef.child("tokens").on("value", (snapshot) => {
+      store.dispatch(setTokens(snapshot.val()));
+    });
+    uidRef.child("map").on("value", (snapshot) => {
+      store.dispatch(setMap(snapshot.val()));
+    });
+    uidRef.child("curLocationId").on("value", (snapshot) => {
+      store.dispatch(setCurLocationId(snapshot.val()));
+    });
+    uidRef.child("saved").on("value", (snapshot) => {
+      store.dispatch(setSaved(snapshot.val()));
+    });
   } else {
     const uid = store.getState().user.uid;
-    firebase.database().ref(`users/${uid}/tokens`).off();
-    firebase.database().ref(`users/${uid}/map`).off();
-    firebase.database().ref(`users/${uid}/curLocationId`).off();
-    firebase.database().ref(`users/${uid}/saved`).off();
+    const uidRef = firebase.database().ref(`users/${uid}`);
+    uidRef.child("tokens").off();
+    uidRef.child("map").off();
+    uidRef.child("curLocationId").off();
+    uidRef.child("saved").off();
     store.dispatch(setUser({ uid: "", displayName: "" }));
     SecureStore.deleteItemAsync("credential");
   }
@@ -79,6 +69,8 @@ firebase.auth().onAuthStateChanged((user) => {
 
 // TODO Push notifications
 // TODO Analytics
+// TODO All the backend lol goddamn
+// TODO Unlock item functionality
 
 enableScreens();
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -150,7 +142,9 @@ export default function App(): JSX.Element {
           <Stack.Screen
             name="Purchase"
             component={Purchase}
-            options={{ stackPresentation: "fullScreenModal" }}
+            options={{
+              stackPresentation: "fullScreenModal",
+            }}
           />
           <Stack.Screen
             name="Share"

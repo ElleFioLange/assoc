@@ -137,6 +137,19 @@ export const styles = StyleSheet.create({
     marginLeft: width * 0.035,
   },
 
+  // Share ---------------
+
+  shareText: {
+    width,
+    fontSize: 20,
+    fontWeight: "500",
+  },
+  shareCode: {
+    width,
+    fontSize: 35,
+    fontWeight: "900",
+  },
+
   // Collection ---------------
 
   locationShelf: {

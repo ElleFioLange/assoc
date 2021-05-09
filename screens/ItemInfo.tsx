@@ -7,7 +7,6 @@ import Content from "../components/Content";
 import { styles, width, accentBlue, accentBlueLite } from "../utils/styles";
 
 // TODO Figure out a way to incorporate links into item description
-// TODO Add sharing functionality
 
 export default function ItemInfo({
   navigation,

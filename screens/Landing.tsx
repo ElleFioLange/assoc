@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import * as firebase from "firebase";
 import * as SecureStore from "expo-secure-store";
 import { useAppDispatch } from "../utils/hooks";
@@ -6,19 +6,17 @@ import { setUser } from "../utils/userSlice";
 import {
   Modal,
   View,
-  TextInput,
   Pressable,
   Alert,
   Text,
-  Animated,
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
   ImageBackground,
-  Easing,
   Keyboard,
   Platform,
 } from "react-native";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import CustomTextInput from "../components/CustomTextInput";
+import DatePicker from "@react-native-community/datetimepicker";
 import {
   styles,
   width,
@@ -26,7 +24,6 @@ import {
   accentBlue,
   accentBlueLite,
 } from "../utils/styles";
-const AnimTextInput = Animated.createAnimatedComponent(TextInput);
 
 export default function Landing({ navigation }: LandingProps): JSX.Element {
   firebase.app();
@@ -39,60 +36,6 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
   const [password, setPassword] = useState("");
   const [loadingSignIn, setLoadingSignIn] = useState(false);
   const [loadingSignUp, setLoadingSignUp] = useState(false);
-
-  const nameAnim = useRef(new Animated.Value(0)).current;
-  const emailAnim = useRef(new Animated.Value(0)).current;
-  const passwordAnim = useRef(new Animated.Value(0)).current;
-
-  const nameRef = useRef<TextInput>();
-  const emailRef = useRef<TextInput>();
-  const passwordRef = useRef<TextInput>();
-
-  const toggleName = (focused: boolean) => {
-    focused
-      ? Animated.timing(nameAnim, {
-          useNativeDriver: true,
-          toValue: 1,
-          duration: 200,
-          easing: Easing.ease,
-        }).start()
-      : Animated.timing(nameAnim, {
-          useNativeDriver: true,
-          toValue: 0,
-          duration: 200,
-          easing: Easing.ease,
-        }).start();
-  };
-  const toggleEmail = (focused: boolean) => {
-    focused
-      ? Animated.timing(emailAnim, {
-          useNativeDriver: true,
-          toValue: 1,
-          duration: 200,
-          easing: Easing.ease,
-        }).start()
-      : Animated.timing(emailAnim, {
-          useNativeDriver: true,
-          toValue: 0,
-          duration: 200,
-          easing: Easing.ease,
-        }).start();
-  };
-  const togglePassword = (focused: boolean) => {
-    focused
-      ? Animated.timing(passwordAnim, {
-          useNativeDriver: true,
-          toValue: 1,
-          duration: 200,
-          easing: Easing.ease,
-        }).start()
-      : Animated.timing(passwordAnim, {
-          useNativeDriver: true,
-          toValue: 0,
-          duration: 200,
-          easing: Easing.ease,
-        }).start();
-  };
 
   function testInputs() {
     const regex = RegExp(
@@ -129,7 +72,10 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
           setLoadingSignIn(false);
           navigation.replace("Home");
         })
-        .catch((e) => Alert.alert("Error signing in", e.message));
+        .catch((e) => {
+          Alert.alert("Error signing in", e.message);
+          setLoadingSignIn(false);
+        });
     }
   }
 
@@ -168,7 +114,10 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
         setLoadingSignUp(false);
         navigation.replace("Home");
       })
-      .catch((e) => Alert.alert("Error signing up", e.message));
+      .catch((e) => {
+        Alert.alert("Error signing up", e.message);
+        setLoadingSignUp(false);
+      });
   }
 
   return (
@@ -194,177 +143,92 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
               style={styles.container}
               onPress={Keyboard.dismiss}
             >
-              <KeyboardAvoidingView
-                behavior={Platform.OS === "ios" ? "padding" : "height"}
-                style={styles.container}
-              >
-                <View style={[styles.container, { minWidth: win.width }]}>
-                  <AnimTextInput
-                    onChangeText={setName}
-                    allowFontScaling={false}
-                    // disableFullscreenUI
-                    value={name}
-                    placeholder="name"
-                    placeholderTextColor="#9194ab"
-                    ref={nameRef}
+              <View style={[styles.container, { minWidth: win.width }]}>
+                <CustomTextInput
+                  placeholder="name"
+                  value={name}
+                  setValue={setName}
+                />
+                <View
+                  style={[
+                    styles.input,
+                    styles.birthDatePicker,
+                    styles.border,
+                    styles.marginTop,
+                  ]}
+                >
+                  <Text
                     style={[
-                      styles.input,
-                      styles.shadow,
+                      styles.avenir,
+                      styles.birthDateLabel,
                       {
-                        shadowOffset: {
-                          width: 0,
-                          height: nameAnim.interpolate({
-                            inputRange: [0, 1],
-                            outputRange: [0, width],
-                          }),
-                        },
-                        shadowRadius: nameAnim.interpolate({
-                          inputRange: [0, 1],
-                          outputRange: [0, 10],
-                        }),
+                        color: birthDate ? "black" : "#9194ab",
                       },
-                      styles.border,
-                    ]}
-                    onFocus={() => toggleName(true)}
-                    onBlur={() => toggleName(false)}
-                  />
-                  <View
-                    style={[
-                      styles.input,
-                      styles.birthDatePicker,
-                      styles.border,
-                      styles.marginTop,
                     ]}
                   >
-                    <Text
-                      style={[
-                        styles.avenir,
-                        styles.birthDateLabel,
-                        {
-                          color: birthDate ? "black" : "#9194ab",
-                        },
-                      ]}
-                    >
-                      {birthDate?.toLocaleDateString() || "birthdate"}
-                    </Text>
-                  </View>
-                  <DateTimePicker
-                    style={{ width: width }}
-                    value={birthDate || new Date()}
-                    mode="date"
-                    display="spinner"
-                    onChange={(_, selectedDate) =>
-                      setBirthDate(selectedDate || birthDate)
-                    }
-                    maximumDate={new Date()}
-                  />
-                  <Pressable
-                    style={({ pressed }) => [
-                      {
-                        backgroundColor: pressed ? accentBlueLite : accentBlue,
-                      },
-                      styles.logOut,
-                      styles.marginTopDouble,
-                    ]}
-                    onPress={() => {
-                      if (!name) Alert.alert("Name is required");
-                      else if (!birthDate) Alert.alert("Birthdate is required");
-                      else {
-                        setModal(false);
-                        signUp();
-                      }
-                    }}
-                  >
-                    <Text style={[styles.avenir, styles.logOutText]}>
-                      Submit
-                    </Text>
-                  </Pressable>
-                  <Pressable
-                    style={({ pressed }) => [
-                      {
-                        backgroundColor: pressed ? accentBlueLite : accentBlue,
-                      },
-                      styles.logOut,
-                      styles.marginTop,
-                    ]}
-                    onPress={() => {
-                      setName("");
-                      setBirthDate(undefined);
-                      toggleName(false);
-                      setModal(false);
-                    }}
-                  >
-                    <Text style={[styles.avenir, styles.logOutText]}>
-                      Cancel
-                    </Text>
-                  </Pressable>
+                    {birthDate?.toLocaleDateString() || "birthdate"}
+                  </Text>
                 </View>
-              </KeyboardAvoidingView>
+                <DatePicker
+                  textColor="black"
+                  style={{ width: width }}
+                  value={birthDate || new Date()}
+                  display="spinner"
+                  onChange={(_, selectedDate) =>
+                    setBirthDate(selectedDate || birthDate)
+                  }
+                  maximumDate={new Date()}
+                />
+                <Pressable
+                  style={({ pressed }) => [
+                    {
+                      backgroundColor: pressed ? accentBlueLite : accentBlue,
+                    },
+                    styles.logOut,
+                    styles.marginTopDouble,
+                  ]}
+                  onPress={() => {
+                    if (!name) Alert.alert("Name is required");
+                    else if (!birthDate) Alert.alert("Birthdate is required");
+                    else {
+                      setModal(false);
+                      signUp();
+                    }
+                  }}
+                >
+                  <Text style={[styles.avenir, styles.logOutText]}>Submit</Text>
+                </Pressable>
+                <Pressable
+                  style={({ pressed }) => [
+                    {
+                      backgroundColor: pressed ? accentBlueLite : accentBlue,
+                    },
+                    styles.logOut,
+                    styles.marginTop,
+                  ]}
+                  onPress={() => {
+                    setName("");
+                    setBirthDate(undefined);
+                    setModal(false);
+                  }}
+                >
+                  <Text style={[styles.avenir, styles.logOutText]}>Cancel</Text>
+                </Pressable>
+              </View>
             </TouchableWithoutFeedback>
           </Modal>
-          <AnimTextInput
-            keyboardType="email-address"
-            onChangeText={setEmail}
-            allowFontScaling={false}
-            autoCapitalize="none"
-            disableFullscreenUI
-            value={email}
+          <CustomTextInput
             placeholder="email"
-            placeholderTextColor="#9194ab"
-            ref={emailRef}
-            style={[
-              styles.input,
-              styles.shadow,
-              {
-                shadowOffset: {
-                  width: 0,
-                  height: emailAnim.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [0, width],
-                  }),
-                },
-                shadowRadius: emailAnim.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [0, 10],
-                }),
-              },
-              styles.marginTop,
-              styles.border,
-            ]}
-            onFocus={() => toggleEmail(true)}
-            onBlur={() => toggleEmail(false)}
+            props={{ autoCapitalize: "none", keyboardType: "email-address" }}
+            value={email}
+            setValue={setEmail}
           />
-          <AnimTextInput
-            secureTextEntry
-            onChangeText={(input) => setPassword(input.trim())}
-            allowFontScaling={false}
-            autoCapitalize="none"
-            disableFullscreenUI
-            value={password}
+          <CustomTextInput
             placeholder="password"
-            placeholderTextColor="#9194ab"
-            ref={passwordRef}
-            style={[
-              styles.input,
-              styles.shadow,
-              {
-                shadowOffset: {
-                  width: 0,
-                  height: passwordAnim.interpolate({
-                    inputRange: [0, 1],
-                    outputRange: [0, width * 0.02],
-                  }),
-                },
-                shadowRadius: passwordAnim.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: [0, 10],
-                }),
-              },
-              styles.marginTop,
-              styles.border,
-            ]}
-            onFocus={() => togglePassword(true)}
-            onBlur={() => togglePassword(false)}
+            props={{ secureTextEntry: true, autoCapitalize: "none" }}
+            style={styles.marginTop}
+            value={password}
+            setValue={setPassword}
           />
           <Pressable
             style={({ pressed }) => [
@@ -376,14 +240,12 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
             ]}
             onPress={() => {
               Keyboard.dismiss();
-              emailRef.current?.blur();
-              passwordRef.current?.blur();
 
               signIn();
             }}
           >
             <Text style={[styles.avenir, styles.logOutText]}>
-              {loadingSignIn ? "Loading..." : "Sign In"}
+              {loadingSignIn ? "Signing In..." : "Sign In"}
             </Text>
           </Pressable>
           <Pressable
@@ -396,14 +258,12 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
             ]}
             onPress={() => {
               Keyboard.dismiss();
-              emailRef.current?.blur();
-              passwordRef.current?.blur();
 
               getSignUpInfo();
             }}
           >
             <Text style={[styles.avenir, styles.logOutText]}>
-              {loadingSignUp ? "Loading..." : "Sign Up"}
+              {loadingSignUp ? "Signing Up..." : "Sign Up"}
             </Text>
           </Pressable>
         </KeyboardAvoidingView>
