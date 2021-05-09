@@ -16,6 +16,7 @@ import MapScreen from "./screens/MapScreen";
 import Collection from "./screens/Collection";
 import LocationInfo from "./screens/LocationInfo";
 import Purchase from "./screens/Purchase";
+import Share from "./screens/Share";
 import Settings from "./screens/Settings";
 import Tokens from "./screens/Tokens";
 
@@ -149,6 +150,11 @@ export default function App(): JSX.Element {
           <Stack.Screen
             name="Purchase"
             component={Purchase}
+            options={{ stackPresentation: "fullScreenModal" }}
+          />
+          <Stack.Screen
+            name="Share"
+            component={Share}
             options={{ stackPresentation: "fullScreenModal" }}
           />
           <Stack.Screen name="Map" component={MapScreen} />

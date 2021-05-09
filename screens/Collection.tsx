@@ -125,12 +125,15 @@ export default function Collection(): JSX.Element {
 
   return (
     <Tab.Navigator
+      tabBarOptions={{
+        showLabel: false,
+      }}
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
 
           if (route.name === "All") {
-            iconName = focused ? "box-open" : "box";
+            iconName = "box-open";
           } else if (route.name === "Saved") {
             iconName = "star";
           }

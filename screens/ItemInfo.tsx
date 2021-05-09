@@ -97,7 +97,7 @@ export default function ItemInfo({
               },
               styles.itemAction,
             ]}
-            onPress={() => console.log(saved)}
+            onPress={() => navigation.navigate("Share", { item })}
           >
             <FontAwesome5 name="share" color="white" size={width * 0.07} />
           </Pressable>

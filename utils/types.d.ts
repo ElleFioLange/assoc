@@ -49,6 +49,7 @@ type RootStackParamList = {
   Answer: { answer: string };
   ItemInfo: { item: ItemData };
   Purchase: { item: ItemData };
+  Share: { item: ItemData };
   Map: undefined;
   LocationInfo: { location: LocationData };
   Collection: undefined;
@@ -101,6 +102,11 @@ type ItemInfoProps = import("react-native-screens/native-stack").NativeStackScre
 type PurchaseProps = import("react-native-screens/native-stack").NativeStackScreenProps<
   RootStackParamList,
   "Purchase"
+>;
+
+type ShareProps = import("react-native-screens/native-stack").NativeStackScreenProps<
+  RootStackParamList,
+  "Share"
 >;
 
 type MapProps = import("react-native-screens/native-stack").NativeStackScreenProps<
