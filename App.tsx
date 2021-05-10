@@ -107,7 +107,7 @@ export default function App(): JSX.Element {
     <Provider store={store}>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName={credStatus === "available" ? "Home" : "Landing"}
+          initialRouteName={credStatus === "available" ? "Home" : "Home"}
           screenOptions={{ headerShown: false }}
         >
           <Stack.Screen

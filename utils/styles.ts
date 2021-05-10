@@ -57,6 +57,14 @@ export const styles = StyleSheet.create({
     borderColor: accentBlue,
     borderWidth: StyleSheet.hairlineWidth,
   },
+  actionBar: {
+    width,
+    height: width * 0.15,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: width * 0.015,
+  },
 
   // Home ---------------
 
@@ -206,14 +214,6 @@ export const styles = StyleSheet.create({
     fontSize: width * 0.06,
     fontWeight: "400",
     maxWidth: width * 0.7,
-  },
-  logOut: {
-    width,
-    height: width * 0.15,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    borderRadius: width * 0.015,
   },
   logOutText: {
     fontSize: width * 0.06,

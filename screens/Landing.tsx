@@ -6,7 +6,6 @@ import { setUser } from "../utils/userSlice";
 import {
   Modal,
   View,
-  Pressable,
   Alert,
   Text,
   TouchableWithoutFeedback,
@@ -15,15 +14,10 @@ import {
   Keyboard,
   Platform,
 } from "react-native";
+import ActionBar from "../components/ActionBar";
 import CustomTextInput from "../components/CustomTextInput";
 import DatePicker from "@react-native-community/datetimepicker";
-import {
-  styles,
-  width,
-  win,
-  accentBlue,
-  accentBlueLite,
-} from "../utils/styles";
+import { styles, width, win } from "../utils/styles";
 
 export default function Landing({ navigation }: LandingProps): JSX.Element {
   firebase.app();
@@ -184,14 +178,8 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
                   }}
                   maximumDate={new Date()}
                 />
-                <Pressable
-                  style={({ pressed }) => [
-                    {
-                      backgroundColor: pressed ? accentBlueLite : accentBlue,
-                    },
-                    styles.logOut,
-                    styles.marginTopDouble,
-                  ]}
+                <ActionBar
+                  style={styles.marginTopDouble}
                   onPress={() => {
                     if (!name) Alert.alert("Name is required");
                     else if (!birthDate) Alert.alert("Birthdate is required");
@@ -202,15 +190,9 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
                   }}
                 >
                   <Text style={[styles.avenir, styles.logOutText]}>Submit</Text>
-                </Pressable>
-                <Pressable
-                  style={({ pressed }) => [
-                    {
-                      backgroundColor: pressed ? accentBlueLite : accentBlue,
-                    },
-                    styles.logOut,
-                    styles.marginTop,
-                  ]}
+                </ActionBar>
+                <ActionBar
+                  style={styles.marginTop}
                   onPress={() => {
                     setName("");
                     setBirthDate(undefined);
@@ -218,7 +200,7 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
                   }}
                 >
                   <Text style={[styles.avenir, styles.logOutText]}>Cancel</Text>
-                </Pressable>
+                </ActionBar>
               </View>
             </TouchableWithoutFeedback>
           </Modal>
@@ -239,14 +221,8 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
               setValue={setPassword}
             />
           </KeyboardAvoidingView>
-          <Pressable
-            style={({ pressed }) => [
-              {
-                backgroundColor: pressed ? accentBlueLite : accentBlue,
-              },
-              styles.logOut,
-              styles.marginTopDouble,
-            ]}
+          <ActionBar
+            style={styles.marginTopDouble}
             onPress={() => {
               Keyboard.dismiss();
 
@@ -256,15 +232,9 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
             <Text style={[styles.avenir, styles.logOutText]}>
               {signingIn ? "Signing In..." : "Sign In"}
             </Text>
-          </Pressable>
-          <Pressable
-            style={({ pressed }) => [
-              {
-                backgroundColor: pressed ? accentBlueLite : accentBlue,
-              },
-              styles.logOut,
-              styles.marginTop,
-            ]}
+          </ActionBar>
+          <ActionBar
+            style={styles.marginTop}
             onPress={() => {
               Keyboard.dismiss();
 
@@ -274,7 +244,7 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
             <Text style={[styles.avenir, styles.logOutText]}>
               {signingUp ? "Signing Up..." : "Sign Up"}
             </Text>
-          </Pressable>
+          </ActionBar>
         </View>
       </TouchableWithoutFeedback>
     </ImageBackground>
