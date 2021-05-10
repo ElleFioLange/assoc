@@ -30,6 +30,7 @@ type ItemData = {
       maxAvailable?: number;
     };
   };
+  link?: string;
 };
 
 type LocationData = {

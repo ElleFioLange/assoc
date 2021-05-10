@@ -6,6 +6,7 @@ import { useAppSelector } from "../utils/hooks";
 import { styles, accentBlue, accentBlueLite } from "../utils/styles";
 
 // TODO User feedback
+// TODO Advert functionality
 
 export default function Tokens(): JSX.Element {
   const tokens = useAppSelector((state) => state.tokens);
@@ -25,21 +26,17 @@ export default function Tokens(): JSX.Element {
 
   function giveFeedback() {
     feedbackDatabaseRef.once("value", (snapshot) => {
-      if (snapshot.val() > new Date().getTime() - 172800) {
-        Alert.alert(
-          "You can only get tokens every 48 hours",
-          "Give feedback anyway?",
-          [
-            {
-              text: "Cancel",
-              style: "cancel",
-            },
-            {
-              text: "Ok",
-              onPress: openFeedback,
-            },
-          ]
-        );
+      if (snapshot.val() > new Date().getTime() - 604800) {
+        Alert.alert("Reward available once a week", "Give feedback anyway?", [
+          {
+            text: "Cancel",
+            style: "cancel",
+          },
+          {
+            text: "Ok",
+            onPress: openFeedback,
+          },
+        ]);
       } else openFeedback();
     });
   }

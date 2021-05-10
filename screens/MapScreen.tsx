@@ -6,6 +6,8 @@ import { useAppSelector, useAppDispatch } from "../utils/hooks";
 import { selectLocations, setCurLocationId } from "../utils/mapSlice";
 import { styles, win } from "../utils/styles";
 
+// TODO Make it so there's a minimum amount of hexagons (either 1 or 2 full rings)
+
 // Parameters for sizing
 const sideLength = win.width * 0.15;
 const edgeRad = (Math.sqrt(3) / 2) * sideLength;

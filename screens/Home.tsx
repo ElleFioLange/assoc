@@ -157,47 +157,57 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
               </KeyboardAvoidingView>
             </TouchableWithoutFeedback>
             <View style={styles.container}>
-              <Carousel
-                layout={"default"}
-                data={
-                  curLocation
-                    ? Object.keys(curLocation.items).map(
-                        (key) => curLocation.items[key]
-                      )
-                    : []
-                }
-                contentContainerCustomStyle={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-                // enableMomentum={true}
-                decelerationRate={"fast"}
-                style={styles.shadow}
-                renderItem={({ item }: { item: ItemData }) => (
-                  <TouchableWithoutFeedback
-                    onPress={() => {
-                      navigation.navigate("ItemInfo", { item });
-                    }}
-                  >
-                    <View
-                      style={[
-                        styles.shadow,
-                        styles.card,
-                        styles.marginTopDouble,
-                        styles.border,
-                      ]}
+              {curLocation ? (
+                <Carousel
+                  layout={"default"}
+                  data={
+                    curLocation
+                      ? Object.keys(curLocation.items).map(
+                          (key) => curLocation.items[key]
+                        )
+                      : []
+                  }
+                  contentContainerCustomStyle={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                  // enableMomentum={true}
+                  decelerationRate={"fast"}
+                  style={styles.shadow}
+                  renderItem={({ item }: { item: ItemData }) => (
+                    <TouchableWithoutFeedback
+                      onPress={() => {
+                        navigation.navigate("ItemInfo", { item });
+                      }}
                     >
-                      <Content
-                        content={item.content[0]}
-                        style={{ opacity: hideItems ? 0 : 1 }}
-                      />
-                    </View>
-                  </TouchableWithoutFeedback>
-                )}
-                sliderWidth={win.width}
-                itemWidth={width}
-              />
+                      <View
+                        style={[
+                          styles.shadow,
+                          styles.card,
+                          styles.marginTopDouble,
+                          styles.border,
+                        ]}
+                      >
+                        <Content
+                          content={item.content[0]}
+                          style={{ opacity: !hideItems ? 1 : 0 }}
+                        />
+                      </View>
+                    </TouchableWithoutFeedback>
+                  )}
+                  sliderWidth={win.width}
+                  itemWidth={width}
+                />
+              ) : (
+                <View
+                  style={[
+                    styles.marginTopDouble,
+                    styles.card,
+                    { backgroundColor: "none" },
+                  ]}
+                />
+              )}
               <View style={styles.pressableContainer}>
                 <Pressable
                   onPress={() => {

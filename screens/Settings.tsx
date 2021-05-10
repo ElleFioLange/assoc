@@ -1,10 +1,10 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-import React from "react";
+import React, { useState } from "react";
 import * as firebase from "firebase";
 import * as SecureStore from "expo-secure-store";
 import { ScrollView, Text, View, Pressable, Alert } from "react-native";
 import Setting from "../components/Setting";
 import { useAppSelector, useAppDispatch } from "../utils/hooks";
+import { setUser } from "../utils/userSlice";
 import {
   setInvertBg,
   setAutoAd,
@@ -16,6 +16,8 @@ import { accentBlue, accentBlueLite, styles } from "../utils/styles";
 
 export default function Settings({ navigation }: SettingsProps): JSX.Element {
   firebase.app();
+
+  const [deleting, setDeleting] = useState(false);
 
   const displayName = useAppSelector((state) => state.user.displayName);
   const invertBg = useAppSelector((state) => state.settings.invertBg);
@@ -64,18 +66,25 @@ export default function Settings({ navigation }: SettingsProps): JSX.Element {
   }
 
   async function deleteAccount() {
+    setDeleting(true);
     const credential = await SecureStore.getItemAsync("credential");
     const { email, password } = JSON.parse(credential!);
     await firebase.auth().signInWithEmailAndPassword(email, password);
-    const uid = firebase.auth().currentUser!.uid;
-    firebase
-      .auth()
-      .currentUser!.delete()
+    const user = firebase.auth().currentUser!;
+    const uidRef = firebase.database().ref(`users/${user.uid}`);
+    uidRef.child("tokens").off();
+    uidRef.child("map").off();
+    uidRef.child("curLocationId").off();
+    uidRef.child("saved").off();
+    dispatch(setUser({ uid: "", displayName: "" }));
+    SecureStore.deleteItemAsync("credential");
+    user.delete()
       .then(() => {
-        firebase.database().ref(`/users/${uid}`).set(null);
+        firebase.database().ref(`/users/${user.uid}`).remove();
+        setDeleting(false);
         navigation.navigate("Landing");
       })
-      .catch((e) => Alert.alert("Error deleting account", e.message));
+      .catch();
   }
 
   return (
@@ -89,6 +98,7 @@ export default function Settings({ navigation }: SettingsProps): JSX.Element {
         justifyContent: "space-between",
         alignItems: "center",
       }}
+      pointerEvents={deleting ? "none" : "auto"}
     >
       <View>
         <Text style={[styles.avenir, styles.s_tTitle, styles.marginTopDouble]}>
@@ -134,7 +144,7 @@ export default function Settings({ navigation }: SettingsProps): JSX.Element {
           onPress={doubleCheck}
         >
           <Text style={[styles.avenir, styles.logOutText]}>
-            Delete my account
+            {deleting ? "Deleting account..." : "Delete my account"}
           </Text>
         </Pressable>
       </View>

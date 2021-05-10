@@ -66,7 +66,7 @@ export const styles = StyleSheet.create({
     height: width * 0.15,
     borderRadius: width * 0.015,
     textAlign: "center",
-    fontSize: 18,
+    fontSize: width * 0.06,
     fontFamily: "Avenir Next",
     fontWeight: "400",
   },
@@ -101,7 +101,8 @@ export const styles = StyleSheet.create({
   // Answer ---------------
 
   answer: {
-    fontSize: 20,
+    fontSize: width * 0.15,
+    fontWeight: "600",
     textAlign: "center",
   },
 
@@ -110,11 +111,11 @@ export const styles = StyleSheet.create({
   itemName: {
     width,
     textAlign: "left",
-    fontSize: 25,
+    fontSize: width * 0.07,
     fontWeight: "600",
   },
   itemDescription: {
-    fontSize: 15,
+    fontSize: width * 0.05,
     fontWeight: "300",
     width,
     textAlign: "left",
@@ -141,12 +142,12 @@ export const styles = StyleSheet.create({
 
   shareText: {
     width,
-    fontSize: 20,
+    fontSize: width * 0.07,
     fontWeight: "500",
   },
   shareCode: {
     width,
-    fontSize: 35,
+    fontSize: width * 0.15,
     fontWeight: "900",
   },
 
@@ -164,7 +165,7 @@ export const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   shelfName: {
-    fontSize: 15,
+    fontSize: width * 0.05,
     fontWeight: "400",
   },
   shelfItem: {
@@ -173,11 +174,15 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     width,
   },
+  saveText: {
+    fontSize: width * 0.15,
+    fontWeight: "600",
+  },
 
   // Settings & Tokens ---------------
 
   s_tTitle: {
-    fontSize: 50,
+    fontSize: width * 0.15,
     fontWeight: "100",
     width,
     textAlign: "center",
@@ -198,7 +203,7 @@ export const styles = StyleSheet.create({
   //   alignItems: "center",
   // },
   s_tName: {
-    fontSize: 18,
+    fontSize: width * 0.06,
     fontWeight: "400",
     maxWidth: width * 0.7,
   },
@@ -240,7 +245,7 @@ export const styles = StyleSheet.create({
     justifyContent: "center",
   },
   birthDateLabel: {
-    fontSize: 18,
+    fontSize: width * 0.06,
     fontWeight: "400",
   },
 });

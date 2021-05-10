@@ -34,8 +34,8 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
   const [birthDate, setBirthDate] = useState<Date>();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loadingSignIn, setLoadingSignIn] = useState(false);
-  const [loadingSignUp, setLoadingSignUp] = useState(false);
+  const [signingIn, setSigningIn] = useState(false);
+  const [signingUp, setSigningUp] = useState(false);
 
   function testInputs() {
     const regex = RegExp(
@@ -58,7 +58,7 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
 
   async function signIn() {
     if (testInputs()) {
-      setLoadingSignIn(true);
+      setSigningIn(true);
       firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
@@ -69,12 +69,12 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
           );
           setEmail("");
           setPassword("");
-          setLoadingSignIn(false);
+          setSigningIn(false);
           navigation.replace("Home");
         })
         .catch((e) => {
           Alert.alert("Error signing in", e.message);
-          setLoadingSignIn(false);
+          setSigningIn(false);
         });
     }
   }
@@ -86,7 +86,7 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
   }
 
   async function signUp() {
-    setLoadingSignUp(true);
+    setSigningUp(true);
     firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
@@ -111,12 +111,12 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
         setPassword("");
         setName("");
         setBirthDate(undefined);
-        setLoadingSignUp(false);
+        setSigningUp(false);
         navigation.replace("Home");
       })
       .catch((e) => {
         Alert.alert("Error signing up", e.message);
-        setLoadingSignUp(false);
+        setSigningUp(false);
       });
   }
 
@@ -129,7 +129,10 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
         style={styles.container}
         onPress={Keyboard.dismiss}
       >
-        <View style={styles.container}>
+        <View
+          style={styles.container}
+          pointerEvents={signingIn || signingUp ? "none" : "auto"}
+        >
           <Modal
             visible={modal}
             transparent={false}
@@ -175,9 +178,10 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
                   style={{ width: width }}
                   value={birthDate || new Date()}
                   display="spinner"
-                  onChange={(_, selectedDate) =>
-                    setBirthDate(selectedDate || birthDate)
-                  }
+                  onChange={(_, selectedDate) => {
+                    setBirthDate(selectedDate || birthDate);
+                    Keyboard.dismiss();
+                  }}
                   maximumDate={new Date()}
                 />
                 <Pressable
@@ -250,7 +254,7 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
             }}
           >
             <Text style={[styles.avenir, styles.logOutText]}>
-              {loadingSignIn ? "Signing In..." : "Sign In"}
+              {signingIn ? "Signing In..." : "Sign In"}
             </Text>
           </Pressable>
           <Pressable
@@ -268,7 +272,7 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
             }}
           >
             <Text style={[styles.avenir, styles.logOutText]}>
-              {loadingSignUp ? "Signing Up..." : "Sign Up"}
+              {signingUp ? "Signing Up..." : "Sign Up"}
             </Text>
           </Pressable>
         </View>

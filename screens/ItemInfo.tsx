@@ -1,12 +1,12 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React from "react";
 import * as firebase from "firebase";
+import * as Linking from "expo-linking";
 import { View, Text, ScrollView, Pressable, FlatList } from "react-native";
 import { useAppSelector } from "../utils/hooks";
 import { FontAwesome5 } from "@expo/vector-icons";
 import Content from "../components/Content";
 import { styles, width, accentBlue, accentBlueLite } from "../utils/styles";
-
-// TODO Figure out a way to incorporate links into item description
 
 export default function ItemInfo({
   navigation,
@@ -87,6 +87,19 @@ export default function ItemInfo({
                 color="white"
                 size={width * 0.07}
               />
+            </Pressable>
+          ) : null}
+          {item.link ? (
+            <Pressable
+              style={({ pressed }) => [
+                {
+                  backgroundColor: pressed ? accentBlueLite : accentBlue,
+                },
+                styles.itemAction,
+              ]}
+              onPress={() => Linking.openURL(item.link!)}
+            >
+              <FontAwesome5 name="link" color="white" size={width * 0.07} />
             </Pressable>
           ) : null}
           <Pressable

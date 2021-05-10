@@ -19,6 +19,7 @@
     "expo": "~40.0.0",
     "expo-app-loading": "^1.0.3",
     "expo-firebase-analytics": "~2.6.0",
+    "expo-linking": "^2.2.3",
     "expo-module-scripts": "^2.0.0",
     "expo-payments-stripe": "~8.4.0",
     "expo-secure-store": "^10.1.0",

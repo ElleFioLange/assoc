@@ -53,11 +53,11 @@ export default function Share({ navigation, route }: ShareProps): JSX.Element {
 
     subStrings.forEach((string) => {
       if (filter.isProfane(string)) {
-        return false;
+        return true;
       }
     });
 
-    return true;
+    return false;
   }
 
   async function checkCode(potential: string) {
@@ -119,7 +119,10 @@ export default function Share({ navigation, route }: ShareProps): JSX.Element {
       style={styles.container}
       onPress={Keyboard.dismiss}
     >
-      <View style={[styles.container, styles.whiteBg]}>
+      <View
+        style={[styles.container, styles.whiteBg]}
+        pointerEvents={generating ? "none" : "auto"}
+      >
         <Text style={[styles.avenir, styles.shareText]}>
           No code has been set for this item yet. Enter a custom 8 character
           code (emojis count as 2 characters), or generate a new one to share

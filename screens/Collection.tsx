@@ -109,7 +109,9 @@ function Saved({ route }: CollectionSavedProps): JSX.Element {
           keyExtractor={(item) => item.id}
         />
       ) : (
-        <Text>Save some items fucker</Text>
+        <Text style={[styles.avenir, styles.saveText]}>
+          Save some items to access them more easily
+        </Text>
       )}
     </View>
   );

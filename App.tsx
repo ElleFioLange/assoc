@@ -55,15 +55,6 @@ firebase.auth().onAuthStateChanged((user) => {
     uidRef.child("saved").on("value", (snapshot) => {
       store.dispatch(setSaved(snapshot.val()));
     });
-  } else {
-    const uid = store.getState().user.uid;
-    const uidRef = firebase.database().ref(`users/${uid}`);
-    uidRef.child("tokens").off();
-    uidRef.child("map").off();
-    uidRef.child("curLocationId").off();
-    uidRef.child("saved").off();
-    store.dispatch(setUser({ uid: "", displayName: "" }));
-    SecureStore.deleteItemAsync("credential");
   }
 });
 
