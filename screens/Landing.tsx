@@ -129,10 +129,7 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
         style={styles.container}
         onPress={Keyboard.dismiss}
       >
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={styles.container}
-        >
+        <View style={styles.container}>
           <Modal
             visible={modal}
             transparent={false}
@@ -144,11 +141,15 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
               onPress={Keyboard.dismiss}
             >
               <View style={[styles.container, { minWidth: win.width }]}>
-                <CustomTextInput
-                  placeholder="name"
-                  value={name}
-                  setValue={setName}
-                />
+                <KeyboardAvoidingView
+                  behavior={Platform.OS === "ios" ? "padding" : "height"}
+                >
+                  <CustomTextInput
+                    placeholder="name"
+                    value={name}
+                    setValue={setName}
+                  />
+                </KeyboardAvoidingView>
                 <View
                   style={[
                     styles.input,
@@ -217,19 +218,23 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
               </View>
             </TouchableWithoutFeedback>
           </Modal>
-          <CustomTextInput
-            placeholder="email"
-            props={{ autoCapitalize: "none", keyboardType: "email-address" }}
-            value={email}
-            setValue={setEmail}
-          />
-          <CustomTextInput
-            placeholder="password"
-            props={{ secureTextEntry: true, autoCapitalize: "none" }}
-            style={styles.marginTop}
-            value={password}
-            setValue={setPassword}
-          />
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+          >
+            <CustomTextInput
+              placeholder="email"
+              props={{ autoCapitalize: "none", keyboardType: "email-address" }}
+              value={email}
+              setValue={setEmail}
+            />
+            <CustomTextInput
+              placeholder="password"
+              props={{ secureTextEntry: true, autoCapitalize: "none" }}
+              style={styles.marginTop}
+              value={password}
+              setValue={setPassword}
+            />
+          </KeyboardAvoidingView>
           <Pressable
             style={({ pressed }) => [
               {
@@ -266,7 +271,7 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
               {loadingSignUp ? "Signing Up..." : "Sign Up"}
             </Text>
           </Pressable>
-        </KeyboardAvoidingView>
+        </View>
       </TouchableWithoutFeedback>
     </ImageBackground>
   );

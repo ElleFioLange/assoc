@@ -2644,6 +2644,11 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
+"@types/bad-words@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@types/bad-words/-/bad-words-3.0.0.tgz#73a753d691cf98359b25a844dfb6c9978d60ed81"
+  integrity sha512-QTOy+vQbDbRg0rbaSLb99bOJa16UZGO9cW4Qt0f/JAUghPXQcoH2eMdcNlYbPbpxhGpgur9+skGATssMCBSArA==
+
 "@types/bytebuffer@^5.0.40":
   version "5.0.42"
   resolved "https://registry.yarnpkg.com/@types/bytebuffer/-/bytebuffer-5.0.42.tgz#1c602a77942d34c5c0879ad75c58d5d8c07dfb3b"
@@ -2797,7 +2802,7 @@
 
 "@types/react-redux@^7.1.16":
   version "7.1.16"
-  resolved "https://registry.npmjs.org/@types/react-redux/-/react-redux-7.1.16.tgz"
+  resolved "https://registry.yarnpkg.com/@types/react-redux/-/react-redux-7.1.16.tgz#0fbd04c2500c12105494c83d4a3e45c084e3cb21"
   integrity sha512-f/FKzIrZwZk7YEO9E1yoxIuDNRiDducxkFlkw/GNMGEnK9n4K8wJzlJBghpSuOVDgEUHoDkDF7Gi9lHNQR4siw==
   dependencies:
     "@types/hoist-non-react-statics" "^3.3.0"
@@ -3586,10 +3591,22 @@ babel-preset-jest@^25.2.6, babel-preset-jest@^25.5.0:
     babel-plugin-jest-hoist "^25.5.0"
     babel-preset-current-node-syntax "^0.1.2"
 
+bad-words@^3.0.4:
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/bad-words/-/bad-words-3.0.4.tgz#044c83935c4c363a905d47b5e0179f7241fecaec"
+  integrity sha512-v/Q9uRPH4+yzDVLL4vR1+S9KoFgOEUl5s4axd6NIAq8SV2mradgi4E8lma/Y0cw1ltVdvyegCQQKffCPRCp8fg==
+  dependencies:
+    badwords-list "^1.0.0"
+
 badgin@^1.1.2:
   version "1.2.2"
   resolved "https://registry.npmjs.org/badgin/-/badgin-1.2.2.tgz"
   integrity sha512-XtoSjNhy2D09qGiLhFWBJmBwBlmleQuwyYyjddWNCJ3gqGRBOBR25VGcd8CAOSghpEUmghB3LD4NpHrUG89zCg==
+
+badwords-list@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/badwords-list/-/badwords-list-1.0.0.tgz#5e9856dbf13482a295c3b0b304afb9d4cfc5c579"
+  integrity sha1-XphW2/E0gqKVw7CzBK+51M/FxXk=
 
 balanced-match@^1.0.0:
   version "1.0.2"

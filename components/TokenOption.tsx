@@ -9,11 +9,11 @@ export default function TokenOption({
 }: {
   quantity: number;
   price: number;
-  cb: (quantity: number) => void;
+  cb: ({ price, quantity }: { price: number; quantity: number }) => void;
 }): JSX.Element {
   return (
     <View style={[styles.s_tContainer, styles.marginTop]}>
-      <Text style={styles.s_tName}>{quantity}</Text>
+      <Text style={styles.s_tName}>{quantity} Tokens</Text>
       <Pressable
         style={({ pressed }) => [
           {
@@ -21,9 +21,9 @@ export default function TokenOption({
           },
           styles.tokenPurchase,
         ]}
-        onPress={() => cb(quantity)}
+        onPress={() => cb({ price, quantity })}
       >
-        <Text style={[styles.avenir, styles.purchaseText]}>${price}.00</Text>
+        <Text style={[styles.avenir, styles.logOutText]}>${price}.00</Text>
       </Pressable>
     </View>
   );

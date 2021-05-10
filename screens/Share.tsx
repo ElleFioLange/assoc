@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import * as firebase from "firebase";
+import Filter from "bad-words";
 import {
   View,
   Pressable,
@@ -12,6 +13,8 @@ import {
 } from "react-native";
 import CustomTextInput from "../components/CustomTextInput";
 import { styles, accentBlue, accentBlueLite } from "../utils/styles";
+
+const filter = new Filter();
 
 export default function Share({ navigation, route }: ShareProps): JSX.Element {
   const { item } = route.params;
@@ -35,6 +38,27 @@ export default function Share({ navigation, route }: ShareProps): JSX.Element {
       shortcutItemDirectoryRef.child(item.id).off();
     };
   });
+
+  function checkProfanity(potential: string) {
+    let i,
+      j,
+      // eslint-disable-next-line prefer-const
+      subStrings = [];
+
+    for (i = 0; i < potential.length; i++) {
+      for (j = i + 1; j < potential.length + 1; j++) {
+        subStrings.push(potential.slice(i, j));
+      }
+    }
+
+    subStrings.forEach((string) => {
+      if (filter.isProfane(string)) {
+        return false;
+      }
+    });
+
+    return true;
+  }
 
   async function checkCode(potential: string) {
     const check = await shortcutCodeDirectoryRef.child(potential).once("value");
@@ -62,6 +86,8 @@ export default function Share({ navigation, route }: ShareProps): JSX.Element {
       Alert.alert("Code must be exactly 8 characters");
     } else if (!(await checkCode(codeInput))) {
       Alert.alert("Code is already in use");
+    } else if (checkProfanity(codeInput)) {
+      Alert.alert("Watch your profanity", "Right, I'm sorry");
     } else {
       shortcutItemDirectoryRef.child(item.id).set(codeInput);
       shortcutCodeDirectoryRef.child(codeInput).set(item.id);

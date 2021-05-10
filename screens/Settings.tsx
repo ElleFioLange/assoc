@@ -10,7 +10,6 @@ import {
   setAutoAd,
   setDisableAnimations,
 } from "../utils/settingsSlice";
-import { setUser } from "../utils/userSlice";
 import { accentBlue, accentBlueLite, styles } from "../utils/styles";
 
 // TODO Add animation disabling functionality

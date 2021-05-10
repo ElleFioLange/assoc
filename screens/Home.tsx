@@ -23,7 +23,6 @@ import TokensIcon from "../assets/tokens.svg";
 import { styles, win, width } from "../utils/styles";
 
 // TODO Write the asc and answer functionality
-// TODO Edit the SVG icons to add the gradient borders like the collection icon
 // TODO Advert functionality
 
 export default function Home({ navigation }: HomeProps): JSX.Element {
