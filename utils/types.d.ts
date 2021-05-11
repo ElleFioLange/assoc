@@ -12,6 +12,15 @@ type ContentData = {
   h: number;
 };
 
+type ConnectionData = {
+  id: string;
+  sourceName: string;
+  sourceId: string;
+  sinkName: string;
+  sinkId: string;
+  key: string;
+};
+
 type ItemData = {
   id: string;
   name: string;
@@ -21,6 +30,7 @@ type ItemData = {
   content: ContentData[];
   type: "image" | "video" | "audio";
   numUnlocked: number;
+  connections: Record<string, ConnectionData>;
   purchaseInfo: {
     static?: number;
     dynamic?: {
@@ -37,9 +47,6 @@ type LocationData = {
   id: string;
   name: string;
   description: string;
-  parentId: string;
-  incoming: Record<string, string>;
-  outgoing: Record<string, string>;
   minD: Record<string, number>;
   items: Record<string, ItemData>;
 };

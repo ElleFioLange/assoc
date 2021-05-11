@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React, { useState } from "react";
 import * as firebase from "firebase";
 import * as SecureStore from "expo-secure-store";
-import { ScrollView, Text, View, Pressable, Alert } from "react-native";
+import { ScrollView, Text, View, Alert } from "react-native";
+import ActionBar from "../components/ActionBar";
 import Setting from "../components/Setting";
 import { useAppSelector, useAppDispatch } from "../utils/hooks";
 import { setUser } from "../utils/userSlice";
@@ -10,7 +12,7 @@ import {
   setAutoAd,
   setDisableAnimations,
 } from "../utils/settingsSlice";
-import { accentBlue, accentBlueLite, styles } from "../utils/styles";
+import { styles } from "../utils/styles";
 
 // TODO Add animation disabling functionality
 
@@ -65,6 +67,16 @@ export default function Settings({ navigation }: SettingsProps): JSX.Element {
     );
   }
 
+  async function resetUser() {
+    firebase
+      .database()
+      .ref(`userInit`)
+      .once("value", (snapshot) => {
+        const uid = firebase.auth().currentUser!.uid;
+        firebase.database().ref(`users/${uid}`).set(snapshot.val());
+      });
+  }
+
   async function deleteAccount() {
     setDeleting(true);
     const credential = await SecureStore.getItemAsync("credential");
@@ -78,7 +90,8 @@ export default function Settings({ navigation }: SettingsProps): JSX.Element {
     uidRef.child("saved").off();
     dispatch(setUser({ uid: "", displayName: "" }));
     SecureStore.deleteItemAsync("credential");
-    user.delete()
+    user
+      .delete()
       .then(() => {
         firebase.database().ref(`/users/${user.uid}`).remove();
         setDeleting(false);
@@ -121,32 +134,23 @@ export default function Settings({ navigation }: SettingsProps): JSX.Element {
         />
       </View>
       <View>
-        <Pressable
-          style={({ pressed }) => [
-            {
-              backgroundColor: pressed ? accentBlueLite : accentBlue,
-            },
-            styles.logOut,
-            styles.marginTopDouble,
-          ]}
+        <ActionBar
+          title="Sign Out"
+          style={styles.marginTopDouble}
           onPress={signOut}
-        >
-          <Text style={[styles.avenir, styles.logOutText]}>Sign out</Text>
-        </Pressable>
-        <Pressable
-          style={({ pressed }) => [
-            {
-              backgroundColor: pressed ? accentBlueLite : accentBlue,
-            },
-            styles.logOut,
-            styles.marginTop,
-          ]}
+        />
+        <ActionBar
+          title={deleting ? "Deleting account..." : "Delete My Account"}
+          style={styles.marginTop}
           onPress={doubleCheck}
-        >
-          <Text style={[styles.avenir, styles.logOutText]}>
-            {deleting ? "Deleting account..." : "Delete my account"}
-          </Text>
-        </Pressable>
+        />
+        {__DEV__ && (
+          <ActionBar
+            title="Reset User"
+            style={styles.marginTop}
+            onPress={resetUser}
+          />
+        )}
       </View>
     </ScrollView>
   );

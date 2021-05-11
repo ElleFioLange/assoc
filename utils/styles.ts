@@ -65,6 +65,11 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: width * 0.015,
   },
+  actionBarText: {
+    fontSize: width * 0.06,
+    fontWeight: "600",
+    color: "white",
+  },
 
   // Home ---------------
 
@@ -119,7 +124,7 @@ export const styles = StyleSheet.create({
   itemName: {
     width,
     textAlign: "left",
-    fontSize: width * 0.07,
+    fontSize: width * 0.08,
     fontWeight: "600",
   },
   itemDescription: {
@@ -157,6 +162,38 @@ export const styles = StyleSheet.create({
     width,
     fontSize: width * 0.15,
     fontWeight: "900",
+  },
+
+  // LocationInfo ---------------
+
+  locationName: {
+    fontSize: width * 0.1,
+    fontWeight: "600",
+    textAlign: "left",
+    width,
+  },
+  connectionTitle: {
+    fontSize: width * 0.075,
+    fontWeight: "600",
+  },
+  connectionName: {
+    fontSize: width * 0.05,
+    fontWeight: "400",
+  },
+  connectionKey: {
+    fontSize: width * 0.05,
+    fontWeight: "200",
+  },
+  connection: {
+    marginTop: width * 0.025,
+    paddingBottom: width * 0.01,
+    borderBottomColor: "#e0e0e0",
+    borderBottomWidth: 1,
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    flexWrap: "wrap",
   },
 
   // Collection ---------------
@@ -214,11 +251,6 @@ export const styles = StyleSheet.create({
     fontSize: width * 0.06,
     fontWeight: "400",
     maxWidth: width * 0.7,
-  },
-  logOutText: {
-    fontSize: width * 0.06,
-    fontWeight: "600",
-    color: "white",
   },
   tokenPurchase: {
     // width: width * 0.2,

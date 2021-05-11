@@ -6,6 +6,7 @@ import { View, Text, ScrollView, Pressable, FlatList } from "react-native";
 import { useAppSelector } from "../utils/hooks";
 import { FontAwesome5 } from "@expo/vector-icons";
 import Content from "../components/Content";
+import Connections from "../components/Connections";
 import { styles, width, accentBlue, accentBlueLite } from "../utils/styles";
 
 export default function ItemInfo({
@@ -55,6 +56,7 @@ export default function ItemInfo({
         <Text style={[styles.itemDescription, styles.marginTop, styles.avenir]}>
           {item.description}
         </Text>
+        <Connections connections={Object.values(item.connections)} />
         <View style={[styles.marginTopDouble, styles.itemActionContainer]}>
           <Pressable
             style={({ pressed }) => [
@@ -116,7 +118,7 @@ export default function ItemInfo({
         </View>
       </View>
       {/* Just to give some space on the bottom for scrolling */}
-      <View style={{ marginBottom: width * 0.25 }} />
+      <View style={{ marginBottom: width * 0.35 }} />
     </ScrollView>
   );
 }

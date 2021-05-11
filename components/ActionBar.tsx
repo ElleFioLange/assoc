@@ -3,18 +3,19 @@ import {
   Pressable,
   StyleProp,
   ViewStyle,
+  Text,
   GestureResponderEvent,
 } from "react-native";
 import { styles, accentBlue, accentBlueLite } from "../utils/styles";
 
 export default function ActionBar({
+  title,
   onPress,
   style,
-  children,
 }: {
+  title: string;
   onPress: (event: GestureResponderEvent) => void;
   style: StyleProp<ViewStyle>;
-  children: React.ReactNode;
 }): JSX.Element {
   return (
     <Pressable
@@ -27,7 +28,7 @@ export default function ActionBar({
       ]}
       onPress={onPress}
     >
-      {children}
+      <Text style={[styles.avenir, styles.actionBarText]}>{title}</Text>
     </Pressable>
   );
 }

@@ -270,7 +270,7 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
                   <TokensIcon />
                 </Pressable>
               </View>
-              <View style={{ marginBottom: width * 0.25 }} />
+              <View style={{ marginBottom: width * 0.35 }} />
             </View>
           </ScrollView>
         </ImageBackground>

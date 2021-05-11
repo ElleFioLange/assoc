@@ -3,7 +3,6 @@ import * as firebase from "firebase";
 import Filter from "bad-words";
 import {
   View,
-  Pressable,
   Text,
   Alert,
   TouchableWithoutFeedback,
@@ -11,10 +10,12 @@ import {
   Keyboard,
   Platform,
 } from "react-native";
+import ActionBar from "../components/ActionBar";
 import CustomTextInput from "../components/CustomTextInput";
-import { styles, accentBlue, accentBlueLite } from "../utils/styles";
+import { styles } from "../utils/styles";
 
 const filter = new Filter();
+// filter.addWords(🤬,🍆,💦,👉👌,🖕,👅,🎟💃👀)
 
 export default function Share({ navigation, route }: ShareProps): JSX.Element {
   const { item } = route.params;
@@ -101,18 +102,21 @@ export default function Share({ navigation, route }: ShareProps): JSX.Element {
         {itemCode}
       </Text>
       <Text style={styles.shareText}>to share this item.</Text>
-      <Pressable
-        style={({ pressed }) => [
-          {
-            backgroundColor: pressed ? accentBlueLite : accentBlue,
-          },
-          styles.logOut,
-          styles.marginTopDouble,
-        ]}
+      <ActionBar
+        title="Back"
+        style={styles.marginTopDouble}
         onPress={() => navigation.goBack()}
-      >
-        <Text style={[styles.avenir, styles.logOutText]}>Back</Text>
-      </Pressable>
+      />
+      {__DEV__ && (
+        <ActionBar
+          title="Reset"
+          style={styles.marginTop}
+          onPress={() => {
+            shortcutCodeDirectoryRef.child(itemCode).remove();
+            shortcutItemDirectoryRef.child(item.id).remove();
+          }}
+        />
+      )}
     </View>
   ) : (
     <TouchableWithoutFeedback
@@ -126,7 +130,7 @@ export default function Share({ navigation, route }: ShareProps): JSX.Element {
         <Text style={[styles.avenir, styles.shareText]}>
           No code has been set for this item yet. Enter a custom 8 character
           code (emojis count as 2 characters), or generate a new one to share
-          this item.
+          this item. Be careful, this can&apos;t be changed afterwards.
         </Text>
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -139,47 +143,24 @@ export default function Share({ navigation, route }: ShareProps): JSX.Element {
             setValue={setCodeInput}
           />
         </KeyboardAvoidingView>
-        <Pressable
-          style={({ pressed }) => [
-            {
-              backgroundColor: pressed ? accentBlueLite : accentBlue,
-            },
-            styles.logOut,
-            styles.marginTop,
-          ]}
+        <ActionBar
+          title="Submit"
+          style={styles.marginTopDouble}
           onPress={submitCode}
-        >
-          <Text style={[styles.avenir, styles.logOutText]}>Submit</Text>
-        </Pressable>
-        <Pressable
-          style={({ pressed }) => [
-            {
-              backgroundColor: pressed ? accentBlueLite : accentBlue,
-            },
-            styles.logOut,
-            styles.marginTop,
-          ]}
+        />
+        <ActionBar
+          title={generating ? "Generating..." : "Generate"}
+          style={styles.marginTop}
           onPress={async () => {
             const generatedCode = await generateCode();
             setCodeInput(generatedCode);
           }}
-        >
-          <Text style={[styles.avenir, styles.logOutText]}>
-            {generating ? "Generating..." : "Generate"}
-          </Text>
-        </Pressable>
-        <Pressable
-          style={({ pressed }) => [
-            {
-              backgroundColor: pressed ? accentBlueLite : accentBlue,
-            },
-            styles.logOut,
-            styles.marginTop,
-          ]}
+        />
+        <ActionBar
+          title="Cancel"
+          style={styles.marginTop}
           onPress={() => navigation.goBack()}
-        >
-          <Text style={[styles.avenir, styles.logOutText]}>Cancel</Text>
-        </Pressable>
+        />
       </View>
     </TouchableWithoutFeedback>
   );

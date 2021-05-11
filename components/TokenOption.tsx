@@ -23,7 +23,7 @@ export default function TokenOption({
         ]}
         onPress={() => cb({ price, quantity })}
       >
-        <Text style={[styles.avenir, styles.logOutText]}>${price}.00</Text>
+        <Text style={[styles.avenir, styles.actionBarText]}>${price}.00</Text>
       </Pressable>
     </View>
   );

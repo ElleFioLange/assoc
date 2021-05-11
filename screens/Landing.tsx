@@ -179,6 +179,7 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
                   maximumDate={new Date()}
                 />
                 <ActionBar
+                  title="Submit"
                   style={styles.marginTopDouble}
                   onPress={() => {
                     if (!name) Alert.alert("Name is required");
@@ -188,19 +189,16 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
                       signUp();
                     }
                   }}
-                >
-                  <Text style={[styles.avenir, styles.logOutText]}>Submit</Text>
-                </ActionBar>
+                />
                 <ActionBar
+                  title="Cancel"
                   style={styles.marginTop}
                   onPress={() => {
                     setName("");
                     setBirthDate(undefined);
                     setModal(false);
                   }}
-                >
-                  <Text style={[styles.avenir, styles.logOutText]}>Cancel</Text>
-                </ActionBar>
+                />
               </View>
             </TouchableWithoutFeedback>
           </Modal>
@@ -222,29 +220,23 @@ export default function Landing({ navigation }: LandingProps): JSX.Element {
             />
           </KeyboardAvoidingView>
           <ActionBar
+            title={signingIn ? "Signing In..." : "Sign In"}
             style={styles.marginTopDouble}
             onPress={() => {
               Keyboard.dismiss();
 
               signIn();
             }}
-          >
-            <Text style={[styles.avenir, styles.logOutText]}>
-              {signingIn ? "Signing In..." : "Sign In"}
-            </Text>
-          </ActionBar>
+          />
           <ActionBar
+            title={signingUp ? "Signing Up..." : "Sign Up"}
             style={styles.marginTop}
             onPress={() => {
               Keyboard.dismiss();
 
               getSignUpInfo();
             }}
-          >
-            <Text style={[styles.avenir, styles.logOutText]}>
-              {signingUp ? "Signing Up..." : "Sign Up"}
-            </Text>
-          </ActionBar>
+          />
         </View>
       </TouchableWithoutFeedback>
     </ImageBackground>

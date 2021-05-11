@@ -69,7 +69,9 @@ export default function Tokens(): JSX.Element {
             ]}
             onPress={watchAd}
           >
-            <Text style={[styles.avenir, styles.logOutText]}>Watch an ad</Text>
+            <Text style={[styles.avenir, styles.actionBarText]}>
+              Watch an ad
+            </Text>
           </Pressable>
         </View>
         <View style={[styles.s_tContainer, styles.marginTop]}>
@@ -83,7 +85,7 @@ export default function Tokens(): JSX.Element {
             ]}
             onPress={giveFeedback}
           >
-            <Text style={[styles.avenir, styles.logOutText]}>
+            <Text style={[styles.avenir, styles.actionBarText]}>
               Give feedback
             </Text>
           </Pressable>
