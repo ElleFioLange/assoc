@@ -4,9 +4,12 @@ import {
   Text,
   View,
   TouchableWithoutFeedback,
+  Platform,
   Image,
 } from "react-native";
-import { styles, width } from "../utils/styles";
+import MapView, { Marker } from "react-native-maps";
+import openMaps from "react-native-open-maps";
+import { styles, width, accentBlue } from "../utils/styles";
 
 export default function LocationItemList({
   location,
@@ -74,6 +77,55 @@ export default function LocationItemList({
                       : (width * content.video.h) / content.video.w
                   }
                 />
+              </TouchableWithoutFeedback>
+            </View>
+          );
+        }
+        if (content.map) {
+          return (
+            <View style={styles.shelfItem}>
+              <TouchableWithoutFeedback onPress={() => openItem(item)}>
+                {/* 
+              I have absolutely no idea why, but if I use the
+              custom content component that I wrote then it eats the
+              touch responder or something and openItem never gets called.
+              */}
+                <MapView
+                  style={[
+                    {
+                      width: width * 0.99,
+                      height: width * 0.99,
+                    },
+                  ]}
+                  initialRegion={{
+                    latitude: content.map.latitude,
+                    longitude: content.map.longitude,
+                    latitudeDelta: content.map.viewDelta,
+                    longitudeDelta: content.map.viewDelta,
+                  }}
+                  showsMyLocationButton={false}
+                  showsPointsOfInterest={false}
+                  showsCompass={false}
+                  onLongPress={() =>
+                    openMaps({
+                      latitude: content.map?.latitude,
+                      longitude: content.map?.longitude,
+                      provider: Platform.OS === "ios" ? "apple" : "google",
+                    })
+                  }
+                  scrollEnabled={false}
+                  zoomEnabled={false}
+                  rotateEnabled={false}
+                  pitchEnabled={false}
+                >
+                  <Marker
+                    coordinate={{
+                      latitude: content.map.latitude,
+                      longitude: content.map.longitude,
+                    }}
+                    pinColor={accentBlue}
+                  />
+                </MapView>
               </TouchableWithoutFeedback>
             </View>
           );

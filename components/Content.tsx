@@ -1,9 +1,10 @@
 import React from "react";
-import { Image, View, StyleProp, ImageStyle, Text } from "react-native";
+import { Image, StyleProp, ImageStyle, Text, Platform } from "react-native";
 import { Video } from "expo-av";
 import VideoPlayer from "expo-video-player";
-import { styles, width } from "../utils/styles";
-import MapView from "react-native-maps";
+import { accentBlue, styles, width } from "../utils/styles";
+import MapView, { Marker } from "react-native-maps";
+import openMaps from "react-native-open-maps";
 
 // TODO Make this a content object that can handle audio, maps, 3d models???? nfts????
 
@@ -83,15 +84,42 @@ export default function Content({
   if (content.map) {
     return (
       <MapView
-        style={{ width: width * 0.99, height: width * 0.99 }}
+        style={[
+          {
+            width: width * 0.99,
+            height: width * 0.99,
+          },
+          style,
+        ]}
         initialRegion={{
           latitude: content.map.latitude,
           longitude: content.map.longitude,
           latitudeDelta: content.map.viewDelta,
           longitudeDelta: content.map.viewDelta,
         }}
-        showsMyLocationButton
-      />
+        showsMyLocationButton={false}
+        showsPointsOfInterest={false}
+        showsCompass={false}
+        onLongPress={() =>
+          openMaps({
+            latitude: content.map?.latitude,
+            longitude: content.map?.longitude,
+            provider: Platform.OS === "ios" ? "apple" : "google",
+          })
+        }
+        scrollEnabled={false}
+        zoomEnabled={!poster}
+        rotateEnabled={!poster}
+        pitchEnabled={!poster}
+      >
+        <Marker
+          coordinate={{
+            latitude: content.map.latitude,
+            longitude: content.map.longitude,
+          }}
+          pinColor={accentBlue}
+        />
+      </MapView>
     );
   }
   return <Text>Error loading content</Text>;

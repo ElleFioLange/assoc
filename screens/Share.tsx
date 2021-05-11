@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import * as firebase from "firebase";
-import Filter from "bad-words";
+import axios from "axios";
 import {
   View,
   Text,
@@ -14,14 +14,14 @@ import ActionBar from "../components/ActionBar";
 import CustomTextInput from "../components/CustomTextInput";
 import { styles } from "../utils/styles";
 
-const filter = new Filter();
-// filter.addWords(🤬,🍆,💦,👉👌,🖕,👅,🎟💃👀)
+// TODO Report functionality
 
 export default function Share({ navigation, route }: ShareProps): JSX.Element {
   const { item } = route.params;
 
   const [itemCode, setItemCode] = useState("");
   const [codeInput, setCodeInput] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const [generating, setGenerating] = useState(false);
 
   const shortcutItemDirectoryRef = firebase
@@ -40,31 +40,26 @@ export default function Share({ navigation, route }: ShareProps): JSX.Element {
     };
   });
 
-  function checkProfanity(potential: string) {
-    let i,
-      j,
-      // eslint-disable-next-line prefer-const
-      subStrings = [];
-
-    for (i = 0; i < potential.length; i++) {
-      for (j = i + 1; j < potential.length + 1; j++) {
-        subStrings.push(potential.slice(i, j));
+  async function checkProfanity(potential: string) {
+    const response = await axios.get(
+      "https://community-purgomalum.p.rapidapi.com/containsprofanity",
+      {
+        params: { text: potential },
+        headers: {
+          "x-rapidapi-key":
+            "2de6f8e75dmsh3d44193d16219b3p1b4accjsn11b047d66add",
+          "x-rapidapi-host": "community-purgomalum.p.rapidapi.com",
+        },
       }
-    }
+    );
 
-    subStrings.forEach((string) => {
-      if (filter.isProfane(string)) {
-        return true;
-      }
-    });
-
-    return false;
+    return response.data;
   }
 
-  async function checkCode(potential: string) {
+  async function checkInUse(potential: string) {
     const check = await shortcutCodeDirectoryRef.child(potential).once("value");
-    if (check.val()) return false;
-    return true;
+    if (check.val()) return true;
+    return false;
   }
 
   async function generateCode(): Promise<string> {
@@ -75,7 +70,9 @@ export default function Share({ navigation, route }: ShareProps): JSX.Element {
     for (let i = 0; i < 8; i++) {
       result += characters.charAt(Math.floor(Math.random() * 62));
     }
-    if (checkCode(result)) {
+    const profane = await checkProfanity(result);
+    const inUse = await checkInUse(result);
+    if (!(profane || inUse)) {
       setGenerating(false);
       return result;
     }
@@ -83,16 +80,22 @@ export default function Share({ navigation, route }: ShareProps): JSX.Element {
   }
 
   async function submitCode() {
+    setSubmitting(true);
     if (codeInput.length !== 8) {
       Alert.alert("Code must be exactly 8 characters");
-    } else if (!(await checkCode(codeInput))) {
-      Alert.alert("Code is already in use");
-    } else if (checkProfanity(codeInput)) {
+    } else if (await checkProfanity(codeInput)) {
       Alert.alert("Watch your profanity", "Right, I'm sorry");
+    } else if (await checkInUse(codeInput)) {
+      Alert.alert("Code is already in use");
     } else {
       shortcutItemDirectoryRef.child(item.id).set(codeInput);
       shortcutCodeDirectoryRef.child(codeInput).set(item.id);
     }
+    setSubmitting(false);
+  }
+
+  function report() {
+    Alert.alert("Snitches get stitches");
   }
 
   return itemCode ? (
@@ -106,6 +109,11 @@ export default function Share({ navigation, route }: ShareProps): JSX.Element {
         title="Back"
         style={styles.marginTopDouble}
         onPress={() => navigation.goBack()}
+      />
+      <ActionBar
+        title="Report profanity"
+        style={styles.marginTop}
+        onPress={report}
       />
       {__DEV__ && (
         <ActionBar
@@ -144,7 +152,7 @@ export default function Share({ navigation, route }: ShareProps): JSX.Element {
           />
         </KeyboardAvoidingView>
         <ActionBar
-          title="Submit"
+          title={submitting ? "Submitting..." : "Submit"}
           style={styles.marginTopDouble}
           onPress={submitCode}
         />

@@ -8,21 +8,33 @@ export default function Connections({
 }: {
   connections: ConnectionData[];
 }): JSX.Element {
+  console.log(connections);
   return (
     <View style={[{ width }, styles.marginTopDouble]}>
       <Text style={[styles.avenir, styles.connectionTitle]}>Connections</Text>
-      {connections.map((connection) => (
-        <View key={connection.id} style={styles.connection}>
-          <Text style={styles.connectionName}>{connection.sourceName}</Text>
-          <FontAwesome5 name="long-arrow-alt-right" size={width * 0.05} />
-          <Text style={styles.connectionKey}>
-            &quot;
-            {connection.key}&quot;
-          </Text>
-          <FontAwesome5 name="long-arrow-alt-right" size={width * 0.05} />
-          <Text style={styles.connectionName}>{connection.sinkName}</Text>
-        </View>
-      ))}
+      {connections.map((connection) => {
+        return connection.isSource ? (
+          <View key={connection.id} style={styles.connection}>
+            <Text style={styles.connectionName}>{connection.sourceName}</Text>
+            <FontAwesome5 name="long-arrow-alt-right" size={width * 0.05} />
+            <Text style={styles.connectionKey}>
+              &quot;{connection.key}&quot;
+            </Text>
+            <FontAwesome5 name="long-arrow-alt-right" size={width * 0.05} />
+            <Text style={styles.connectionName}>{connection.sinkName}</Text>
+          </View>
+        ) : (
+          <View key={connection.id} style={styles.connection}>
+            <Text style={styles.connectionName}>{connection.sinkName}</Text>
+            <FontAwesome5 name="long-arrow-alt-left" size={width * 0.05} />
+            <Text style={styles.connectionKey}>
+              &quot;{connection.key}&quot;
+            </Text>
+            <FontAwesome5 name="long-arrow-alt-left" size={width * 0.05} />
+            <Text style={styles.connectionName}>{connection.sourceName}</Text>
+          </View>
+        );
+      })}
     </View>
   );
 }

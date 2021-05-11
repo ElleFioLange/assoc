@@ -21,11 +21,14 @@ type ContentData = {
     latitude: number;
     longitude: number;
     viewDelta: number;
+    title: string;
+    description: string;
   };
 };
 
 type ConnectionData = {
   id: string;
+  isSource: boolean;
   sourceName: string;
   sourceId: string;
   sinkName: string;
