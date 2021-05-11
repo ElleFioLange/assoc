@@ -6,10 +6,22 @@ declare module "*.svg" {
 }
 
 type ContentData = {
-  isVideo: boolean;
-  uri: string;
-  w: number;
-  h: number;
+  image?: {
+    uri: string;
+    w: number;
+    h: number;
+  };
+  video?: {
+    videoUri: string;
+    posterUri: string;
+    w: number;
+    h: number;
+  };
+  map?: {
+    latitude: number;
+    longitude: number;
+    viewDelta: number;
+  };
 };
 
 type ConnectionData = {

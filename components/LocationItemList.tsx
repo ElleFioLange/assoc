@@ -1,5 +1,11 @@
 import React from "react";
-import { FlatList, View, TouchableWithoutFeedback, Image } from "react-native";
+import {
+  FlatList,
+  Text,
+  View,
+  TouchableWithoutFeedback,
+  Image,
+} from "react-native";
 import { styles, width } from "../utils/styles";
 
 export default function LocationItemList({
@@ -15,31 +21,64 @@ export default function LocationItemList({
       data={items}
       renderItem={({ item }) => {
         const content = item.content[0];
-        return (
-          <View style={styles.shelfItem}>
-            <TouchableWithoutFeedback onPress={() => openItem(item)}>
-              {/* 
+        if (content.image) {
+          return (
+            <View style={styles.shelfItem}>
+              <TouchableWithoutFeedback onPress={() => openItem(item)}>
+                {/* 
               I have absolutely no idea why, but if I use the
               custom content component that I wrote then it eats the
               touch responder or something and openItem never gets called.
               */}
-              <Image
-                source={{ uri: content.uri, cache: "force-cache" }}
-                style={styles.image}
-                width={
-                  content.w >= content.h
-                    ? width
-                    : (width * content.w) / content.h
-                }
-                height={
-                  content.w < content.h
-                    ? width
-                    : (width * content.h) / content.w
-                }
-              />
-            </TouchableWithoutFeedback>
-          </View>
-        );
+                <Image
+                  source={{ uri: content.image.uri, cache: "force-cache" }}
+                  style={styles.image}
+                  width={
+                    content.image.w >= content.image.h
+                      ? width
+                      : (width * content.image.w) / content.image.h
+                  }
+                  height={
+                    content.image.w < content.image.h
+                      ? width
+                      : (width * content.image.h) / content.image.w
+                  }
+                />
+              </TouchableWithoutFeedback>
+            </View>
+          );
+        }
+        if (content.video) {
+          return (
+            <View style={styles.shelfItem}>
+              <TouchableWithoutFeedback onPress={() => openItem(item)}>
+                {/* 
+              I have absolutely no idea why, but if I use the
+              custom content component that I wrote then it eats the
+              touch responder or something and openItem never gets called.
+              */}
+                <Image
+                  source={{
+                    uri: content.video.posterUri,
+                    cache: "force-cache",
+                  }}
+                  style={styles.image}
+                  width={
+                    content.video.w >= content.video.h
+                      ? width
+                      : (width * content.video.w) / content.video.h
+                  }
+                  height={
+                    content.video.w < content.video.h
+                      ? width
+                      : (width * content.video.h) / content.video.w
+                  }
+                />
+              </TouchableWithoutFeedback>
+            </View>
+          );
+        }
+        return <Text>Error loading content</Text>;
       }}
       horizontal={true}
       style={styles.locationShelf}

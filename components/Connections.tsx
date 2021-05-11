@@ -8,7 +8,6 @@ export default function Connections({
 }: {
   connections: ConnectionData[];
 }): JSX.Element {
-  console.log(connections);
   return (
     <View style={[{ width }, styles.marginTopDouble]}>
       <Text style={[styles.avenir, styles.connectionTitle]}>Connections</Text>

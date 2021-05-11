@@ -7,6 +7,7 @@ import { styles, accentBlue, accentBlueLite } from "../utils/styles";
 
 // TODO User feedback
 // TODO Advert functionality
+// TODO Microtransactions
 
 export default function Tokens(): JSX.Element {
   const tokens = useAppSelector((state) => state.tokens);

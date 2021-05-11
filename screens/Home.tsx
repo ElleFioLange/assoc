@@ -192,6 +192,7 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
                         <Content
                           content={item.content[0]}
                           style={{ opacity: !hideItems ? 1 : 0 }}
+                          poster
                         />
                       </View>
                     </TouchableWithoutFeedback>
