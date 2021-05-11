@@ -6,8 +6,6 @@ import { accentBlue, styles, width } from "../utils/styles";
 import MapView, { Marker } from "react-native-maps";
 import openMaps from "react-native-open-maps";
 
-// TODO Make this a content object that can handle audio, maps, 3d models???? nfts????
-
 export default function Content({
   content,
   style,

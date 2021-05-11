@@ -4,9 +4,7 @@ import { View, StyleSheet, Animated, PanResponder } from "react-native";
 import Svg, { Polygon, Text, G } from "react-native-svg";
 import { useAppSelector, useAppDispatch } from "../utils/hooks";
 import { selectLocations, setCurLocationId } from "../utils/mapSlice";
-import { styles, win } from "../utils/styles";
-
-// TODO Make it so there's a minimum amount of hexagons (either 1 or 2 full rings)
+import { accentBlue, styles, win } from "../utils/styles";
 
 // Parameters for sizing
 const sideLength = win.width * 0.15;
@@ -133,23 +131,28 @@ export default function MapScreen({ navigation }: MapProps): JSX.Element {
     return a.minD[curLocationId] - b.minD[curLocationId];
   });
 
-  // Only for testing
-  const test = data.map((location) => {
-    return { id: location.id, name: location.name };
-  });
-  for (let i = 2; i < 91; i++) {
-    test.push({ id: `${i}`, name: `${i}` });
+  // Padding the data so that there's atleast 1 or 2 full rings
+  const paddedData: Array<LocationData | { name: string; id: null }> = [];
+  data.forEach((location) => paddedData.push(location));
+  if (1 < data.length && data.length < 7) {
+    for (let i = 7 - data.length; i > 0; i--) {
+      paddedData.push({ name: "", id: null });
+    }
+  } else if (7 < data.length && data.length < 19) {
+    for (let i = 19 - data.length; i > 0; i--) {
+      paddedData.push({ name: "", id: null });
+    }
   }
 
   const hexCenters: { x: number; y: number }[] = [];
-  for (let i = 0; i < test.length; i++) {
+  for (let i = 0; i < paddedData.length; i++) {
     hexCenters.push(getCenter(i));
   }
 
   return (
     <View style={[styles.container, styles.whiteBg]}>
       <Svg height={win.height} width={win.width}>
-        {test.map((location, index) => {
+        {paddedData.map((location, index) => {
           const center = hexCenters[index];
           const onScreen =
             center.x > -panX - sideLength &&
@@ -162,22 +165,27 @@ export default function MapScreen({ navigation }: MapProps): JSX.Element {
               // y={Animated.add(pan.y, new Animated.Value(center.y))}
               x={panX + center.x}
               y={panY + center.y}
-              key={location.id}
+              key={location.id ? location.id : `hexpad-${index}`}
               {...panResponder.panHandlers}
             >
               <Polygon
-                onPress={() =>
-                  navigation.navigate("LocationInfo", { location: data[0] })
+                onPress={
+                  location.id
+                    ? () => navigation.navigate("LocationInfo", { location })
+                    : undefined
                 }
-                onLongPress={() => {
-                  dispatch(setCurLocationId(data[1].id));
-                  navigation.navigate("Home");
-                }}
-                // rotation={test.length - 1 - index}
+                onLongPress={
+                  location.id
+                    ? () => {
+                        dispatch(setCurLocationId(location.id));
+                        navigation.navigate("Home");
+                      }
+                    : undefined
+                }
                 delayLongPress={250}
                 points={points}
-                stroke="#1122f4"
-                fill={index ? "white" : "#1122f4"}
+                stroke={accentBlue}
+                fill={index ? "white" : accentBlue}
                 strokeWidth={Math.max(
                   StyleSheet.hairlineWidth,
                   4 -
