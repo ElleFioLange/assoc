@@ -5,6 +5,7 @@ const initialState = {
   invertBg: false,
   autoAd: false,
   disableAnimations: false,
+  autoPlayVideos: false,
 };
 
 export const fetchSettings = createAsyncThunk("settings/fetch", async () => {
@@ -37,16 +38,27 @@ const settingsSlice = createSlice({
         JSON.stringify({ ...state, disableAnimations: action.payload })
       );
     },
+    setAutoPlayVideos(state, action) {
+      state.autoPlayVideos = action.payload;
+      AsyncStorage.setItem(
+        "settings",
+        JSON.stringify({ ...state, autoPlayVideos: action.payload })
+      );
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(fetchSettings.fulfilled, (state, action) => {
       if (action.payload) {
-        const { invertBg, autoAd, disableAnimations } = JSON.parse(
-          action.payload
-        );
+        const {
+          invertBg,
+          autoAd,
+          disableAnimations,
+          autoPlayVideos,
+        } = JSON.parse(action.payload);
         state.invertBg = invertBg;
         state.autoAd = autoAd;
         state.disableAnimations = disableAnimations;
+        state.autoPlayVideos = autoPlayVideos;
       }
     });
   },
@@ -56,6 +68,7 @@ export const {
   setInvertBg,
   setAutoAd,
   setDisableAnimations,
+  setAutoPlayVideos,
 } = settingsSlice.actions;
 
 export default settingsSlice.reducer;

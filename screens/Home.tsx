@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { useAppSelector } from "../utils/hooks";
+import { useAppSelector } from "../utils/reduxHooks";
 import { selectLocationById } from "../utils/mapSlice";
 import {
   View,
@@ -31,13 +31,16 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
   const curLocation = useAppSelector((state) =>
     selectLocationById(state, curLocationId)
   );
+  const disableAnimations = useAppSelector(
+    (state) => state.settings.disableAnimations
+  );
 
   // Loading state to block interaction during the animation
   const [loading, setLoading] = useState(false);
 
   // States for input text
   const [asc, setAsc] = useState("");
-  const [ans, setAns] = useState("");
+  const [search, setSearch] = useState("");
 
   // Using this to hide items as carousel updates so there's no jumping
   const [hideItems, setHideItems] = useState(false);
@@ -48,18 +51,19 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
 
   // Toggle the loading animation
   const toggleAnimation = (anim: boolean) => {
-    setLoading(anim);
-    anim
-      ? Animated.timing(fadeAnim, {
-          toValue: 0.25,
-          duration: 650,
-          easing: Easing.ease,
-        }).start()
-      : Animated.timing(fadeAnim, {
-          toValue: 1,
-          duration: 650,
-          easing: Easing.ease,
-        }).start();
+    if (!disableAnimations) {
+      anim
+        ? Animated.timing(fadeAnim, {
+            toValue: 0.25,
+            duration: 650,
+            easing: Easing.ease,
+          }).start()
+        : Animated.timing(fadeAnim, {
+            toValue: 1,
+            duration: 650,
+            easing: Easing.ease,
+          }).start();
+    }
   };
 
   // Only for dev so that the loading animation actually runs
@@ -68,9 +72,11 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
   }
 
   const handleAsc = (question: string) => {
+    setLoading(true);
     toggleAnimation(true);
     sleep(1500).then(() => {
       toggleAnimation(false);
+      setLoading(false);
       setAsc("");
       navigation.navigate("Answer", { answer: "Placeholder" });
     });
@@ -79,12 +85,14 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
   const handleAns = (answer: string) => {
     console.log(answer);
     console.log(answer === "Dieter Rams");
+    setLoading(true);
     toggleAnimation(true);
     setHideItems(true);
     sleep(1500).then((value) => {
       setHideItems(false);
-      setAns("");
+      setSearch("");
       toggleAnimation(false);
+      setLoading(false);
     });
   };
 
@@ -136,12 +144,12 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
                     }
                   />
                   <TextInput
-                    onChangeText={setAns}
+                    onChangeText={setSearch}
                     allowFontScaling={false}
                     autoCapitalize="none"
                     disableFullscreenUI={true}
                     enablesReturnKeyAutomatically={true}
-                    value={ans}
+                    value={search}
                     placeholder="search"
                     style={[
                       styles.input,

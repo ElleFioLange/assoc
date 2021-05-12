@@ -5,16 +5,15 @@ import * as SecureStore from "expo-secure-store";
 import { ScrollView, Text, View, Alert } from "react-native";
 import ActionBar from "../components/ActionBar";
 import Setting from "../components/Setting";
-import { useAppSelector, useAppDispatch } from "../utils/hooks";
+import { useAppSelector, useAppDispatch } from "../utils/reduxHooks";
 import { setUser } from "../utils/userSlice";
 import {
   setInvertBg,
   setAutoAd,
   setDisableAnimations,
+  setAutoPlayVideos,
 } from "../utils/settingsSlice";
 import { styles } from "../utils/styles";
-
-// TODO Add animation disabling functionality
 
 export default function Settings({ navigation }: SettingsProps): JSX.Element {
   firebase.app();
@@ -26,6 +25,9 @@ export default function Settings({ navigation }: SettingsProps): JSX.Element {
   const autoAd = useAppSelector((state) => state.settings.autoAd);
   const disableAnimations = useAppSelector(
     (state) => state.settings.disableAnimations
+  );
+  const autoPlayVideos = useAppSelector(
+    (state) => state.settings.autoPlayVideos
   );
   const dispatch = useAppDispatch();
 
@@ -39,6 +41,10 @@ export default function Settings({ navigation }: SettingsProps): JSX.Element {
 
   function toggleDisableAnimations() {
     dispatch(setDisableAnimations(!disableAnimations));
+  }
+
+  function toggleAutoPlayVideos() {
+    dispatch(setAutoPlayVideos(!autoPlayVideos));
   }
 
   function signOut() {
@@ -131,6 +137,11 @@ export default function Settings({ navigation }: SettingsProps): JSX.Element {
           title="Disable animations"
           value={disableAnimations}
           cb={toggleDisableAnimations}
+        />
+        <Setting
+          title="Auto play videos"
+          value={autoPlayVideos}
+          cb={toggleAutoPlayVideos}
         />
       </View>
       <View>

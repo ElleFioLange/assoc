@@ -15,7 +15,6 @@ import ItemInfo from "./screens/ItemInfo";
 import MapScreen from "./screens/MapScreen";
 import Collection from "./screens/Collection";
 import LocationInfo from "./screens/LocationInfo";
-import Purchase from "./screens/Purchase";
 import Share from "./screens/Share";
 import Settings from "./screens/Settings";
 import Tokens from "./screens/Tokens";
@@ -68,6 +67,9 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App(): JSX.Element {
   const [credStatus, setCredStatus] = useState("checking");
+  const [disableAnimations, setDisableAnimations] = useState(
+    store.getState().settings.disableAnimations
+  );
 
   useEffect(() => {
     store.dispatch(fetchSettings());
@@ -77,6 +79,9 @@ export default function App(): JSX.Element {
       } else {
         setCredStatus("unavailable");
       }
+    });
+    store.subscribe(() => {
+      setDisableAnimations(store.getState().settings.disableAnimations);
     });
   });
 
@@ -108,7 +113,10 @@ export default function App(): JSX.Element {
       <NavigationContainer>
         <Stack.Navigator
           initialRouteName={credStatus === "available" ? "Home" : "Home"}
-          screenOptions={{ headerShown: false }}
+          screenOptions={{
+            headerShown: false,
+            stackAnimation: disableAnimations ? "none" : "default",
+          }}
         >
           <Stack.Screen
             name="Landing"
@@ -129,13 +137,6 @@ export default function App(): JSX.Element {
             name="ItemInfo"
             component={ItemInfo}
             options={{ stackPresentation: "formSheet" }}
-          />
-          <Stack.Screen
-            name="Purchase"
-            component={Purchase}
-            options={{
-              stackPresentation: "fullScreenModal",
-            }}
           />
           <Stack.Screen
             name="Share"

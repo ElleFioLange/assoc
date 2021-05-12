@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import * as firebase from "firebase";
 import * as SecureStore from "expo-secure-store";
-import { useAppDispatch } from "../utils/hooks";
+import { useAppDispatch } from "../utils/reduxHooks";
 import { setUser } from "../utils/userSlice";
 import {
   Modal,

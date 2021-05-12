@@ -133,7 +133,7 @@ export default function LocationItemList({
         return <Text>Error loading content</Text>;
       }}
       horizontal={true}
-      style={styles.locationShelf}
+      style={styles.shelf}
       keyExtractor={(item) => item.id}
     />
   );

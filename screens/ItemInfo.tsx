@@ -3,11 +3,13 @@ import React from "react";
 import * as firebase from "firebase";
 import * as Linking from "expo-linking";
 import { View, Text, ScrollView, Pressable, FlatList } from "react-native";
-import { useAppSelector } from "../utils/hooks";
+import { useAppSelector } from "../utils/reduxHooks";
 import { FontAwesome5 } from "@expo/vector-icons";
 import Content from "../components/Content";
 import Connections from "../components/Connections";
 import { styles, width, accentBlue, accentBlueLite } from "../utils/styles";
+
+// TODO change saved functionality to tag functionality
 
 export default function ItemInfo({
   navigation,
@@ -44,7 +46,7 @@ export default function ItemInfo({
               );
             }}
             horizontal={true}
-            style={[styles.locationShelf, styles.marginTopDouble]}
+            style={[styles.shelf, styles.marginTopDouble]}
             keyExtractor={(_, index) => `${item.id}-content-${index}`}
           />
         ) : (
@@ -74,7 +76,7 @@ export default function ItemInfo({
               solid={saved ? saved[item.id] !== undefined : false}
             />
           </Pressable>
-          {item.purchaseInfo ? (
+          {/* {item.purchaseInfo ? (
             <Pressable
               style={({ pressed }) => [
                 {
@@ -82,7 +84,7 @@ export default function ItemInfo({
                 },
                 styles.itemAction,
               ]}
-              onPress={() => navigation.navigate("Purchase", { item })}
+              onPress={openPurchase}
             >
               <FontAwesome5
                 name="shopping-cart"
@@ -90,7 +92,7 @@ export default function ItemInfo({
                 size={width * 0.07}
               />
             </Pressable>
-          ) : null}
+          ) : null} */}
           {item.link ? (
             <Pressable
               style={({ pressed }) => [

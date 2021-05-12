@@ -2,7 +2,7 @@
 import React, { useRef, useState } from "react";
 import { View, StyleSheet, Animated, PanResponder } from "react-native";
 import Svg, { Polygon, Text, G } from "react-native-svg";
-import { useAppSelector, useAppDispatch } from "../utils/hooks";
+import { useAppSelector, useAppDispatch } from "../utils/reduxHooks";
 import { selectLocations, setCurLocationId } from "../utils/mapSlice";
 import { accentBlue, styles, win } from "../utils/styles";
 

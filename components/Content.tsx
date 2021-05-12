@@ -5,6 +5,7 @@ import VideoPlayer from "expo-video-player";
 import { accentBlue, styles, width } from "../utils/styles";
 import MapView, { Marker } from "react-native-maps";
 import openMaps from "react-native-open-maps";
+import { useAppSelector } from "../utils/reduxHooks";
 
 export default function Content({
   content,
@@ -15,6 +16,9 @@ export default function Content({
   style?: StyleProp<ImageStyle>;
   poster?: boolean;
 }): JSX.Element {
+  const autoPlayVideos = useAppSelector(
+    (state) => state.settings.autoPlayVideos
+  );
   if (content.image) {
     return (
       <Image
@@ -56,7 +60,7 @@ export default function Content({
     ) : (
       <VideoPlayer
         videoProps={{
-          shouldPlay: false,
+          shouldPlay: autoPlayVideos,
           resizeMode: Video.RESIZE_MODE_CONTAIN,
           posterSource: {
             uri: content.video.posterUri,

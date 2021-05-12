@@ -7,12 +7,15 @@ import {
   Text,
   Image,
   TouchableWithoutFeedback,
+  Platform,
 } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import LocationItemList from "../components/LocationItemList";
-import { useAppSelector } from "../utils/hooks";
+import MapView, { Marker } from "react-native-maps";
+import openMaps from "react-native-open-maps";
+import { useAppSelector } from "../utils/reduxHooks";
 import { selectLocations, selectLocationById } from "../utils/mapSlice";
-import { styles, width } from "../utils/styles";
+import { styles, width, accentBlue } from "../utils/styles";
 
 function All({ route }: CollectionAllProps): JSX.Element {
   const navigation = useNavigation<CollectionAllScreenNavigationProp>();
@@ -68,45 +71,148 @@ function Saved({ route }: CollectionSavedProps): JSX.Element {
           data={saved}
           renderItem={({ item }) => {
             const content = item.content[0];
-            return (
-              <React.Fragment key={item.id}>
-                <View
-                  style={[styles.container, styles.marginTop, styles.itemShelf]}
-                >
-                  <TouchableWithoutFeedback
-                    onPress={() => navigation.navigate("ItemInfo", { item })}
+            if (content.image) {
+              return (
+                <>
+                  <View style={[styles.container, styles.shelf]}>
+                    <TouchableWithoutFeedback
+                      onPress={() => navigation.navigate("ItemInfo", { item })}
+                    >
+                      {/*
+                      I have absolutely no idea why, but if I use the
+                      custom content component that I wrote then it eats the
+                      touch responder or something and openItem never gets called.
+                      */}
+                      <Image
+                        source={{
+                          uri: content.image.uri,
+                          cache: "force-cache",
+                        }}
+                        style={styles.image}
+                        width={
+                          content.image.w >= content.image.h
+                            ? width
+                            : (width * content.image.w) / content.image.h
+                        }
+                        height={
+                          content.image.w < content.image.h
+                            ? width
+                            : (width * content.image.h) / content.image.w
+                        }
+                      />
+                    </TouchableWithoutFeedback>
+                  </View>
+                  <Text
+                    style={[styles.avenir, styles.marginTop, styles.shelfName]}
                   >
-                    {/* 
-                    I have absolutely no idea why, but if I use the
-                    custom content component that I wrote then it eats the
-                    touch responder or something and openItem never gets called.
-                    */}
-                    <Image
-                      source={{ uri: content.uri, cache: "force-cache" }}
-                      style={styles.image}
-                      width={
-                        content.w >= content.h
-                          ? width
-                          : (width * content.w) / content.h
-                      }
-                      height={
-                        content.w < content.h
-                          ? width
-                          : (width * content.h) / content.w
-                      }
-                    />
-                  </TouchableWithoutFeedback>
-                </View>
-                <Text
-                  style={[styles.avenir, styles.marginTop, styles.shelfName]}
-                >
-                  {item.name}
-                </Text>
-              </React.Fragment>
-            );
+                    {item.name}
+                  </Text>
+                </>
+              );
+            }
+            if (content.video) {
+              return (
+                <>
+                  <View style={[styles.container, styles.shelf]}>
+                    <TouchableWithoutFeedback
+                      onPress={() => navigation.navigate("ItemInfo", { item })}
+                    >
+                      {/*
+                      I have absolutely no idea why, but if I use the
+                      custom content component that I wrote then it eats the
+                      touch responder or something and openItem never gets called.
+                      */}
+                      <Image
+                        source={{
+                          uri: content.video.posterUri,
+                          cache: "force-cache",
+                        }}
+                        style={styles.image}
+                        width={
+                          content.video.w >= content.video.h
+                            ? width
+                            : (width * content.video.w) / content.video.h
+                        }
+                        height={
+                          content.video.w < content.video.h
+                            ? width
+                            : (width * content.video.h) / content.video.w
+                        }
+                      />
+                    </TouchableWithoutFeedback>
+                  </View>
+                  <Text
+                    style={[styles.avenir, styles.marginTop, styles.shelfName]}
+                  >
+                    {item.name}
+                  </Text>
+                </>
+              );
+            }
+            if (content.map) {
+              return (
+                <>
+                  <View style={[styles.container, styles.shelf]}>
+                    <TouchableWithoutFeedback
+                      onPress={() => navigation.navigate("ItemInfo", { item })}
+                    >
+                      {/*
+                      I have absolutely no idea why, but if I use the
+                      custom content component that I wrote then it eats the
+                      touch responder or something and openItem never gets called.
+                      */}
+                      <MapView
+                        style={[
+                          {
+                            width: width * 0.99,
+                            height: width * 0.99,
+                          },
+                        ]}
+                        initialRegion={{
+                          latitude: content.map.latitude,
+                          longitude: content.map.longitude,
+                          latitudeDelta: content.map.viewDelta,
+                          longitudeDelta: content.map.viewDelta,
+                        }}
+                        showsMyLocationButton={false}
+                        showsPointsOfInterest={false}
+                        showsCompass={false}
+                        onLongPress={() =>
+                          openMaps({
+                            latitude: content.map?.latitude,
+                            longitude: content.map?.longitude,
+                            provider:
+                              Platform.OS === "ios" ? "apple" : "google",
+                          })
+                        }
+                        scrollEnabled={false}
+                        zoomEnabled={false}
+                        rotateEnabled={false}
+                        pitchEnabled={false}
+                      >
+                        <Marker
+                          coordinate={{
+                            latitude: content.map.latitude,
+                            longitude: content.map.longitude,
+                          }}
+                          pinColor={accentBlue}
+                        />
+                      </MapView>
+                    </TouchableWithoutFeedback>
+                  </View>
+                  <Text
+                    style={[styles.avenir, styles.marginTop, styles.shelfName]}
+                  >
+                    {item.name}
+                  </Text>
+                </>
+              );
+            }
+            return <Text>Error loading content for {item.name}</Text>;
           }}
-          contentContainerStyle={[styles.scrollPadding]}
+          contentContainerStyle={styles.scrollPadding}
           keyExtractor={(item) => item.id}
+          showsVerticalScrollIndicator={false}
         />
       ) : (
         <Text style={[styles.avenir, styles.saveText]}>

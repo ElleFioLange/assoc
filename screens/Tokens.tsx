@@ -2,7 +2,7 @@ import React from "react";
 import * as firebase from "firebase";
 import { ScrollView, View, Text, Pressable, Alert } from "react-native";
 import TokenOption from "../components/TokenOption";
-import { useAppSelector } from "../utils/hooks";
+import { useAppSelector } from "../utils/reduxHooks";
 import { styles, accentBlue, accentBlueLite } from "../utils/styles";
 
 // TODO User feedback
