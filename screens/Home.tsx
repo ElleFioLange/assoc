@@ -24,6 +24,7 @@ import { styles, win, width } from "../utils/styles";
 
 // TODO Write the asc and answer functionality
 // TODO Advert functionality
+// TODO User verification in order to purchase tokens
 
 export default function Home({ navigation }: HomeProps): JSX.Element {
   const invertBg = useAppSelector((state) => state.settings.invertBg);

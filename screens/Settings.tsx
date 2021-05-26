@@ -20,6 +20,7 @@ export default function Settings({ navigation }: SettingsProps): JSX.Element {
 
   const [deleting, setDeleting] = useState(false);
 
+  const uid = useAppSelector((state) => state.user.uid);
   const displayName = useAppSelector((state) => state.user.displayName);
   const invertBg = useAppSelector((state) => state.settings.invertBg);
   const autoAd = useAppSelector((state) => state.settings.autoAd);
@@ -78,7 +79,6 @@ export default function Settings({ navigation }: SettingsProps): JSX.Element {
       .database()
       .ref(`userInit`)
       .once("value", (snapshot) => {
-        const uid = firebase.auth().currentUser!.uid;
         firebase.database().ref(`users/${uid}`).set(snapshot.val());
       });
   }
@@ -88,18 +88,18 @@ export default function Settings({ navigation }: SettingsProps): JSX.Element {
     const credential = await SecureStore.getItemAsync("credential");
     const { email, password } = JSON.parse(credential!);
     await firebase.auth().signInWithEmailAndPassword(email, password);
-    const user = firebase.auth().currentUser!;
-    const uidRef = firebase.database().ref(`users/${user.uid}`);
+    const uidRef = firebase.database().ref(`users/${uid}`);
     uidRef.child("tokens").off();
     uidRef.child("map").off();
     uidRef.child("curLocationId").off();
     uidRef.child("saved").off();
     dispatch(setUser({ uid: "", displayName: "" }));
     SecureStore.deleteItemAsync("credential");
-    user
-      .delete()
+    firebase
+      .auth()
+      .currentUser!.delete()
       .then(() => {
-        firebase.database().ref(`/users/${user.uid}`).remove();
+        firebase.database().ref(`/users/${uid}`).remove();
         setDeleting(false);
         navigation.navigate("Landing");
       })

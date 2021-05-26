@@ -20,8 +20,7 @@ import Settings from "./screens/Settings";
 import Tokens from "./screens/Tokens";
 
 import store from "./utils/store";
-import { setUser, setSaved } from "./utils/userSlice";
-import { setTokens } from "./utils/tokensSlice";
+import { setUser, setTokens, setSaved } from "./utils/userSlice";
 import { setMap, setCurLocationId } from "./utils/mapSlice";
 import { fetchSettings } from "./utils/settingsSlice";
 
@@ -36,25 +35,36 @@ const firebaseConfig = {
   measurementId: "G-VVME0TLGNG",
 };
 
-firebase.initializeApp(firebaseConfig);
+firebase.apps.length ? firebase.app() : firebase.initializeApp(firebaseConfig);
 firebase.auth().onAuthStateChanged((user) => {
+  // TODO fix getting data on auth state change
   if (user) {
     const { uid, displayName } = user;
     store.dispatch(setUser({ uid, displayName }));
-    const uidRef = firebase.database().ref(`users/${uid}`);
-    uidRef.child("tokens").on("value", (snapshot) => {
-      store.dispatch(setTokens(snapshot.val()));
-    });
-    uidRef.child("map").on("value", (snapshot) => {
-      store.dispatch(setMap(snapshot.val()));
-    });
-    uidRef.child("curLocationId").on("value", (snapshot) => {
-      store.dispatch(setCurLocationId(snapshot.val()));
-    });
-    uidRef.child("saved").on("value", (snapshot) => {
-      store.dispatch(setSaved(snapshot.val()));
-    });
+    firebase
+      .firestore()
+      .collection("users")
+      .doc(uid)
+      .get()
+      .then((doc) => {
+        const data = doc.data() as TUserData;
+        store.dispatch(setTokens(data.tokens));
+        store.dispatch(setSaved(data.saved));
+        firebase.firestore().collection("master")
+      });
   }
+  // uidRef.child("tokens").on("value", (snapshot) => {
+  //   store.dispatch(setTokens(snapshot.val()));
+  // });
+  // uidRef.child("map").on("value", (snapshot) => {
+  //   store.dispatch(setMap(snapshot.val()));
+  // });
+  // uidRef.child("curLocationId").on("value", (snapshot) => {
+  //   store.dispatch(setCurLocationId(snapshot.val()));
+  // });
+  // uidRef.child("saved").on("value", (snapshot) => {
+  //   store.dispatch(setSaved(snapshot.val()));
+  // });
 });
 
 // TODO Push notifications
@@ -87,6 +97,7 @@ export default function App(): JSX.Element {
 
   async function checkForCredential() {
     const data = await SecureStore.getItemAsync("credential");
+    console.log(data);
     if (data) {
       const { email, password } = JSON.parse(data);
       return firebase
@@ -97,7 +108,17 @@ export default function App(): JSX.Element {
             return true;
           },
           (e: Error) => {
-            Alert.alert("Error signing in", e.message);
+            Alert.alert("Error signing in", e.message, [
+              {
+                text: "Ok",
+                style: "default",
+              },
+              {
+                text: "Reset saved credentials",
+                onPress: () => SecureStore.deleteItemAsync("credential"),
+                style: "destructive",
+              },
+            ]);
             return false;
           }
         );
@@ -112,7 +133,7 @@ export default function App(): JSX.Element {
     <Provider store={store}>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName={credStatus === "available" ? "Home" : "Home"}
+          initialRouteName={credStatus === "available" ? "Home" : "Landing"}
           screenOptions={{
             headerShown: false,
             stackAnimation: disableAnimations ? "none" : "default",

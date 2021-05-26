@@ -11,7 +11,7 @@ import { styles, accentBlue, accentBlueLite } from "../utils/styles";
 
 export default function Tokens(): JSX.Element {
   const tokens = useAppSelector((state) => state.tokens);
-  const uid = firebase.auth().currentUser?.uid;
+  const uid = useAppSelector((state) => state.user.uid);
   const tokenDatabaseRef = firebase.database().ref(`users/${uid}/tokens`);
   const feedbackDatabaseRef = firebase
     .database()

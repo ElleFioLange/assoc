@@ -12,12 +12,14 @@ import {
 } from "react-native";
 import ActionBar from "../components/ActionBar";
 import CustomTextInput from "../components/CustomTextInput";
+import { useAppSelector } from "../utils/reduxHooks";
 import { styles } from "../utils/styles";
 
 // TODO Report functionality
 
 export default function Share({ navigation, route }: ShareProps): JSX.Element {
   const { item } = route.params;
+  const uid = useAppSelector((state) => state.user.uid);
 
   const [itemCode, setItemCode] = useState("");
   const [codeInput, setCodeInput] = useState("");
@@ -34,7 +36,7 @@ export default function Share({ navigation, route }: ShareProps): JSX.Element {
   useEffect(() => {
     shortcutItemDirectoryRef
       .child(item.id)
-      .on("value", (snapshot) => setItemCode(snapshot.val()));
+      .on("value", (snapshot) => setItemCode(snapshot.val().code));
     return function cleanup() {
       shortcutItemDirectoryRef.child(item.id).off();
     };
@@ -88,7 +90,9 @@ export default function Share({ navigation, route }: ShareProps): JSX.Element {
     } else if (await checkInUse(codeInput)) {
       Alert.alert("Code is already in use");
     } else {
-      shortcutItemDirectoryRef.child(item.id).set(codeInput);
+      shortcutItemDirectoryRef
+        .child(item.id)
+        .set({ code: codeInput, author: uid });
       shortcutCodeDirectoryRef.child(codeInput).set(item.id);
     }
     setSubmitting(false);

@@ -20,9 +20,9 @@ export default function ItemInfo({
   const { item } = route.params;
 
   const saved = useAppSelector((state) => state.user.saved);
+  const uid = useAppSelector((state) => state.user.uid);
 
   function toggleSaved() {
-    const uid = firebase.auth().currentUser?.uid;
     saved && saved[item.id]
       ? firebase.database().ref(`users/${uid}/saved/${item.id}`).remove()
       : firebase.database().ref(`users/${uid}/saved/${item.id}`).set(item);

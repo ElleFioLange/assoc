@@ -5,75 +5,92 @@ declare module "*.svg" {
   export default content;
 }
 
-type ContentData = {
-  image?: {
-    uri: string;
-    w: number;
-    h: number;
-  };
-  video?: {
-    videoUri: string;
-    posterUri: string;
-    w: number;
-    h: number;
-  };
-  map?: {
-    latitude: number;
-    longitude: number;
-    viewDelta: number;
-    title: string;
-    description: string;
-  };
-};
+// ================ CONTENT ===================
 
-type ConnectionData = {
+type TImage = {
+  type: "image";
   id: string;
-  isSource: boolean;
-  sourceName: string;
-  sourceId: string;
-  sinkName: string;
-  sinkId: string;
-  key: string;
+  name: string;
+  uri: string;
+  w: number;
+  h: number;
 };
 
-type ItemData = {
+type TVideo = {
+  type: "video";
+  id: string;
+  name: string;
+  posterUri: string;
+  posterW: number;
+  posterH: number;
+  videoUri: string;
+  videoW: number;
+  videoH: number;
+};
+
+type TMap = {
+  type: "map";
+  id: string;
+  name: string;
+  lat: number;
+  lon: number;
+  viewDelta: number;
+  description: string;
+};
+
+type TContent = TImage | TVideo | TMap;
+
+// ================ MAP DATA ===================
+
+type TConnection = {
+  id: string;
+  key: string;
+  isSource: boolean;
+  partnerId: string;
+};
+
+type TItem = {
   id: string;
   name: string;
   description: string;
-  parentName: string;
   parentId: string;
-  content: ContentData[];
-  type: "image" | "video" | "audio";
-  numUnlocked: number;
-  connections: Record<string, ConnectionData>;
-  purchaseInfo: {
-    static?: number;
-    dynamic?: {
-      maxPrice: number;
-      minPrice: number;
-      numNeededForMin: number;
-      maxAvailable?: number;
-    };
-  };
+  parentName: string;
+  connections: Record<string, TConnection>;
+  content: TContent[];
   link?: string;
 };
 
-type LocationData = {
+type TLocation = {
   id: string;
   name: string;
   description: string;
   minD: Record<string, number>;
-  items: Record<string, ItemData>;
+  items: Record<string, TItem>;
 };
+
+// ================ USER ===================
+
+type TUserData = {
+  id: string;
+  name: string;
+  birthday: number;
+  lastFeedbackReward: number;
+  reports: string[];
+  items: Record<string, string[]>;
+  tokens: number;
+  saved: string[];
+};
+
+// ================ APP ===================
 
 type RootStackParamList = {
   Landing: undefined;
   Home: undefined;
   Answer: { answer: string };
-  ItemInfo: { item: ItemData };
-  Share: { item: ItemData };
+  ItemInfo: { item: TITem };
+  Share: { item: TITem };
   Map: undefined;
-  LocationInfo: { location: LocationData };
+  LocationInfo: { location: TLocation };
   Collection: undefined;
   // Collection: import("@react-navigation/native").NavigatorScreenParams<CollectionTabParamList>;
   Settings: undefined;
@@ -81,8 +98,8 @@ type RootStackParamList = {
 };
 
 type CollectionTabParamList = {
-  All: { curLocation: LocationData };
-  Saved: { curLocation: LocationData };
+  All: { curLocation: TLocation };
+  Saved: { curLocation: TLocation };
 };
 
 type CollectionAllScreenNavigationProp = import("@react-navigation/native").CompositeNavigationProp<

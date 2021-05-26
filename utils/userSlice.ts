@@ -3,11 +3,13 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState: {
   uid: string;
   displayName: string;
-  saved: Record<string, ItemData> | null;
+  tokens: number;
+  saved: TItem[];
 } = {
   uid: "",
   displayName: "",
-  saved: null,
+  tokens: 0,
+  saved: [],
 };
 
 const userSlice = createSlice({
@@ -19,12 +21,15 @@ const userSlice = createSlice({
       state.uid = uid || state.uid;
       state.displayName = displayName || state.displayName;
     },
+    setTokens(state, action) {
+      state.tokens = action.payload;
+    },
     setSaved(state, action) {
       state.saved = action.payload;
     },
   },
 });
 
-export const { setUser, setSaved } = userSlice.actions;
+export const { setUser, setTokens, setSaved } = userSlice.actions;
 
 export default userSlice.reducer;
