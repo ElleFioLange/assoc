@@ -5,7 +5,9 @@ import { styles } from "../utils/styles";
 export default function Answer({ route }: AnswerProps): JSX.Element {
   return (
     <View style={styles.container}>
-      <Text style={styles.answer}>{route.params.answer}</Text>
+      <Text selectable style={styles.answer}>
+        {route.params.answer}
+      </Text>
     </View>
   );
 }

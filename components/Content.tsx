@@ -102,7 +102,7 @@ export default function Content({
         showsMyLocationButton={false}
         showsPointsOfInterest={false}
         showsCompass={false}
-        onLongPress={() =>
+        onDoublePress={() =>
           openMaps({
             latitude: content.map?.latitude,
             longitude: content.map?.longitude,

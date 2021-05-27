@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import * as firebase from "firebase";
-import axios from "axios";
 import {
   View,
   Text,
@@ -41,19 +40,19 @@ export default function Share({ navigation, route }: ShareProps): JSX.Element {
   });
 
   async function checkProfanity(potential: string) {
-    const response = await axios.get(
-      "https://community-purgomalum.p.rapidapi.com/containsprofanity",
+    const response = await fetch(
+      `https://community-purgomalum.p.rapidapi.com/containsprofanity?text=${potential}`,
       {
-        params: { text: potential },
+        method: "GET",
         headers: {
           "x-rapidapi-key":
             "2de6f8e75dmsh3d44193d16219b3p1b4accjsn11b047d66add",
           "x-rapidapi-host": "community-purgomalum.p.rapidapi.com",
         },
       }
-    );
+    ).then((response) => response.json());
 
-    return response.data;
+    return response;
   }
 
   async function checkInUse(potential: string) {

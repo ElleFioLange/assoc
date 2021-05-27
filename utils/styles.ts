@@ -114,9 +114,10 @@ export const styles = StyleSheet.create({
   // Answer ---------------
 
   answer: {
-    fontSize: width * 0.15,
+    fontSize: width * 0.08,
     fontWeight: "600",
     textAlign: "center",
+    padding: width * 0.1,
   },
 
   // Item info ---------------

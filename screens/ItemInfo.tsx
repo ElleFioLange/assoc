@@ -58,7 +58,9 @@ export default function ItemInfo({
         <Text style={[styles.itemDescription, styles.marginTop, styles.avenir]}>
           {item.description}
         </Text>
-        <Connections connections={Object.values(item.connections)} />
+        {item.connections && (
+          <Connections connections={Object.values(item.connections)} />
+        )}
         <View style={[styles.marginTopDouble, styles.itemActionContainer]}>
           <Pressable
             style={({ pressed }) => [

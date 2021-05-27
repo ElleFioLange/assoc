@@ -43,18 +43,8 @@ type ItemData = {
   parentName: string;
   parentId: string;
   content: ContentData[];
-  type: "image" | "video" | "audio";
   numUnlocked: number;
   connections: Record<string, ConnectionData>;
-  purchaseInfo: {
-    static?: number;
-    dynamic?: {
-      maxPrice: number;
-      minPrice: number;
-      numNeededForMin: number;
-      maxAvailable?: number;
-    };
-  };
   link?: string;
 };
 

@@ -25,6 +25,8 @@ import { setTokens } from "./utils/tokensSlice";
 import { setMap, setCurLocationId } from "./utils/mapSlice";
 import { fetchSettings } from "./utils/settingsSlice";
 
+import { Text } from "react-native";
+
 const firebaseConfig = {
   apiKey: "AIzaSyBBrOZTRhISAGWaj6JjVm8DTPpzHRT9VRI",
   authDomain: "assoc-d30ac.firebaseapp.com",
@@ -36,7 +38,7 @@ const firebaseConfig = {
   measurementId: "G-VVME0TLGNG",
 };
 
-firebase.initializeApp(firebaseConfig);
+firebase.apps.length ? firebase.app() : firebase.initializeApp(firebaseConfig);
 firebase.auth().onAuthStateChanged((user) => {
   if (user) {
     const { uid, displayName } = user;
@@ -108,6 +110,7 @@ export default function App(): JSX.Element {
 
   return credStatus === "checking" ? (
     <AppLoading />
+    // <Text>asdlfjalskdfjal;sdjfk</Text>
   ) : (
     <Provider store={store}>
       <NavigationContainer>
