@@ -5,14 +5,14 @@ import * as SecureStore from "expo-secure-store";
 import { ScrollView, Text, View, Alert } from "react-native";
 import ActionBar from "../components/ActionBar";
 import Setting from "../components/Setting";
-import { useAppSelector, useAppDispatch } from "../utils/reduxHooks";
-import { setUser } from "../utils/userSlice";
+import { useAppSelector, useAppDispatch } from "../redux/hooks";
+import { setUser } from "../redux/userSlice";
 import {
   setInvertBg,
   setAutoAd,
   setDisableAnimations,
   setAutoPlayVideos,
-} from "../utils/settingsSlice";
+} from "../redux/settingsSlice";
 import { styles } from "../utils/styles";
 
 export default function Settings({ navigation }: SettingsProps): JSX.Element {
@@ -20,8 +20,8 @@ export default function Settings({ navigation }: SettingsProps): JSX.Element {
 
   const [deleting, setDeleting] = useState(false);
 
-  const uid = useAppSelector((state) => state.user.uid);
-  const displayName = useAppSelector((state) => state.user.displayName);
+  const uid = useAppSelector((state) => state.user.id);
+  const displayName = useAppSelector((state) => state.user.name);
   const invertBg = useAppSelector((state) => state.settings.invertBg);
   const autoAd = useAppSelector((state) => state.settings.autoAd);
   const disableAnimations = useAppSelector(

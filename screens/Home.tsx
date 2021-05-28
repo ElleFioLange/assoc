@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
-import { useAppSelector } from "../utils/reduxHooks";
-import { selectLocationById } from "../utils/mapSlice";
+import { useAppSelector } from "../redux/hooks";
+import { selectLocationById } from "../redux/locationsSlice";
+import { selectItemDict } from "../redux/itemsSlice";
 import {
   View,
   ImageBackground,
@@ -28,10 +29,13 @@ import { styles, win, width } from "../utils/styles";
 
 export default function Home({ navigation }: HomeProps): JSX.Element {
   const invertBg = useAppSelector((state) => state.settings.invertBg);
-  const curLocationId = useAppSelector((state) => state.map.curLocationId);
+  const curLocationId = useAppSelector((state) => state.user.curLocationId);
   const curLocation = useAppSelector((state) =>
     selectLocationById(state, curLocationId)
   );
+  const itemDict = useAppSelector((state) => selectItemDict(state));
+  const curItems = curLocation?.items.map((id) => itemDict[id]);
+
   const disableAnimations = useAppSelector(
     (state) => state.settings.disableAnimations
   );
@@ -76,10 +80,35 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
     setLoading(true);
     toggleAnimation(true);
     sleep(1500).then(() => {
-      toggleAnimation(false);
-      setLoading(false);
-      setAsc("");
-      navigation.navigate("Answer", { answer: "Placeholder" });
+      fetch("https://api.openai.com/v1/engines/davinci/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer sk-EV7pP6fQtc6JEURvvZexyelkqHkgKThm3RJEkZv9",
+        },
+        body: JSON.stringify({
+          prompt:
+            "ARCHITECTURE comes about as a result of the synthesizing by the architect of creative responses to input from the client; data gathered from the site and the climate; and an understanding of structure, materials, space and light. Working from the inside-out, the architect guides the growth of an IDEA resulting from the combination of these responses to a completed design which is as much a portrait of the client as it may be of himself. I am particularly attracted to buildings by native peoples.  They ALWAYS are responsive to the individual sites in macro and micro aspects with a resulting solution which ‘belongs’ there both inside and out.  I can’t think of any building that I wish I had designed but can appreciate good design when I see it.  One of my favorite buildings is the old chemistry building built in 1916 which was designed by Barry Byrne who worked for Louis Sullivan in Chicago, Frank Lloyd Wright and Walter Burley Griffin.  Few people know about this little building but it is hidden away and in generally original condition.  Another building I enjoy in New Mexico was designed by Frank Lloyd Wright located in Pecos.  Again, few people know it is there which is fine by the owners who are relatives of the original client.",
+          max_tokens: 50,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          toggleAnimation(false);
+          setLoading(false);
+          setAsc("");
+          navigation.navigate("Answer", { answer: data.choices[0].text });
+        })
+        .catch((e) => {
+          console.error(e);
+          toggleAnimation(false);
+          setLoading(false);
+          setAsc("");
+        });
+      // toggleAnimation(false);
+      // setLoading(false);
+      // setAsc("");
+      // navigation.navigate("Answer", { answer: "Placeholder" });
     });
   };
 
@@ -169,13 +198,7 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
               {curLocation ? (
                 <Carousel
                   layout={"default"}
-                  data={
-                    curLocation
-                      ? Object.keys(curLocation.items).map(
-                          (key) => curLocation.items[key]
-                        )
-                      : []
-                  }
+                  data={curItems || []}
                   contentContainerCustomStyle={{
                     display: "flex",
                     justifyContent: "center",
@@ -184,10 +207,10 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
                   // enableMomentum={true}
                   decelerationRate={"fast"}
                   style={styles.shadow}
-                  renderItem={({ item }: { item: ItemData }) => (
+                  renderItem={({ item }: { item: TItem | undefined }) => (
                     <TouchableWithoutFeedback
                       onPress={() => {
-                        navigation.navigate("ItemInfo", { item });
+                        if (item) navigation.navigate("ItemInfo", { item });
                       }}
                     >
                       <View
@@ -199,9 +222,9 @@ export default function Home({ navigation }: HomeProps): JSX.Element {
                         ]}
                       >
                         <Content
-                          content={item.content[0]}
+                          content={item!.content[0]}
                           style={{
-                            opacity: !hideItems ? 1 : 0,
+                            opacity: hideItems ? 0 : 1,
                             borderRadius: width * 0.03,
                           }}
                           poster

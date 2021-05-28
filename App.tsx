@@ -19,10 +19,11 @@ import Share from "./screens/Share";
 import Settings from "./screens/Settings";
 import Tokens from "./screens/Tokens";
 
-import store from "./utils/store";
-import { setUser, setTokens, setSaved } from "./utils/userSlice";
-import { setMap, setCurLocationId } from "./utils/mapSlice";
-import { fetchSettings } from "./utils/settingsSlice";
+import store from "./redux/store";
+import { setUser } from "./redux/userSlice";
+import { addLocation } from "./redux/locationsSlice";
+import { addItem } from "./redux/itemsSlice";
+import { fetchSettings } from "./redux/settingsSlice";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBBrOZTRhISAGWaj6JjVm8DTPpzHRT9VRI",
@@ -36,36 +37,6 @@ const firebaseConfig = {
 };
 
 firebase.apps.length ? firebase.app() : firebase.initializeApp(firebaseConfig);
-firebase.auth().onAuthStateChanged((user) => {
-  // TODO fix getting data on auth state change
-  if (user) {
-    const { uid, displayName } = user;
-    store.dispatch(setUser({ uid, displayName }));
-    firebase
-      .firestore()
-      .collection("users")
-      .doc(uid)
-      .get()
-      .then((doc) => {
-        const data = doc.data() as TUserData;
-        store.dispatch(setTokens(data.tokens));
-        store.dispatch(setSaved(data.saved));
-        firebase.firestore().collection("master")
-      });
-  }
-  // uidRef.child("tokens").on("value", (snapshot) => {
-  //   store.dispatch(setTokens(snapshot.val()));
-  // });
-  // uidRef.child("map").on("value", (snapshot) => {
-  //   store.dispatch(setMap(snapshot.val()));
-  // });
-  // uidRef.child("curLocationId").on("value", (snapshot) => {
-  //   store.dispatch(setCurLocationId(snapshot.val()));
-  // });
-  // uidRef.child("saved").on("value", (snapshot) => {
-  //   store.dispatch(setSaved(snapshot.val()));
-  // });
-});
 
 // TODO Push notifications
 // TODO Analytics
@@ -81,15 +52,55 @@ export default function App(): JSX.Element {
     store.getState().settings.disableAnimations
   );
 
+  firebase.auth().onAuthStateChanged((user) => {
+    if (user) {
+      const { uid } = user;
+      const fstore = firebase.firestore();
+      fstore
+        .collection("users")
+        .doc(uid)
+        .get()
+        .then((doc) => {
+          const data = doc.data() as TUserData;
+          store.dispatch(setUser(data));
+          const { locations, items } = data;
+          const locationIds = Object.keys(locations);
+          for (let i = 0; i < locationIds.length; i += 10) {
+            fstore
+              .collection("locations")
+              .where("id", "in", locationIds.slice(i, i + 10))
+              .get()
+              .then((docs) => {
+                docs.forEach((doc) => {
+                  const docData = doc.data() as TLocation;
+                  docData.items = locations[docData.id];
+                  store.dispatch(addLocation(docData));
+                });
+              });
+          }
+          const itemIds = Object.values(items);
+          for (let i = 0; i < locationIds.length; i += 10) {
+            fstore
+              .collection("items")
+              .where("id", "in", itemIds.slice(i, i + 10))
+              .get()
+              .then((docs) => {
+                docs.forEach((doc) => {
+                  const docData = doc.data() as TItem;
+                  // Set connections to only those unlocked by the user
+                  docData.connections = items[docData.id];
+                  store.dispatch(addItem(docData));
+                });
+              });
+          }
+        })
+        .then(() => setCredStatus("available"));
+    }
+  });
+
   useEffect(() => {
     store.dispatch(fetchSettings());
-    checkForCredential().then((available) => {
-      if (available) {
-        setCredStatus("available");
-      } else {
-        setCredStatus("unavailable");
-      }
-    });
+    checkForCredential();
     store.subscribe(() => {
       setDisableAnimations(store.getState().settings.disableAnimations);
     });
@@ -119,11 +130,12 @@ export default function App(): JSX.Element {
                 style: "destructive",
               },
             ]);
-            return false;
+            SecureStore.deleteItemAsync("credential");
+            setCredStatus("unavailable");
           }
         );
     } else {
-      return false;
+      setCredStatus("unavailable");
     }
   }
 

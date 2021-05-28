@@ -2,8 +2,9 @@
 import React, { useRef, useState } from "react";
 import { View, StyleSheet, Animated, PanResponder } from "react-native";
 import Svg, { Polygon, Text, G } from "react-native-svg";
-import { useAppSelector, useAppDispatch } from "../utils/reduxHooks";
-import { selectLocations, setCurLocationId } from "../utils/mapSlice";
+import { useAppSelector, useAppDispatch } from "../redux/hooks";
+import { selectLocations } from "../redux/locationsSlice";
+import { setCurLocationId } from "../redux/userSlice";
 import { accentBlue, styles, win } from "../utils/styles";
 
 // Parameters for sizing
@@ -85,7 +86,7 @@ function getCenter(index: number): { x: number; y: number } {
 const AnimatedG = Animated.createAnimatedComponent(G);
 
 export default function MapScreen({ navigation }: MapProps): JSX.Element {
-  const curLocationId = useAppSelector((state) => state.map.curLocationId);
+  const curLocationId = useAppSelector((state) => state.user.curLocationId);
   const locations = useAppSelector(selectLocations);
   const dispatch = useAppDispatch();
 
@@ -132,7 +133,7 @@ export default function MapScreen({ navigation }: MapProps): JSX.Element {
   });
 
   // Padding the data so that there's atleast 1 or 2 full rings
-  const paddedData: Array<LocationData | { name: string; id: null }> = [];
+  const paddedData: Array<TLocation | { name: string; id: null }> = [];
   data.forEach((location) => paddedData.push(location));
   if (1 < data.length && data.length < 7) {
     for (let i = 7 - data.length; i > 0; i--) {

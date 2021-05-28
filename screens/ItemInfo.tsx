@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import React from "react";
-import * as firebase from "firebase";
 import * as Linking from "expo-linking";
+import { firestore } from "firebase";
 import { View, Text, ScrollView, Pressable, FlatList } from "react-native";
-import { useAppSelector } from "../utils/reduxHooks";
+import { useAppSelector, useAppDispatch } from "../redux/hooks";
+import { setSaved } from "../redux/userSlice";
 import { FontAwesome5 } from "@expo/vector-icons";
 import Content from "../components/Content";
 import Connections from "../components/Connections";
@@ -15,17 +16,18 @@ export default function ItemInfo({
   navigation,
   route,
 }: ItemInfoProps): JSX.Element {
-  firebase.app();
-
   const { item } = route.params;
 
+  const dispatch = useAppDispatch();
   const saved = useAppSelector((state) => state.user.saved);
-  const uid = useAppSelector((state) => state.user.uid);
+  const uid = useAppSelector((state) => state.user.id);
 
-  function toggleSaved() {
-    saved && saved[item.id]
-      ? firebase.database().ref(`users/${uid}/saved/${item.id}`).remove()
-      : firebase.database().ref(`users/${uid}/saved/${item.id}`).set(item);
+  async function toggleSaved() {
+    const { id } = item;
+    const newSaved = { ...saved };
+    saved[id] ? delete newSaved[id] : (newSaved[id] = true);
+    firestore().collection("users").doc(uid).update({ saved: newSaved });
+    dispatch(setSaved(newSaved));
   }
 
   return (
@@ -67,7 +69,7 @@ export default function ItemInfo({
               },
               styles.itemAction,
             ]}
-            onPress={() => toggleSaved()}
+            onPress={toggleSaved}
           >
             <FontAwesome5
               name="star"

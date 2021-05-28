@@ -32,8 +32,8 @@ type TMap = {
   type: "map";
   id: string;
   name: string;
-  lat: number;
-  lon: number;
+  latitude: number;
+  longitude: number;
   viewDelta: number;
   description: string;
 };
@@ -45,17 +45,21 @@ type TContent = TImage | TVideo | TMap;
 type TConnection = {
   id: string;
   key: string;
+  preReqs?: string[];
   isSource: boolean;
+  ownerId: string;
   partnerId: string;
+  ad?: string[] | [string, string, number][];
 };
 
 type TItem = {
   id: string;
   name: string;
   description: string;
+  aiPrompt: string;
   parentId: string;
   parentName: string;
-  connections: Record<string, TConnection>;
+  connections: TConnections[];
   content: TContent[];
   link?: string;
 };
@@ -65,7 +69,7 @@ type TLocation = {
   name: string;
   description: string;
   minD: Record<string, number>;
-  items: Record<string, TItem>;
+  items: string[];
 };
 
 // ================ USER ===================
@@ -74,11 +78,13 @@ type TUserData = {
   id: string;
   name: string;
   birthday: number;
+  curLocationId: string;
   lastFeedbackReward: number;
   reports: string[];
+  locations: Record<string, string[]>;
   items: Record<string, string[]>;
   tokens: number;
-  saved: string[];
+  saved: Record<string, boolean>;
 };
 
 // ================ APP ===================
@@ -87,8 +93,8 @@ type RootStackParamList = {
   Landing: undefined;
   Home: undefined;
   Answer: { answer: string };
-  ItemInfo: { item: TITem };
-  Share: { item: TITem };
+  ItemInfo: { item: TItem };
+  Share: { item: TItem };
   Map: undefined;
   LocationInfo: { location: TLocation };
   Collection: undefined;

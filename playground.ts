@@ -1,10 +1,5 @@
-const a = {
-  b: 1,
-  c: 2
-};
+const a = [1, 2, 3, undefined, null, 5, 6];
 
-const d = {
-  b: 3
-}
+const b = a.map((i) => i ? i : undefined);
 
-b = 
+console.log(b);

@@ -6,7 +6,7 @@ import { styles, width } from "../utils/styles";
 export default function Connections({
   connections,
 }: {
-  connections: ConnectionData[];
+  connections: TConnection[];
 }): JSX.Element {
   return (
     <View style={[{ width }, styles.marginTopDouble]}>
@@ -14,23 +14,23 @@ export default function Connections({
       {connections.map((connection) => {
         return connection.isSource ? (
           <View key={connection.id} style={styles.connection}>
-            <Text style={styles.connectionName}>{connection.sourceName}</Text>
+            <Text style={styles.connectionName}>{connection.ownerId}</Text>
             <FontAwesome5 name="long-arrow-alt-right" size={width * 0.05} />
             <Text style={styles.connectionKey}>
               &quot;{connection.key}&quot;
             </Text>
             <FontAwesome5 name="long-arrow-alt-right" size={width * 0.05} />
-            <Text style={styles.connectionName}>{connection.sinkName}</Text>
+            <Text style={styles.connectionName}>{connection.partnerId}</Text>
           </View>
         ) : (
           <View key={connection.id} style={styles.connection}>
-            <Text style={styles.connectionName}>{connection.sinkName}</Text>
+            <Text style={styles.connectionName}>{connection.partnerId}</Text>
             <FontAwesome5 name="long-arrow-alt-left" size={width * 0.05} />
             <Text style={styles.connectionKey}>
               &quot;{connection.key}&quot;
             </Text>
             <FontAwesome5 name="long-arrow-alt-left" size={width * 0.05} />
-            <Text style={styles.connectionName}>{connection.sourceName}</Text>
+            <Text style={styles.connectionName}>{connection.ownerId}</Text>
           </View>
         );
       })}

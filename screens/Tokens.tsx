@@ -2,7 +2,7 @@ import React from "react";
 import * as firebase from "firebase";
 import { ScrollView, View, Text, Pressable, Alert } from "react-native";
 import TokenOption from "../components/TokenOption";
-import { useAppSelector } from "../utils/reduxHooks";
+import { useAppSelector } from "../redux/hooks";
 import { styles, accentBlue, accentBlueLite } from "../utils/styles";
 
 // TODO User feedback
@@ -10,8 +10,8 @@ import { styles, accentBlue, accentBlueLite } from "../utils/styles";
 // TODO Microtransactions
 
 export default function Tokens(): JSX.Element {
-  const tokens = useAppSelector((state) => state.tokens);
-  const uid = useAppSelector((state) => state.user.uid);
+  const tokens = useAppSelector((state) => state.user.tokens);
+  const uid = useAppSelector((state) => state.user.id);
   const tokenDatabaseRef = firebase.database().ref(`users/${uid}/tokens`);
   const feedbackDatabaseRef = firebase
     .database()

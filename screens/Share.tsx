@@ -12,14 +12,14 @@ import {
 } from "react-native";
 import ActionBar from "../components/ActionBar";
 import CustomTextInput from "../components/CustomTextInput";
-import { useAppSelector } from "../utils/reduxHooks";
+import { useAppSelector } from "../redux/hooks";
 import { styles } from "../utils/styles";
 
 // TODO Report functionality
 
 export default function Share({ navigation, route }: ShareProps): JSX.Element {
   const { item } = route.params;
-  const uid = useAppSelector((state) => state.user.uid);
+  const uid = useAppSelector((state) => state.user.id);
 
   const [itemCode, setItemCode] = useState("");
   const [codeInput, setCodeInput] = useState("");
